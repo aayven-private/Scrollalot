@@ -30,6 +30,9 @@
 		B0ECE16E1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16C1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld */; };
 		B0ECE174197013AB00A6F3C5 /* GlobalAppProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE173197013AB00A6F3C5 /* GlobalAppProperties.m */; };
 		B0ECE17619702FBB00A6F3C5 /* achievements.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0ECE17519702FBB00A6F3C5 /* achievements.plist */; };
+		B0ECE17E19703D9700A6F3C5 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE17919703D9700A6F3C5 /* NetworkManager.m */; };
+		B0ECE17F19703D9700A6F3C5 /* RequestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE17B19703D9700A6F3C5 /* RequestHelper.m */; };
+		B0ECE18019703D9700A6F3C5 /* ResponseHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE17D19703D9700A6F3C5 /* ResponseHelper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +81,12 @@
 		B0ECE172197013AB00A6F3C5 /* GlobalAppProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalAppProperties.h; sourceTree = "<group>"; };
 		B0ECE173197013AB00A6F3C5 /* GlobalAppProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalAppProperties.m; sourceTree = "<group>"; };
 		B0ECE17519702FBB00A6F3C5 /* achievements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = achievements.plist; sourceTree = "<group>"; };
+		B0ECE17819703D9700A6F3C5 /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
+		B0ECE17919703D9700A6F3C5 /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
+		B0ECE17A19703D9700A6F3C5 /* RequestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestHelper.h; sourceTree = "<group>"; };
+		B0ECE17B19703D9700A6F3C5 /* RequestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestHelper.m; sourceTree = "<group>"; };
+		B0ECE17C19703D9700A6F3C5 /* ResponseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponseHelper.h; sourceTree = "<group>"; };
+		B0ECE17D19703D9700A6F3C5 /* ResponseHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponseHelper.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +148,7 @@
 		B09B8013196F027000800BD4 /* scrollalot */ = {
 			isa = PBXGroup;
 			children = (
+				B0ECE17719703D8700A6F3C5 /* NetworkManagement */,
 				B0ECE1711970138D00A6F3C5 /* Helpers */,
 				B0ECE1681970132500A6F3C5 /* DBAccessLayer */,
 				B0ECE164196FEB4B00A6F3C5 /* Protocols */,
@@ -266,6 +276,19 @@
 			name = Helpers;
 			sourceTree = "<group>";
 		};
+		B0ECE17719703D8700A6F3C5 /* NetworkManagement */ = {
+			isa = PBXGroup;
+			children = (
+				B0ECE17819703D9700A6F3C5 /* NetworkManager.h */,
+				B0ECE17919703D9700A6F3C5 /* NetworkManager.m */,
+				B0ECE17A19703D9700A6F3C5 /* RequestHelper.h */,
+				B0ECE17B19703D9700A6F3C5 /* RequestHelper.m */,
+				B0ECE17C19703D9700A6F3C5 /* ResponseHelper.h */,
+				B0ECE17D19703D9700A6F3C5 /* ResponseHelper.m */,
+			);
+			name = NetworkManagement;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -369,10 +392,13 @@
 				B09B8027196F027000800BD4 /* ScrollScene.m in Sources */,
 				B09B804A196F02AE00800BD4 /* SceneObject.m in Sources */,
 				B09B8053196F043A00800BD4 /* MarkerObject.m in Sources */,
+				B0ECE17F19703D9700A6F3C5 /* RequestHelper.m in Sources */,
 				B09B8024196F027000800BD4 /* ScrollViewController.m in Sources */,
 				B0ECE16E1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld in Sources */,
 				B0ECE16B1970133D00A6F3C5 /* DBAccessLayer.m in Sources */,
 				B09B801E196F027000800BD4 /* AppDelegate.m in Sources */,
+				B0ECE17E19703D9700A6F3C5 /* NetworkManager.m in Sources */,
+				B0ECE18019703D9700A6F3C5 /* ResponseHelper.m in Sources */,
 				B09B801A196F027000800BD4 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
