@@ -11,16 +11,25 @@
 #import "MarkerObject.h"
 
 static CGFloat mmPerPixel = 0.078125;
+static CGFloat cmPerPixel = 0.0078125;
+static CGFloat mPerPixel = 0.000078125;
+static CGFloat kmPerPixel = 0.000000078125;
+static CGFloat mmPSecInKmPH = 0.0036;
 
 @interface ScrollScene()
 
 @property (nonatomic) NSTimeInterval lastUpdateTimeInterval;
+@property (nonatomic) NSTimeInterval speedCheckInterval;
+@property (nonatomic) NSTimeInterval lastSpeedCheckInterval;
 
 @property (nonatomic) NSArray *markers;
 @property (nonatomic) MarkerObject *mainMarker;
 @property (nonatomic) CGFloat lastMarkerPosition;
-@property (nonatomic) CGFloat distance;
+@property (nonatomic) CGFloat lastSpeedCheckDistance;
+@property (nonatomic) double distance;
+
 @property (nonatomic) SKLabelNode *distanceLabel;
+@property (nonatomic) SKLabelNode *speedLabel;
 
 @end
 
@@ -30,6 +39,7 @@ static CGFloat mmPerPixel = 0.078125;
     if (self = [super initWithSize:size]) {
         /* Setup your scene here */
         self.backgroundColor = [UIColor whiteColor];
+        self.speedCheckInterval = 2.0;
     }
     return self;
 }
@@ -52,6 +62,8 @@ static CGFloat mmPerPixel = 0.078125;
     [self addChild:self.mainMarker];
     
     self.distance = 0;
+    self.lastSpeedCheckDistance = self.distance;
+    self.lastSpeedCheckInterval = 0;
     self.lastMarkerPosition = self.mainMarker.position.y;
     
     self.distanceLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
@@ -86,7 +98,7 @@ static CGFloat mmPerPixel = 0.078125;
 -(void)updateWithTimeSinceLastUpdate:(CFTimeInterval)timeSinceLast
 {
     CGFloat distanceDiff = fabsf(_lastMarkerPosition - _mainMarker.position.y);
-    
+    NSLog(@"%f", _mainMarker.position.y);
     if (_mainMarker.position.y < -_mainMarker.size.height / 2.0) {
         _mainMarker.position = CGPointMake(_mainMarker.position.x, self.size.height + _mainMarker.size.height / 2.0);
         distanceDiff = 0.0;
@@ -95,7 +107,7 @@ static CGFloat mmPerPixel = 0.078125;
         distanceDiff = 0.0;
     }
     
-    _distance += distanceDiff * mmPerPixel / 10.0;
+    _distance += distanceDiff * cmPerPixel * 2.0;
     _lastMarkerPosition = _mainMarker.position.y;
     //NSLog(@"Distance: %fcm", _distance);
     if (_distance < 100) {
@@ -105,6 +117,16 @@ static CGFloat mmPerPixel = 0.078125;
     } else {
         _distanceLabel.text = [NSString stringWithFormat:@"%.3fkm", _distance / 100000.];
     }
+    
+    _lastSpeedCheckInterval += timeSinceLast;
+    if (_lastSpeedCheckInterval > _speedCheckInterval) {
+        CGFloat measureDistance = fabs(_distance - _lastSpeedCheckDistance);
+        CGFloat speed = measureDistance * _lastSpeedCheckInterval * mmPSecInKmPH;
+        //NSLog(@"Speed: %f", speed);
+        _lastSpeedCheckDistance = _distance;
+        _lastSpeedCheckInterval = 0.0;
+    }
+    
 }
 
 -(void)swipeWithVelocity:(float)velocity

@@ -26,6 +26,9 @@
 		B09B804A196F02AE00800BD4 /* SceneObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8049196F02AE00800BD4 /* SceneObject.m */; };
 		B09B8053196F043A00800BD4 /* MarkerObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8052196F043A00800BD4 /* MarkerObject.m */; };
 		B0ECE167196FEC5500A6F3C5 /* square.png in Resources */ = {isa = PBXBuildFile; fileRef = B0ECE166196FEC5500A6F3C5 /* square.png */; };
+		B0ECE16B1970133D00A6F3C5 /* DBAccessLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16A1970133D00A6F3C5 /* DBAccessLayer.m */; };
+		B0ECE16E1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16C1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld */; };
+		B0ECE174197013AB00A6F3C5 /* GlobalAppProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE173197013AB00A6F3C5 /* GlobalAppProperties.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +71,11 @@
 		B09B8052196F043A00800BD4 /* MarkerObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarkerObject.m; sourceTree = "<group>"; };
 		B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrollSceneHandlerDelegate.h; sourceTree = "<group>"; };
 		B0ECE166196FEC5500A6F3C5 /* square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square.png; sourceTree = "<group>"; };
+		B0ECE1691970133D00A6F3C5 /* DBAccessLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBAccessLayer.h; sourceTree = "<group>"; };
+		B0ECE16A1970133D00A6F3C5 /* DBAccessLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBAccessLayer.m; sourceTree = "<group>"; };
+		B0ECE16D1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ScrollalotDataModel.xcdatamodel; sourceTree = "<group>"; };
+		B0ECE172197013AB00A6F3C5 /* GlobalAppProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalAppProperties.h; sourceTree = "<group>"; };
+		B0ECE173197013AB00A6F3C5 /* GlobalAppProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalAppProperties.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +137,8 @@
 		B09B8013196F027000800BD4 /* scrollalot */ = {
 			isa = PBXGroup;
 			children = (
+				B0ECE1711970138D00A6F3C5 /* Helpers */,
+				B0ECE1681970132500A6F3C5 /* DBAccessLayer */,
 				B0ECE164196FEB4B00A6F3C5 /* Protocols */,
 				B09B8050196F038000800BD4 /* ViewControllers */,
 				B09B804F196F033500800BD4 /* Scenes */,
@@ -216,6 +226,41 @@
 				B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */,
 			);
 			name = Protocols;
+			sourceTree = "<group>";
+		};
+		B0ECE1681970132500A6F3C5 /* DBAccessLayer */ = {
+			isa = PBXGroup;
+			children = (
+				B0ECE1701970136B00A6F3C5 /* EntityHelpers */,
+				B0ECE16F1970135D00A6F3C5 /* CDEntities */,
+				B0ECE1691970133D00A6F3C5 /* DBAccessLayer.h */,
+				B0ECE16A1970133D00A6F3C5 /* DBAccessLayer.m */,
+				B0ECE16C1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld */,
+			);
+			name = DBAccessLayer;
+			sourceTree = "<group>";
+		};
+		B0ECE16F1970135D00A6F3C5 /* CDEntities */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = CDEntities;
+			sourceTree = "<group>";
+		};
+		B0ECE1701970136B00A6F3C5 /* EntityHelpers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = EntityHelpers;
+			sourceTree = "<group>";
+		};
+		B0ECE1711970138D00A6F3C5 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B0ECE172197013AB00A6F3C5 /* GlobalAppProperties.h */,
+				B0ECE173197013AB00A6F3C5 /* GlobalAppProperties.m */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,10 +361,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0ECE174197013AB00A6F3C5 /* GlobalAppProperties.m in Sources */,
 				B09B8027196F027000800BD4 /* ScrollScene.m in Sources */,
 				B09B804A196F02AE00800BD4 /* SceneObject.m in Sources */,
 				B09B8053196F043A00800BD4 /* MarkerObject.m in Sources */,
 				B09B8024196F027000800BD4 /* ScrollViewController.m in Sources */,
+				B0ECE16E1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld in Sources */,
+				B0ECE16B1970133D00A6F3C5 /* DBAccessLayer.m in Sources */,
 				B09B801E196F027000800BD4 /* AppDelegate.m in Sources */,
 				B09B801A196F027000800BD4 /* main.m in Sources */,
 			);
@@ -544,6 +592,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		B0ECE16C1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B0ECE16D1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodel */,
+			);
+			currentVersion = B0ECE16D1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodel */;
+			path = ScrollalotDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = B09B8000196F027000800BD4 /* Project object */;
 }
