@@ -112,6 +112,16 @@ static CGFloat kmPSecInKmPH = 3600.;
     SKSpriteNode *middle = [[SKSpriteNode alloc] initWithColor:[UIColor redColor] size:CGSizeMake(100, 2)];
     middle.position = CGPointMake(self.size.width / 2.0 - self.mainMarker.size.width / 2.0, self.size.height / 2.0);
     [self addChild:middle];
+    
+    if (self.distanceUnit == 0) {
+        [self addTextArray:@[@"LET", @"THE", @"SCROLL", @"BEGIN!"] completion:^{
+            
+        } andInterval:.7];
+    } else {
+        [self addTextArray:@[@"Back", @"for", @"MORE", @"SCROLL?:)"] completion:^{
+            
+        } andInterval:.7];
+    }
 }
 
 /*-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -207,6 +217,39 @@ static CGFloat kmPSecInKmPH = 3600.;
 -(void)swipeWithVelocity:(float)velocity
 {
     [self.mainMarker.physicsBody applyImpulse:CGVectorMake(0, -velocity)];
+}
+
+-(void)addTextArray:(NSArray *)textArray completion:(void(^)())completion andInterval:(float)interval
+{
+    SKLabelNode *textLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    textLabel.fontColor = [UIColor blackColor];
+    textLabel.fontSize = 25;
+    
+    NSMutableArray *textActions = [NSMutableArray array];
+    
+    SKAction *growAndFade = [SKAction group:@[[SKAction fadeOutWithDuration:interval], [SKAction scaleTo:6.0 duration:interval]]];
+    
+    for (NSString *text in textArray) {
+        SKAction *ta = [SKAction group:@[[SKAction fadeInWithDuration:0.0], [SKAction scaleTo:1.0 duration:0.0], [SKAction runBlock:^{
+            textLabel.text = text;
+        }]]];
+        
+        SKAction *tas = [SKAction sequence:@[growAndFade, ta]];
+        
+        [textActions addObject:tas];
+    }
+    
+    [textActions addObject:growAndFade];
+    [textActions addObject:[SKAction removeFromParent]];
+    
+    SKAction *countDown = [SKAction sequence:textActions];
+    
+    textLabel.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    textLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
+    textLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+    [textLabel runAction:countDown completion:completion];
+    
+    [self addChild:textLabel];
 }
 
 @end
