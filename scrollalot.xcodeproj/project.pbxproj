@@ -17,7 +17,6 @@
 		B09B8021196F027000800BD4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B09B801F196F027000800BD4 /* Main.storyboard */; };
 		B09B8024196F027000800BD4 /* ScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8023196F027000800BD4 /* ScrollViewController.m */; };
 		B09B8027196F027000800BD4 /* ScrollScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8026196F027000800BD4 /* ScrollScene.m */; };
-		B09B8029196F027000800BD4 /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = B09B8028196F027000800BD4 /* Spaceship.png */; };
 		B09B802B196F027000800BD4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B09B802A196F027000800BD4 /* Images.xcassets */; };
 		B09B8032196F027000800BD4 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B8031196F027000800BD4 /* XCTest.framework */; };
 		B09B8033196F027000800BD4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800B196F027000800BD4 /* Foundation.framework */; };
@@ -26,6 +25,7 @@
 		B09B803E196F027000800BD4 /* scrollalotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B803D196F027000800BD4 /* scrollalotTests.m */; };
 		B09B804A196F02AE00800BD4 /* SceneObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8049196F02AE00800BD4 /* SceneObject.m */; };
 		B09B8053196F043A00800BD4 /* MarkerObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8052196F043A00800BD4 /* MarkerObject.m */; };
+		B0ECE167196FEC5500A6F3C5 /* square.png in Resources */ = {isa = PBXBuildFile; fileRef = B0ECE166196FEC5500A6F3C5 /* square.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,7 +55,6 @@
 		B09B8023196F027000800BD4 /* ScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScrollViewController.m; sourceTree = "<group>"; };
 		B09B8025196F027000800BD4 /* ScrollScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrollScene.h; sourceTree = "<group>"; };
 		B09B8026196F027000800BD4 /* ScrollScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScrollScene.m; sourceTree = "<group>"; };
-		B09B8028196F027000800BD4 /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
 		B09B802A196F027000800BD4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B09B8030196F027000800BD4 /* scrollalotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = scrollalotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B09B8031196F027000800BD4 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -67,6 +66,8 @@
 		B09B804C196F030500800BD4 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		B09B8051196F043A00800BD4 /* MarkerObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkerObject.h; sourceTree = "<group>"; };
 		B09B8052196F043A00800BD4 /* MarkerObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarkerObject.m; sourceTree = "<group>"; };
+		B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrollSceneHandlerDelegate.h; sourceTree = "<group>"; };
+		B0ECE166196FEC5500A6F3C5 /* square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +129,7 @@
 		B09B8013196F027000800BD4 /* scrollalot */ = {
 			isa = PBXGroup;
 			children = (
+				B0ECE164196FEB4B00A6F3C5 /* Protocols */,
 				B09B8050196F038000800BD4 /* ViewControllers */,
 				B09B804F196F033500800BD4 /* Scenes */,
 				B09B804B196F02F400800BD4 /* Resources */,
@@ -135,7 +137,6 @@
 				B09B801C196F027000800BD4 /* AppDelegate.h */,
 				B09B801D196F027000800BD4 /* AppDelegate.m */,
 				B09B801F196F027000800BD4 /* Main.storyboard */,
-				B09B8028196F027000800BD4 /* Spaceship.png */,
 				B09B802A196F027000800BD4 /* Images.xcassets */,
 				B09B8014196F027000800BD4 /* Supporting Files */,
 			);
@@ -185,6 +186,7 @@
 		B09B804B196F02F400800BD4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B0ECE166196FEC5500A6F3C5 /* square.png */,
 				B09B804C196F030500800BD4 /* Constants.h */,
 			);
 			name = Resources;
@@ -206,6 +208,14 @@
 				B09B8023196F027000800BD4 /* ScrollViewController.m */,
 			);
 			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		B0ECE164196FEB4B00A6F3C5 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */,
+			);
+			name = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -286,7 +296,7 @@
 			files = (
 				B09B8018196F027000800BD4 /* InfoPlist.strings in Resources */,
 				B09B802B196F027000800BD4 /* Images.xcassets in Resources */,
-				B09B8029196F027000800BD4 /* Spaceship.png in Resources */,
+				B0ECE167196FEC5500A6F3C5 /* square.png in Resources */,
 				B09B8021196F027000800BD4 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -439,8 +449,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "scrollalot/scrollalot-Prefix.pch";
 				INFOPLIST_FILE = "scrollalot/scrollalot-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -453,8 +465,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "scrollalot/scrollalot-Prefix.pch";
 				INFOPLIST_FILE = "scrollalot/scrollalot-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -518,6 +532,7 @@
 				B09B8043196F027000800BD4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B09B8044196F027000800BD4 /* Build configuration list for PBXNativeTarget "scrollalotTests" */ = {
 			isa = XCConfigurationList;
@@ -526,6 +541,7 @@
 				B09B8046196F027000800BD4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

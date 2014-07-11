@@ -25,7 +25,7 @@
     // Here you can customize for example the minimum and maximum number of fingers required
     panSwipeRecognizer.minimumNumberOfTouches = 1;
     [self.view addGestureRecognizer:panSwipeRecognizer];
-    
+    /*
     // Configure the view.
     SKView * skView = (SKView *)self.view;
     skView.showsFPS = YES;
@@ -37,6 +37,7 @@
     
     // Present the scene.
     [skView presentScene:scene];
+     */
 }
 
 - (BOOL)shouldAutorotate
@@ -79,6 +80,7 @@
         // Create and configure the scene.
         _scrollScene = [ScrollScene sceneWithSize:skView.bounds.size];
         _scrollScene.scaleMode = SKSceneScaleModeAspectFill;
+        _scrollScene.delegate = self;
         
         // Present the scene.
         [skView presentScene:_scrollScene];
@@ -103,7 +105,8 @@
     if (recognizer.state == UIGestureRecognizerStateEnded)
     {
         CGPoint vel = [recognizer velocityInView:recognizer.view];
-        NSLog(@"VelY: %f", vel.y);
+        //NSLog(@"VelY: %f", vel.y);
+        [_scrollScene swipeWithVelocity:vel.y];
         /*if (vel.x < SWIPE_LEFT_THRESHOLD)
         {
             // TODO: Detected a swipe to the left

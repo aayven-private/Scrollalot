@@ -7,9 +7,13 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "ScrollSceneHandlerDelegate.h"
 
 @interface ScrollScene : SKScene
 
+@property (nonatomic, weak) id<ScrollSceneHandlerDelegate> delegate;
+
 -(void)initEnvironment;
+-(void)swipeWithVelocity:(float)velocity;
 
 @end

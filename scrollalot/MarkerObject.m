@@ -19,6 +19,8 @@
         self.physicsBody.affectedByGravity = NO;
         self.physicsBody.contactTestBitMask = 0;
         self.physicsBody.collisionBitMask = 0;
+        self.physicsBody.mass = 3;
+        self.physicsBody.linearDamping = 1.0;
     }
     return self;
 }
