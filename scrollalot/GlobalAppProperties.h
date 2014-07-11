@@ -12,4 +12,8 @@
 
 +(id)sharedInstance;
 
+@property (nonatomic) NSNumber *globalDistance;
+@property (nonatomic) NSString *distanceUnit;
+@property (nonatomic) NSNumber *maxSpeed;
+
 @end

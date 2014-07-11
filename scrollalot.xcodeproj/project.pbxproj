@@ -29,6 +29,7 @@
 		B0ECE16B1970133D00A6F3C5 /* DBAccessLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16A1970133D00A6F3C5 /* DBAccessLayer.m */; };
 		B0ECE16E1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16C1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld */; };
 		B0ECE174197013AB00A6F3C5 /* GlobalAppProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE173197013AB00A6F3C5 /* GlobalAppProperties.m */; };
+		B0ECE17619702FBB00A6F3C5 /* achievements.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0ECE17519702FBB00A6F3C5 /* achievements.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		B0ECE16D1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ScrollalotDataModel.xcdatamodel; sourceTree = "<group>"; };
 		B0ECE172197013AB00A6F3C5 /* GlobalAppProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalAppProperties.h; sourceTree = "<group>"; };
 		B0ECE173197013AB00A6F3C5 /* GlobalAppProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalAppProperties.m; sourceTree = "<group>"; };
+		B0ECE17519702FBB00A6F3C5 /* achievements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = achievements.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +200,7 @@
 			children = (
 				B0ECE166196FEC5500A6F3C5 /* square.png */,
 				B09B804C196F030500800BD4 /* Constants.h */,
+				B0ECE17519702FBB00A6F3C5 /* achievements.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0ECE17619702FBB00A6F3C5 /* achievements.plist in Resources */,
 				B09B8018196F027000800BD4 /* InfoPlist.strings in Resources */,
 				B09B802B196F027000800BD4 /* Images.xcassets in Resources */,
 				B0ECE167196FEC5500A6F3C5 /* square.png in Resources */,
