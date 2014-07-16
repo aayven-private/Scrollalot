@@ -10,6 +10,7 @@
 #import "SceneObject.h"
 #import "MarkerObject.h"
 #import "GlobalAppProperties.h"
+#import "ParallaxBG.h"
 
 //static CGFloat mmPerPixel = 0.078125;
 //static CGFloat cmPerPixel = 0.0078125;
@@ -20,7 +21,7 @@ static CGFloat kmPerPixel = 0.000000078125;
 //static CGFloat mPSecInKmPH = 3.6;
 static CGFloat kmPSecInKmPH = 3600.;
 
-//static CGFloat degreeInRadians = 0.0174532925;
+static CGFloat degreeInRadians = 0.0174532925;
 
 @interface ScrollScene()
 
@@ -39,6 +40,13 @@ static CGFloat kmPSecInKmPH = 3600.;
 
 @property (nonatomic) GlobalAppProperties *globalProps;
 @property (nonatomic) float maxSpeed;
+
+@property (nonatomic) ParallaxBG *parallaxBG;
+
+@property (nonatomic) SKEmitterNode *topEmitter;
+@property (nonatomic) SKEmitterNode *bottomEmitter;
+
+@property (nonatomic) MarkerObject *spiral;
 
 @end
 
@@ -69,7 +77,12 @@ static CGFloat kmPSecInKmPH = 3600.;
     
     self.mainMarker = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"square"]]];
     self.mainMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    self.mainMarker.hidden = YES;
     [self addChild:self.mainMarker];
+    
+    self.spiral = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"spiral"]]];
+    self.spiral.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    [self addChild:self.spiral];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
@@ -103,10 +116,6 @@ static CGFloat kmPSecInKmPH = 3600.;
     self.speedLabel.fontColor = [UIColor blackColor];
     [self addChild:self.speedLabel];
     
-    SKSpriteNode *middle = [[SKSpriteNode alloc] initWithColor:[UIColor redColor] size:CGSizeMake(100, 2)];
-    middle.position = CGPointMake(self.size.width / 2.0 - self.mainMarker.size.width / 2.0, self.size.height / 2.0);
-    [self addChild:middle];
-    
     if (self.distance == 0) {
         [self addTextArray:@[@"LET", @"THE", @"SCROLL", @"BEGIN!"] completion:^{
             
@@ -116,6 +125,19 @@ static CGFloat kmPSecInKmPH = 3600.;
             
         } andInterval:.7];
     }
+    
+    NSString *emitterPath = [[NSBundle mainBundle] pathForResource:@"SwipeEmitter" ofType:@"sks"];
+    self.topEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    self.topEmitter.position = CGPointMake(self.size.width / 2.0, self.size.height + 30);
+    self.topEmitter.particlePositionRange = CGVectorMake(self.size.width, 30);
+    self.topEmitter.emissionAngle = 270 * degreeInRadians;
+    
+    self.bottomEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    self.bottomEmitter.position = CGPointMake(self.size.width / 2.0, -30);
+    self.bottomEmitter.particlePositionRange = CGVectorMake(self.size.width, 30);
+    
+    [self addChild:self.topEmitter];
+    [self addChild:self.bottomEmitter];
 }
 
 /*-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -133,6 +155,20 @@ static CGFloat kmPSecInKmPH = 3600.;
         timeSinceLast = 1.0 / 60.0;
     }
     _lastUpdateTimeInterval = currentTime;
+    
+    if (self.mainMarker.physicsBody.velocity.dy < 0) {
+        self.topEmitter.particleBirthRate = 1000;
+        self.topEmitter.yAcceleration = self.mainMarker.physicsBody.velocity.dy;
+        self.bottomEmitter.particleBirthRate = 0;
+    } else if (self.mainMarker.physicsBody.velocity.dy > 0) {
+        self.topEmitter.particleBirthRate = 0;
+        self.bottomEmitter.particleBirthRate = 1000;
+        self.bottomEmitter.yAcceleration = self.mainMarker.physicsBody.velocity.dy;
+    } else {
+        self.topEmitter.particleBirthRate = 0;
+        self.bottomEmitter.particleBirthRate = 0;
+    }
+    
     [self updateWithTimeSinceLastUpdate:timeSinceLast];
 }
 
@@ -179,7 +215,13 @@ static CGFloat kmPSecInKmPH = 3600.;
         _lastSpeedCheckDistance = _distance;
         _lastSpeedCheckInterval = 0.0;
     }
+    CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0);
+    _spiral.xScale = _spiral.yScale = .35 * distanceFromMiddle + 1;
+    _spiral.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
     
+    NSLog(@"%f", distanceFromMiddle);
+    
+    //_spiral.zRotation = distanceFromMiddle * M_PI;
 }
 
 -(void)swipeWithVelocity:(float)velocity
