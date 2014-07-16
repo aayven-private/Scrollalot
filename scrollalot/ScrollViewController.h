@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <SpriteKit/SpriteKit.h>
+#import <AudioToolbox/AudioServices.h>
 #import "ScrollSceneHandlerDelegate.h"
 
 @interface ScrollViewController : UIViewController <ScrollSceneHandlerDelegate>

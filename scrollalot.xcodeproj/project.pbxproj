@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C821976774A008D0528 /* SwipeEmitter.sks */; };
+		B04B2C851976774A008D0528 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C831976774A008D0528 /* spark.png */; };
 		B09B800C196F027000800BD4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800B196F027000800BD4 /* Foundation.framework */; };
 		B09B800E196F027000800BD4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800D196F027000800BD4 /* CoreGraphics.framework */; };
 		B09B8010196F027000800BD4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800F196F027000800BD4 /* UIKit.framework */; };
@@ -46,6 +48,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B04B2C821976774A008D0528 /* SwipeEmitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SwipeEmitter.sks; sourceTree = "<group>"; };
+		B04B2C831976774A008D0528 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		B09B8008196F027000800BD4 /* scrollalot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = scrollalot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B09B800B196F027000800BD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B09B800D196F027000800BD4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -211,6 +215,8 @@
 				B0ECE166196FEC5500A6F3C5 /* square.png */,
 				B09B804C196F030500800BD4 /* Constants.h */,
 				B0ECE17519702FBB00A6F3C5 /* achievements.plist */,
+				B04B2C821976774A008D0528 /* SwipeEmitter.sks */,
+				B04B2C831976774A008D0528 /* spark.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -368,6 +374,8 @@
 				B0ECE17619702FBB00A6F3C5 /* achievements.plist in Resources */,
 				B09B8018196F027000800BD4 /* InfoPlist.strings in Resources */,
 				B09B802B196F027000800BD4 /* Images.xcassets in Resources */,
+				B04B2C851976774A008D0528 /* spark.png in Resources */,
+				B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */,
 				B0ECE167196FEC5500A6F3C5 /* square.png in Resources */,
 				B09B8021196F027000800BD4 /* Main.storyboard in Resources */,
 			);

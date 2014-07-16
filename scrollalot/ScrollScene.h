@@ -15,5 +15,6 @@
 
 -(void)initEnvironment;
 -(void)swipeWithVelocity:(float)velocity;
+-(void)swipeInProgressAtPoint:(CGPoint)point withTranslation:(CGPoint)translation;
 
 @end

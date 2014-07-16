@@ -12,13 +12,15 @@
 #import "GlobalAppProperties.h"
 
 //static CGFloat mmPerPixel = 0.078125;
-static CGFloat cmPerPixel = 0.0078125;
-static CGFloat mPerPixel = 0.000078125;
+//static CGFloat cmPerPixel = 0.0078125;
+//static CGFloat mPerPixel = 0.000078125;
 static CGFloat kmPerPixel = 0.000000078125;
 
-static CGFloat mmPSecInKmPH = 0.0036;
-static CGFloat mPSecInKmPH = 3.6;
+//static CGFloat mmPSecInKmPH = 0.0036;
+//static CGFloat mPSecInKmPH = 3.6;
 static CGFloat kmPSecInKmPH = 3600.;
+
+//static CGFloat degreeInRadians = 0.0174532925;
 
 @interface ScrollScene()
 
@@ -34,8 +36,6 @@ static CGFloat kmPSecInKmPH = 3600.;
 
 @property (nonatomic) SKLabelNode *distanceLabel;
 @property (nonatomic) SKLabelNode *speedLabel;
-
-@property (nonatomic) NSString *distanceUnit;
 
 @property (nonatomic) GlobalAppProperties *globalProps;
 @property (nonatomic) float maxSpeed;
@@ -85,13 +85,7 @@ static CGFloat kmPSecInKmPH = 3600.;
     }
     self.distance = globalDistance.doubleValue;
     self.globalProps.globalDistance = globalDistance;
-    
-    NSString *globalDistanceUnit = [defaults objectForKey:kDistanceUnitKey];
-    if (!globalDistanceUnit) {
-        globalDistanceUnit = kDistanceUnitCm;
-    }
-    self.distanceUnit = globalDistanceUnit;
-    self.globalProps.distanceUnit = globalDistanceUnit;
+    //self.distance = 1;
     
     self.lastSpeedCheckDistance = self.distance;
     self.lastSpeedCheckInterval = 0;
@@ -113,7 +107,7 @@ static CGFloat kmPSecInKmPH = 3600.;
     middle.position = CGPointMake(self.size.width / 2.0 - self.mainMarker.size.width / 2.0, self.size.height / 2.0);
     [self addChild:middle];
     
-    if (self.distanceUnit == 0) {
+    if (self.distance == 0) {
         [self addTextArray:@[@"LET", @"THE", @"SCROLL", @"BEGIN!"] completion:^{
             
         } andInterval:.7];
@@ -154,35 +148,15 @@ static CGFloat kmPSecInKmPH = 3600.;
         distanceDiff = 0.0;
     }
     
-    if ([self.distanceUnit isEqualToString:kDistanceUnitCm]) {
-        _distance += distanceDiff * cmPerPixel * 2.0;
-    } else if ([self.distanceUnit isEqualToString:kDistanceUnitM]) {
-        _distance += distanceDiff * mPerPixel * 2.0;
-    } else if ([self.distanceUnit isEqualToString:kDistanceUnitKm]) {
-        _distance += distanceDiff * kmPerPixel * 2.0;
-    }
+    _distance += distanceDiff * kmPerPixel * 2.0;
     
     _lastMarkerPosition = _mainMarker.position.y;
-    //NSLog(@"Distance: %fcm", _distance);
-    if ([self.distanceUnit isEqualToString:kDistanceUnitCm]) {
-        _distanceLabel.text = [NSString stringWithFormat:@"%.1fcm", _distance];
-        if (_distance > 100) {
-            _distanceUnit = kDistanceUnitM;
-            _globalProps.distanceUnit = _distanceUnit;
-            _distance = _distance / 100.0;
-            _lastSpeedCheckInterval = 0;
-            _lastSpeedCheckDistance = _distance;
-        }
-    } else if ([self.distanceUnit isEqualToString:kDistanceUnitM]) {
-        _distanceLabel.text = [NSString stringWithFormat:@"%.2fm", _distance];
-        if (_distance > 1000) {
-            _distanceUnit = kDistanceUnitKm;
-            _globalProps.distanceUnit = _distanceUnit;
-            _distance = _distance / 1000.0;
-            _lastSpeedCheckInterval = 0;
-            _lastSpeedCheckDistance = _distance;
-        }
-    } else if ([self.distanceUnit isEqualToString:kDistanceUnitKm]) {
+    
+    if (_distance < 0.001) {
+        _distanceLabel.text = [NSString stringWithFormat:@"%.1fcm", _distance * 100000];
+    } else if (_distance < 1) {
+        _distanceLabel.text = [NSString stringWithFormat:@"%.2fm", _distance * 1000];
+    } else {
         _distanceLabel.text = [NSString stringWithFormat:@"%.3fkm", _distance];
     }
     
@@ -190,15 +164,11 @@ static CGFloat kmPSecInKmPH = 3600.;
     
     _lastSpeedCheckInterval += timeSinceLast;
     if (_lastSpeedCheckInterval > _speedCheckInterval) {
+        
         CGFloat measureDistance = fabs(_distance - _lastSpeedCheckDistance);
         CGFloat speed;
-        if ([_distanceUnit isEqualToString:kDistanceUnitCm]) {
-            speed = measureDistance * _lastSpeedCheckInterval * mmPSecInKmPH;
-        } else if ([_distanceUnit isEqualToString:kDistanceUnitM]) {
-            speed = measureDistance * _lastSpeedCheckInterval * mPSecInKmPH;
-        } else if ([_distanceUnit isEqualToString:kDistanceUnitKm]) {
-            speed = measureDistance * _lastSpeedCheckInterval * kmPSecInKmPH;
-        }
+        speed = measureDistance * _lastSpeedCheckInterval * kmPSecInKmPH;
+
         self.speedLabel.text = [NSString stringWithFormat:@"%.1fKm/h", speed];
         
         if (speed > _maxSpeed) {
@@ -206,8 +176,6 @@ static CGFloat kmPSecInKmPH = 3600.;
             _globalProps.maxSpeed = [NSNumber numberWithFloat:_maxSpeed];
         }
         
-        //CGFloat speed = measureDistance * _lastSpeedCheckInterval * mmPSecInKmPH;
-        //NSLog(@"Speed: %f", speed);
         _lastSpeedCheckDistance = _distance;
         _lastSpeedCheckInterval = 0.0;
     }
@@ -217,6 +185,15 @@ static CGFloat kmPSecInKmPH = 3600.;
 -(void)swipeWithVelocity:(float)velocity
 {
     [self.mainMarker.physicsBody applyImpulse:CGVectorMake(0, -velocity)];
+}
+
+-(void)swipeInProgressAtPoint:(CGPoint)point withTranslation:(CGPoint)translation
+{
+    /*double angle = atan2(rwNormalize(translation).x, rwNormalize(translation).y);
+    CGPoint locationInView = CGPointMake(point.x, self.size.height - point.y);
+    if (angle != 0) {
+        self.mainMarker.zRotation = angle;
+    }*/
 }
 
 -(void)addTextArray:(NSArray *)textArray completion:(void(^)())completion andInterval:(float)interval

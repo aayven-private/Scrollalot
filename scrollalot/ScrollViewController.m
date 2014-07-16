@@ -8,6 +8,7 @@
 
 #import "ScrollViewController.h"
 #import "ScrollScene.h"
+#import "Constants.h"
 
 @interface ScrollViewController()
 
@@ -95,46 +96,30 @@
 - (void)handlePanSwipe:(UIPanGestureRecognizer*)recognizer
 {
     // Get the translation in the view
+    CGPoint l = [recognizer locationInView:self.view];
     CGPoint t = [recognizer translationInView:recognizer.view];
     [recognizer setTranslation:CGPointZero inView:recognizer.view];
+    //NSLog(NSStringFromCGPoint(rwNormalize(t)));
+    if (recognizer.state != UIGestureRecognizerStateBegan) {
+        [_scrollScene swipeInProgressAtPoint:l withTranslation:t];
+    }
+    
+    //[recognizer setTranslation:CGPointZero inView:recognizer.view];
     
     // TODO: Here, you should translate your target view using this translation
     //someView.center = CGPointMake(someView.center.x + t.x, someView.center.y + t.y);
     
     // But also, detect the swipe gesture
+    if (recognizer.state == UIGestureRecognizerStateBegan)
+    {
+        //NSLog(@"BEGAN");
+    }
     if (recognizer.state == UIGestureRecognizerStateEnded)
     {
         CGPoint vel = [recognizer velocityInView:recognizer.view];
         //NSLog(@"VelY: %f", vel.y);
         [_scrollScene swipeWithVelocity:vel.y];
-        /*if (vel.x < SWIPE_LEFT_THRESHOLD)
-        {
-            // TODO: Detected a swipe to the left
-            //NSLog(@"VelX: %f", vel.x);
-        }
-        else if (vel.x > SWIPE_RIGHT_THRESHOLD)
-        {
-            // TODO: Detected a swipe to the right
-            //NSLog(@"VelX: %f", vel.x);
-        }
-        else if (vel.y < SWIPE_UP_THRESHOLD)
-        {
-            // TODO: Detected a swipe up
-            NSLog(@"VelY: %f", vel.y);
-        }
-        else if (vel.y > SWIPE_DOWN_THRESHOLD)
-        {
-            // TODO: Detected a swipe down
-            NSLog(@"VelY: %f", vel.y);
-        }
-        else
-        {
-            // TODO:
-            // Here, the user lifted the finger/fingers but didn't swipe.
-            // If you need you can implement a snapping behaviour, where based on the location of your         targetView,
-            // you focus back on the targetView or on some next view.
-            // It's your call
-        }*/
+
     }
 }
 
