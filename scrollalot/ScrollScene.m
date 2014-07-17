@@ -29,7 +29,7 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) NSTimeInterval speedCheckInterval;
 @property (nonatomic) NSTimeInterval lastSpeedCheckInterval;
 
-@property (nonatomic) NSArray *markers;
+@property (nonatomic) NSMutableArray *markers;
 @property (nonatomic) MarkerObject *mainMarker;
 @property (nonatomic) CGFloat lastMarkerPosition;
 @property (nonatomic) CGFloat lastSpeedCheckDistance;
@@ -37,6 +37,7 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 @property (nonatomic) SKLabelNode *distanceLabel;
 @property (nonatomic) SKLabelNode *speedLabel;
+@property (nonatomic) SKLabelNode *maxSpeedLabel;
 
 @property (nonatomic) GlobalAppProperties *globalProps;
 @property (nonatomic) float maxSpeed;
@@ -46,7 +47,12 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) SKEmitterNode *topEmitter;
 @property (nonatomic) SKEmitterNode *bottomEmitter;
 
-@property (nonatomic) MarkerObject *spiral;
+@property (nonatomic) MarkerObject *compass_arrow;
+
+@property (nonatomic) CGVector impulse;
+@property (nonatomic) BOOL needImpulse;
+
+@property (nonatomic) float lastSpeed;
 
 @end
 
@@ -58,6 +64,9 @@ static CGFloat degreeInRadians = 0.0174532925;
         self.backgroundColor = [UIColor whiteColor];
         self.speedCheckInterval = 2.0;
         self.globalProps = [GlobalAppProperties sharedInstance];
+        self.markers = [NSMutableArray array];
+        self.needImpulse = NO;
+        self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
     }
     return self;
 }
@@ -80,9 +89,14 @@ static CGFloat degreeInRadians = 0.0174532925;
     self.mainMarker.hidden = YES;
     [self addChild:self.mainMarker];
     
-    self.spiral = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"spiral"]]];
-    self.spiral.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    [self addChild:self.spiral];
+    SKSpriteNode *compass = [[SKSpriteNode alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"compass"]]];
+    compass.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    [self addChild:compass];
+    
+    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"compass_arrow"]]];
+    self.compass_arrow.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    self.compass_arrow.xScale = self.compass_arrow.yScale = 0.8;
+    [self addChild:self.compass_arrow];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
@@ -103,18 +117,6 @@ static CGFloat degreeInRadians = 0.0174532925;
     self.lastSpeedCheckDistance = self.distance;
     self.lastSpeedCheckInterval = 0;
     self.lastMarkerPosition = self.mainMarker.position.y;
-    
-    self.distanceLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
-    self.distanceLabel.fontSize = 15.0;
-    self.distanceLabel.position = CGPointMake(self.size.width - 50, self.size.height - 50);
-    self.distanceLabel.fontColor = [UIColor blackColor];
-    [self addChild:self.distanceLabel];
-    
-    self.speedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
-    self.speedLabel.fontSize = 15.0;
-    self.speedLabel.position = CGPointMake(50, self.size.height - 50);
-    self.speedLabel.fontColor = [UIColor blackColor];
-    [self addChild:self.speedLabel];
     
     if (self.distance == 0) {
         [self addTextArray:@[@"LET", @"THE", @"SCROLL", @"BEGIN!"] completion:^{
@@ -138,6 +140,51 @@ static CGFloat degreeInRadians = 0.0174532925;
     
     [self addChild:self.topEmitter];
     [self addChild:self.bottomEmitter];
+    
+    MarkerObject *leftMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(200, 5)];
+    leftMarker.position = CGPointMake(0, self.size.height / 2.0);
+    [self.markers addObject:leftMarker];
+    [self addChild:leftMarker];
+    
+    MarkerObject *rightMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(200, 5)];
+    rightMarker.position = CGPointMake(self.size.width, self.size.height / 2.0);
+    [self.markers addObject:rightMarker];
+    [self addChild:rightMarker];
+    
+    SKShapeNode *distanceBox = [SKShapeNode node];
+    [distanceBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width - 150, self.size.height - 80, 130, 50), 8, 8, nil)];
+    distanceBox.strokeColor = distanceBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
+    [self addChild:distanceBox];
+    
+    self.distanceLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    self.distanceLabel.fontSize = 18.0;
+    self.distanceLabel.position = CGPointMake(self.size.width - 85, self.size.height - 60);
+    self.distanceLabel.fontColor = [UIColor whiteColor];
+    [self addChild:self.distanceLabel];
+    
+    SKShapeNode *speedBox = [SKShapeNode node];
+    [speedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(20, self.size.height - 80, 130, 50), 8, 8, nil)];
+    speedBox.strokeColor = speedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
+    [self addChild:speedBox];
+    
+    self.speedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    self.speedLabel.fontSize = 18.0;
+    self.speedLabel.position = CGPointMake(85, self.size.height - 60);
+    self.speedLabel.fontColor = [UIColor whiteColor];
+    self.speedLabel.text = @"0.0Km/h";
+    [self addChild:self.speedLabel];
+    
+    SKShapeNode *maxSpeedBox = [SKShapeNode node];
+    [maxSpeedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width / 2.0 - 65, 40, 130, 50), 8, 8, nil)];
+    maxSpeedBox.strokeColor = maxSpeedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
+    [self addChild:maxSpeedBox];
+    
+    self.maxSpeedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    self.maxSpeedLabel.fontSize = 18.0;
+    self.maxSpeedLabel.position = CGPointMake(self.size.width / 2.0, 60);
+    self.maxSpeedLabel.fontColor = [UIColor whiteColor];
+    self.maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fKm/h", self.maxSpeed];
+    [self addChild:self.maxSpeedLabel];
 }
 
 /*-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -174,6 +221,14 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 -(void)updateWithTimeSinceLastUpdate:(CFTimeInterval)timeSinceLast
 {
+    for (SKSpriteNode *marker in _markers) {
+        if (marker.position.y < -marker.size.height / 2.0) {
+            marker.position = CGPointMake(marker.position.x, self.size.height + marker.size.height / 2.0);
+        } else if (marker.position.y > self.size.height + marker.size.height / 2.0) {
+            marker.position = CGPointMake(marker.position.x, -marker.size.height / 2.0);
+        }
+    }
+    
     CGFloat distanceDiff = fabsf(_lastMarkerPosition - _mainMarker.position.y);
     //NSLog(@"%f", _mainMarker.position.y);
     if (_mainMarker.position.y < -_mainMarker.size.height / 2.0) {
@@ -202,24 +257,39 @@ static CGFloat degreeInRadians = 0.0174532925;
     if (_lastSpeedCheckInterval > _speedCheckInterval) {
         
         CGFloat measureDistance = fabs(_distance - _lastSpeedCheckDistance);
-        CGFloat speed;
-        speed = measureDistance * _lastSpeedCheckInterval * kmPSecInKmPH;
+        CGFloat speed = measureDistance * _lastSpeedCheckInterval * kmPSecInKmPH;
 
         self.speedLabel.text = [NSString stringWithFormat:@"%.1fKm/h", speed];
         
         if (speed > _maxSpeed) {
             _maxSpeed = speed;
             _globalProps.maxSpeed = [NSNumber numberWithFloat:_maxSpeed];
+            _maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fKm/h", _maxSpeed];
         }
+        
+        if (speed < _lastSpeed && _lastSpeed == _maxSpeed) {
+            [self addTextArray:@[@"Speed", @"Record!"] completion:^{
+                
+            } andInterval:.5];
+        }
+        
+        _lastSpeed = speed;
         
         _lastSpeedCheckDistance = _distance;
         _lastSpeedCheckInterval = 0.0;
     }
-    CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0);
-    _spiral.xScale = _spiral.yScale = .35 * distanceFromMiddle + 1;
-    _spiral.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
+    //CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0);
+    _compass_arrow.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
     
-    NSLog(@"%f", distanceFromMiddle);
+    for (MarkerObject *marker in _markers) {
+        CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - marker.position.y) / ((self.size.height + marker.size.height) / 2.0) + 0.6;
+        marker.xScale = distanceFromMiddle;
+        distanceFromMiddle -= 0.4;
+        marker.alpha = distanceFromMiddle * distanceFromMiddle;
+    }
+    //_spiral.xScale = _spiral.yScale = .35 * distanceFromMiddle + 1;
+    
+    //NSLog(@"%f", distanceFromMiddle);
     
     //_spiral.zRotation = distanceFromMiddle * M_PI;
 }
@@ -227,6 +297,8 @@ static CGFloat degreeInRadians = 0.0174532925;
 -(void)swipeWithVelocity:(float)velocity
 {
     [self.mainMarker.physicsBody applyImpulse:CGVectorMake(0, -velocity)];
+    _impulse = CGVectorMake(0, -velocity);
+    _needImpulse = YES;
 }
 
 -(void)swipeInProgressAtPoint:(CGPoint)point withTranslation:(CGPoint)translation
@@ -269,6 +341,16 @@ static CGFloat degreeInRadians = 0.0174532925;
     [textLabel runAction:countDown completion:completion];
     
     [self addChild:textLabel];
+}
+
+-(void)didSimulatePhysics
+{
+    if (_needImpulse) {
+        _needImpulse = NO;
+        for (SKSpriteNode *marker in _markers) {
+            [marker.physicsBody applyImpulse:_impulse];
+        }
+    }
 }
 
 @end

@@ -11,6 +11,8 @@
 		B04B2C851976774A008D0528 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C831976774A008D0528 /* spark.png */; };
 		B04B2C881976B091008D0528 /* ParallaxBG.m in Sources */ = {isa = PBXBuildFile; fileRef = B04B2C871976B091008D0528 /* ParallaxBG.m */; };
 		B04B2C8E1976E326008D0528 /* spiral@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C8D1976E326008D0528 /* spiral@2x.png */; };
+		B04B2C941978266D008D0528 /* compass@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C931978266D008D0528 /* compass@2x.png */; };
+		B04B2C9819782721008D0528 /* compass_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C9719782721008D0528 /* compass_arrow@2x.png */; };
 		B09B800C196F027000800BD4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800B196F027000800BD4 /* Foundation.framework */; };
 		B09B800E196F027000800BD4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800D196F027000800BD4 /* CoreGraphics.framework */; };
 		B09B8010196F027000800BD4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800F196F027000800BD4 /* UIKit.framework */; };
@@ -55,6 +57,8 @@
 		B04B2C861976B091008D0528 /* ParallaxBG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallaxBG.h; sourceTree = "<group>"; };
 		B04B2C871976B091008D0528 /* ParallaxBG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParallaxBG.m; sourceTree = "<group>"; };
 		B04B2C8D1976E326008D0528 /* spiral@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spiral@2x.png"; sourceTree = "<group>"; };
+		B04B2C931978266D008D0528 /* compass@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compass@2x.png"; sourceTree = "<group>"; };
+		B04B2C9719782721008D0528 /* compass_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compass_arrow@2x.png"; sourceTree = "<group>"; };
 		B09B8008196F027000800BD4 /* scrollalot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = scrollalot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B09B800B196F027000800BD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B09B800D196F027000800BD4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -219,6 +223,8 @@
 		B09B804B196F02F400800BD4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B04B2C9719782721008D0528 /* compass_arrow@2x.png */,
+				B04B2C931978266D008D0528 /* compass@2x.png */,
 				B04B2C8D1976E326008D0528 /* spiral@2x.png */,
 				B0ECE166196FEC5500A6F3C5 /* square.png */,
 				B09B804C196F030500800BD4 /* Constants.h */,
@@ -381,8 +387,10 @@
 			files = (
 				B0ECE17619702FBB00A6F3C5 /* achievements.plist in Resources */,
 				B09B8018196F027000800BD4 /* InfoPlist.strings in Resources */,
+				B04B2C941978266D008D0528 /* compass@2x.png in Resources */,
 				B09B802B196F027000800BD4 /* Images.xcassets in Resources */,
 				B04B2C851976774A008D0528 /* spark.png in Resources */,
+				B04B2C9819782721008D0528 /* compass_arrow@2x.png in Resources */,
 				B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */,
 				B0ECE167196FEC5500A6F3C5 /* square.png in Resources */,
 				B09B8021196F027000800BD4 /* Main.storyboard in Resources */,

@@ -25,4 +25,19 @@
     return self;
 }
 
+-(id)initWithColor:(UIColor *)color size:(CGSize)size
+{
+    if (self = [super initWithColor:color size:size]) {
+        self.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:size];
+        self.objectType = kObjectTypeMarker;
+        self.physicsBody.dynamic = YES;
+        self.physicsBody.affectedByGravity = NO;
+        self.physicsBody.contactTestBitMask = 0;
+        self.physicsBody.collisionBitMask = 0;
+        self.physicsBody.mass = 3;
+        self.physicsBody.linearDamping = 1.0;
+    }
+    return self;
+}
+
 @end
