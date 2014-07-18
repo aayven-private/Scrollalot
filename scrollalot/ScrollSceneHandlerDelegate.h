@@ -12,5 +12,6 @@
 
 -(void)reportMaxSpeed:(float)speed;
 -(void)reportDistance:(double)distance;
+-(void)presentLeaderBoards;
 
 @end

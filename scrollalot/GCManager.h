@@ -14,8 +14,12 @@
 
 @property (nonatomic, weak) id<GCManagerDelegate> delegate;
 
--(void)authenticateLocalPlayerForced:(BOOL)forced;
+@property (nonatomic) BOOL isEnabled;
+@property (nonatomic) NSArray *leaderBoards;
+
+-(void)authenticateLocalPlayer;
 -(void)reportDistance:(double)distance;
 -(void)reportSpeed:(float)speed;
+-(void)downloadLoadLeaderboardInfo;
 
 @end

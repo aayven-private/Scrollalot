@@ -155,12 +155,14 @@ static CGFloat degreeInRadians = 0.0174532925;
     SKShapeNode *distanceBox = [SKShapeNode node];
     [distanceBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width - 150, self.size.height - 80, 130, 50), 8, 8, nil)];
     distanceBox.strokeColor = distanceBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
+    distanceBox.name = @"leaderboards";
     [self addChild:distanceBox];
     
     self.distanceLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
     self.distanceLabel.fontSize = 18.0;
     self.distanceLabel.position = CGPointMake(self.size.width - 85, self.size.height - 60);
     self.distanceLabel.fontColor = [UIColor whiteColor];
+    self.distanceLabel.name = @"leaderboards";
     [self addChild:self.distanceLabel];
     
     SKShapeNode *speedBox = [SKShapeNode node];
@@ -178,13 +180,15 @@ static CGFloat degreeInRadians = 0.0174532925;
     SKShapeNode *maxSpeedBox = [SKShapeNode node];
     [maxSpeedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(20, self.size.height - 80, 130, 50), 8, 8, nil)];
     maxSpeedBox.strokeColor = maxSpeedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
+    maxSpeedBox.name = @"leaderboards";
     [self addChild:maxSpeedBox];
     
     self.maxSpeedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
     self.maxSpeedLabel.fontSize = 18.0;
     self.maxSpeedLabel.position = CGPointMake(85, self.size.height - 60) ;
     self.maxSpeedLabel.fontColor = [UIColor whiteColor];
-    self.maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fKm/h", self.maxSpeed];
+    self.maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", self.maxSpeed];
+    self.maxSpeedLabel.name = @"leaderboards";
     [self addChild:self.maxSpeedLabel];
 }
 
@@ -198,7 +202,13 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInNode:self];
+    SKNode *node = [self nodeAtPoint:location];
+    
+    if ([node.name isEqualToString:@"leaderboards"]) {
+        [_delegate presentLeaderBoards];
+    }
 }
 
 -(void)update:(CFTimeInterval)currentTime {
@@ -273,7 +283,7 @@ static CGFloat degreeInRadians = 0.0174532925;
                 [_delegate reportMaxSpeed:_maxSpeed];
             });
             _globalProps.maxSpeed = [NSNumber numberWithFloat:_maxSpeed];
-            _maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fKm/h", _maxSpeed];
+            _maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", _maxSpeed];
         }
         
         if (speed < _lastSpeed && _lastSpeed == _maxSpeed) {

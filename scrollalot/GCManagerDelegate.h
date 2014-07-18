@@ -12,5 +12,6 @@
 @protocol GCManagerDelegate <NSObject>
 
 -(void)authenticationFinishedWithResult:(GCAuthResult *)result;
+-(void)leaderBoardsDownloaded:(NSArray *)leaderBoards;
 
 @end

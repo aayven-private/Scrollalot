@@ -13,6 +13,6 @@
 #import "ScrollSceneHandlerDelegate.h"
 #import "GCManager.h"
 
-@interface ScrollViewController : UIViewController <ScrollSceneHandlerDelegate, GCManagerDelegate>
+@interface ScrollViewController : UIViewController <ScrollSceneHandlerDelegate, GCManagerDelegate, GKGameCenterControllerDelegate>
 
 @end

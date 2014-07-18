@@ -14,11 +14,11 @@ static NSString *kGCEnabledKey = @"scrollalot_gc_enabled";
 
 @interface GCManager()
 
-@property (nonatomic) BOOL isEnabled;
-
 @end
 
 @implementation GCManager
+
+@synthesize leaderBoards = _leaderBoards;
 
 -(id)init
 {
@@ -34,9 +34,9 @@ static NSString *kGCEnabledKey = @"scrollalot_gc_enabled";
     return self;
 }
 
--(void)authenticateLocalPlayerForced:(BOOL)forced
+-(void)authenticateLocalPlayer
 {
-    if (_isEnabled || forced) {
+    if (_isEnabled) {
         GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
         __weak GKLocalPlayer *blockLocalPlayer = localPlayer;
         localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error){
@@ -47,15 +47,14 @@ static NSString *kGCEnabledKey = @"scrollalot_gc_enabled";
             else {
                 result.authViewController = nil;
                 result.wasSuccessul = blockLocalPlayer.isAuthenticated;
-            }
-            if (!blockLocalPlayer.isAuthenticated) {
-                [self disableGameCenter];
+                if (!blockLocalPlayer.isAuthenticated) {
+                    [self disableGameCenter];
+                } else {
+                    [self enableGameCenter];
+                }
             }
             [_delegate authenticationFinishedWithResult:result];
         };
-    }
-    if (forced) {
-        [self enableGameCenter];
     }
 }
 
@@ -96,6 +95,14 @@ static NSString *kGCEnabledKey = @"scrollalot_gc_enabled";
 {
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kGCEnabledKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)downloadLoadLeaderboardInfo
+{
+    [GKLeaderboard loadLeaderboardsWithCompletionHandler:^(NSArray *leaderboards, NSError *error) {
+        self.leaderBoards = leaderboards;
+        [_delegate leaderBoardsDownloaded:leaderboards];
+    }];
 }
 
 @end

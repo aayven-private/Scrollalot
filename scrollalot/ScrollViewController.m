@@ -30,7 +30,7 @@
     self.gcManager = [[GCManager alloc] init];
     self.gcManager.delegate = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [self.gcManager authenticateLocalPlayerForced:NO];
+        [self.gcManager authenticateLocalPlayer];
     });
 }
 
@@ -129,6 +129,7 @@
         if (result.wasSuccessul) {
             GKLocalPlayer *lp = [GKLocalPlayer localPlayer];
             NSLog(@"AUTH_SUCCESS for player: %@", lp.displayName);
+            [_gcManager downloadLoadLeaderboardInfo];
         } else {
             NSLog(@"AUTH_FAIL");
         }
@@ -144,5 +145,25 @@
 {
     [_gcManager reportDistance:distance];
 }
+
+-(void)leaderBoardsDownloaded:(NSArray *)leaderBoards
+{
+    
+}
+
+- (void)presentLeaderBoards {
+    GKGameCenterViewController* gameCenterController = [[GKGameCenterViewController alloc] init];
+    gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
+    gameCenterController.gameCenterDelegate = self;
+    [self presentViewController:gameCenterController animated:YES completion:nil];
+}
+
+- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
+{
+    [gameCenterViewController dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
+
 
 @end
