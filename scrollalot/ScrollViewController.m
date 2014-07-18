@@ -13,6 +13,7 @@
 @interface ScrollViewController()
 
 @property (nonatomic) ScrollScene *scrollScene;
+@property (nonatomic) GCManager *gcManager;
 
 @end
 
@@ -26,19 +27,11 @@
     // Here you can customize for example the minimum and maximum number of fingers required
     panSwipeRecognizer.minimumNumberOfTouches = 1;
     [self.view addGestureRecognizer:panSwipeRecognizer];
-    /*
-    // Configure the view.
-    SKView * skView = (SKView *)self.view;
-    skView.showsFPS = YES;
-    skView.showsNodeCount = YES;
-    
-    // Create and configure the scene.
-    SKScene * scene = [ScrollScene sceneWithSize:skView.bounds.size];
-    scene.scaleMode = SKSceneScaleModeAspectFill;
-    
-    // Present the scene.
-    [skView presentScene:scene];
-     */
+    self.gcManager = [[GCManager alloc] init];
+    self.gcManager.delegate = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [self.gcManager authenticateLocalPlayerForced:NO];
+    });
 }
 
 - (BOOL)shouldAutorotate
@@ -121,6 +114,35 @@
         [_scrollScene swipeWithVelocity:vel.y];
 
     }
+}
+
+-(void)authenticationFinishedWithResult:(GCAuthResult *)result
+{
+    if (result.authViewController) {
+        //Present the authentication view to the user
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:result.authViewController animated:YES completion:^{
+                
+            }];
+        });
+    } else {
+        if (result.wasSuccessul) {
+            GKLocalPlayer *lp = [GKLocalPlayer localPlayer];
+            NSLog(@"AUTH_SUCCESS for player: %@", lp.displayName);
+        } else {
+            NSLog(@"AUTH_FAIL");
+        }
+    }
+}
+
+-(void)reportMaxSpeed:(float)speed
+{
+    [_gcManager reportSpeed:speed];
+}
+
+-(void)reportDistance:(double)distance
+{
+    [_gcManager reportDistance:distance];
 }
 
 @end

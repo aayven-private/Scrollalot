@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <SpriteKit/SpriteKit.h>
 #import <AudioToolbox/AudioServices.h>
+#import <GameKit/GameKit.h>
 #import "ScrollSceneHandlerDelegate.h"
+#import "GCManager.h"
 
-@interface ScrollViewController : UIViewController <ScrollSceneHandlerDelegate>
+@interface ScrollViewController : UIViewController <ScrollSceneHandlerDelegate, GCManagerDelegate>
 
 @end

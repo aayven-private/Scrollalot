@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B01E425D197938C70008CF41 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B01E425C197938C70008CF41 /* GameKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		B01E4261197962650008CF41 /* GCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B01E4260197962650008CF41 /* GCManager.m */; };
+		B01E4265197962EE0008CF41 /* GCAuthResult.m in Sources */ = {isa = PBXBuildFile; fileRef = B01E4264197962EE0008CF41 /* GCAuthResult.m */; };
 		B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C821976774A008D0528 /* SwipeEmitter.sks */; };
 		B04B2C851976774A008D0528 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C831976774A008D0528 /* spark.png */; };
 		B04B2C881976B091008D0528 /* ParallaxBG.m in Sources */ = {isa = PBXBuildFile; fileRef = B04B2C871976B091008D0528 /* ParallaxBG.m */; };
@@ -52,6 +55,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B01E425C197938C70008CF41 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		B01E425F197962650008CF41 /* GCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCManager.h; sourceTree = "<group>"; };
+		B01E4260197962650008CF41 /* GCManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCManager.m; sourceTree = "<group>"; };
+		B01E4262197962C40008CF41 /* GCManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCManagerDelegate.h; sourceTree = "<group>"; };
+		B01E4263197962EE0008CF41 /* GCAuthResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCAuthResult.h; sourceTree = "<group>"; };
+		B01E4264197962EE0008CF41 /* GCAuthResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCAuthResult.m; sourceTree = "<group>"; };
 		B04B2C821976774A008D0528 /* SwipeEmitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SwipeEmitter.sks; sourceTree = "<group>"; };
 		B04B2C831976774A008D0528 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		B04B2C861976B091008D0528 /* ParallaxBG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallaxBG.h; sourceTree = "<group>"; };
@@ -107,6 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B01E425D197938C70008CF41 /* GameKit.framework in Frameworks */,
 				B09B800E196F027000800BD4 /* CoreGraphics.framework in Frameworks */,
 				B09B8010196F027000800BD4 /* UIKit.framework in Frameworks */,
 				B09B8012196F027000800BD4 /* SpriteKit.framework in Frameworks */,
@@ -127,6 +137,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B01E425E197962570008CF41 /* GCManagement */ = {
+			isa = PBXGroup;
+			children = (
+				B01E425F197962650008CF41 /* GCManager.h */,
+				B01E4260197962650008CF41 /* GCManager.m */,
+				B01E4263197962EE0008CF41 /* GCAuthResult.h */,
+				B01E4264197962EE0008CF41 /* GCAuthResult.m */,
+			);
+			name = GCManagement;
+			sourceTree = "<group>";
+		};
 		B09B7FFF196F027000800BD4 = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +170,7 @@
 		B09B800A196F027000800BD4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B01E425C197938C70008CF41 /* GameKit.framework */,
 				B09B800B196F027000800BD4 /* Foundation.framework */,
 				B09B800D196F027000800BD4 /* CoreGraphics.framework */,
 				B09B800F196F027000800BD4 /* UIKit.framework */,
@@ -161,6 +183,7 @@
 		B09B8013196F027000800BD4 /* scrollalot */ = {
 			isa = PBXGroup;
 			children = (
+				B01E425E197962570008CF41 /* GCManagement */,
 				B0ECE17719703D8700A6F3C5 /* NetworkManagement */,
 				B0ECE1711970138D00A6F3C5 /* Helpers */,
 				B0ECE1681970132500A6F3C5 /* DBAccessLayer */,
@@ -257,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */,
+				B01E4262197962C40008CF41 /* GCManagerDelegate.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -414,6 +438,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0ECE174197013AB00A6F3C5 /* GlobalAppProperties.m in Sources */,
+				B01E4261197962650008CF41 /* GCManager.m in Sources */,
+				B01E4265197962EE0008CF41 /* GCAuthResult.m in Sources */,
 				B09B8027196F027000800BD4 /* ScrollScene.m in Sources */,
 				B09B804A196F02AE00800BD4 /* SceneObject.m in Sources */,
 				B09B8053196F043A00800BD4 /* MarkerObject.m in Sources */,

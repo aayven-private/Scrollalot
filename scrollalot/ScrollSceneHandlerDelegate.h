@@ -10,6 +10,7 @@
 
 @protocol ScrollSceneHandlerDelegate <NSObject>
 
-
+-(void)reportMaxSpeed:(float)speed;
+-(void)reportDistance:(double)distance;
 
 @end

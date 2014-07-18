@@ -53,6 +53,7 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) BOOL needImpulse;
 
 @property (nonatomic) float lastSpeed;
+@property (nonatomic) double initialDistance;
 
 @end
 
@@ -112,7 +113,7 @@ static CGFloat degreeInRadians = 0.0174532925;
     }
     self.distance = globalDistance.doubleValue;
     self.globalProps.globalDistance = globalDistance;
-    //self.distance = 1;
+    self.initialDistance = self.distance;
     
     self.lastSpeedCheckDistance = self.distance;
     self.lastSpeedCheckInterval = 0;
@@ -163,25 +164,25 @@ static CGFloat degreeInRadians = 0.0174532925;
     [self addChild:self.distanceLabel];
     
     SKShapeNode *speedBox = [SKShapeNode node];
-    [speedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(20, self.size.height - 80, 130, 50), 8, 8, nil)];
+    [speedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width / 2.0 - 65, 40, 130, 50), 8, 8, nil)];
     speedBox.strokeColor = speedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
     [self addChild:speedBox];
     
     self.speedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
     self.speedLabel.fontSize = 18.0;
-    self.speedLabel.position = CGPointMake(85, self.size.height - 60);
+    self.speedLabel.position = CGPointMake(self.size.width / 2.0, 60);;
     self.speedLabel.fontColor = [UIColor whiteColor];
     self.speedLabel.text = @"0.0Km/h";
     [self addChild:self.speedLabel];
     
     SKShapeNode *maxSpeedBox = [SKShapeNode node];
-    [maxSpeedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width / 2.0 - 65, 40, 130, 50), 8, 8, nil)];
+    [maxSpeedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(20, self.size.height - 80, 130, 50), 8, 8, nil)];
     maxSpeedBox.strokeColor = maxSpeedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
     [self addChild:maxSpeedBox];
     
     self.maxSpeedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
     self.maxSpeedLabel.fontSize = 18.0;
-    self.maxSpeedLabel.position = CGPointMake(self.size.width / 2.0, 60);
+    self.maxSpeedLabel.position = CGPointMake(85, self.size.height - 60) ;
     self.maxSpeedLabel.fontColor = [UIColor whiteColor];
     self.maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fKm/h", self.maxSpeed];
     [self addChild:self.maxSpeedLabel];
@@ -194,6 +195,11 @@ static CGFloat degreeInRadians = 0.0174532925;
 
     }
 }*/
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+
+}
 
 -(void)update:(CFTimeInterval)currentTime {
     /* Called before each frame is rendered */
@@ -263,11 +269,16 @@ static CGFloat degreeInRadians = 0.0174532925;
         
         if (speed > _maxSpeed) {
             _maxSpeed = speed;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                [_delegate reportMaxSpeed:_maxSpeed];
+            });
             _globalProps.maxSpeed = [NSNumber numberWithFloat:_maxSpeed];
             _maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fKm/h", _maxSpeed];
         }
         
         if (speed < _lastSpeed && _lastSpeed == _maxSpeed) {
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:_maxSpeed] forKey:kMaxSpeedKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
             [self addTextArray:@[@"Speed", @"Record!"] completion:^{
                 
             } andInterval:.5];
@@ -287,11 +298,15 @@ static CGFloat degreeInRadians = 0.0174532925;
         distanceFromMiddle -= 0.4;
         marker.alpha = distanceFromMiddle * distanceFromMiddle;
     }
-    //_spiral.xScale = _spiral.yScale = .35 * distanceFromMiddle + 1;
     
-    //NSLog(@"%f", distanceFromMiddle);
-    
-    //_spiral.zRotation = distanceFromMiddle * M_PI;
+    if (_distance * 1000 > _initialDistance * 1000 + 10) {
+        _initialDistance = _distance;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [_delegate reportDistance:_distance];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:_distance] forKey:kGlobalDistanceKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        });
+    }
 }
 
 -(void)swipeWithVelocity:(float)velocity
