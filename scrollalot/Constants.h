@@ -35,6 +35,5 @@ static inline CGPoint rwNormalize(CGPoint a) {
 
 static NSString *kObjectTypeMarker = @"object_type_marker";
 
-
 static NSString *kGlobalDistanceKey = @"global_distance";
 static NSString *kMaxSpeedKey = @"max_speed";

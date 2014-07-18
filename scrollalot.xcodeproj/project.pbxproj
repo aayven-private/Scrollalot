@@ -10,6 +10,7 @@
 		B01E425D197938C70008CF41 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B01E425C197938C70008CF41 /* GameKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		B01E4261197962650008CF41 /* GCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B01E4260197962650008CF41 /* GCManager.m */; };
 		B01E4265197962EE0008CF41 /* GCAuthResult.m in Sources */ = {isa = PBXBuildFile; fileRef = B01E4264197962EE0008CF41 /* GCAuthResult.m */; };
+		B01E426919798A410008CF41 /* ComboManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B01E426819798A410008CF41 /* ComboManager.m */; };
 		B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C821976774A008D0528 /* SwipeEmitter.sks */; };
 		B04B2C851976774A008D0528 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C831976774A008D0528 /* spark.png */; };
 		B04B2C881976B091008D0528 /* ParallaxBG.m in Sources */ = {isa = PBXBuildFile; fileRef = B04B2C871976B091008D0528 /* ParallaxBG.m */; };
@@ -61,6 +62,9 @@
 		B01E4262197962C40008CF41 /* GCManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCManagerDelegate.h; sourceTree = "<group>"; };
 		B01E4263197962EE0008CF41 /* GCAuthResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCAuthResult.h; sourceTree = "<group>"; };
 		B01E4264197962EE0008CF41 /* GCAuthResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCAuthResult.m; sourceTree = "<group>"; };
+		B01E426719798A410008CF41 /* ComboManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComboManager.h; sourceTree = "<group>"; };
+		B01E426819798A410008CF41 /* ComboManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComboManager.m; sourceTree = "<group>"; };
+		B01E426A19798D4E0008CF41 /* ComboManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComboManagerDelegate.h; sourceTree = "<group>"; };
 		B04B2C821976774A008D0528 /* SwipeEmitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SwipeEmitter.sks; sourceTree = "<group>"; };
 		B04B2C831976774A008D0528 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		B04B2C861976B091008D0528 /* ParallaxBG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallaxBG.h; sourceTree = "<group>"; };
@@ -148,6 +152,15 @@
 			name = GCManagement;
 			sourceTree = "<group>";
 		};
+		B01E426619798A2B0008CF41 /* ComboManagement */ = {
+			isa = PBXGroup;
+			children = (
+				B01E426719798A410008CF41 /* ComboManager.h */,
+				B01E426819798A410008CF41 /* ComboManager.m */,
+			);
+			name = ComboManagement;
+			sourceTree = "<group>";
+		};
 		B09B7FFF196F027000800BD4 = {
 			isa = PBXGroup;
 			children = (
@@ -183,6 +196,7 @@
 		B09B8013196F027000800BD4 /* scrollalot */ = {
 			isa = PBXGroup;
 			children = (
+				B01E426619798A2B0008CF41 /* ComboManagement */,
 				B01E425E197962570008CF41 /* GCManagement */,
 				B0ECE17719703D8700A6F3C5 /* NetworkManagement */,
 				B0ECE1711970138D00A6F3C5 /* Helpers */,
@@ -281,6 +295,7 @@
 			children = (
 				B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */,
 				B01E4262197962C40008CF41 /* GCManagerDelegate.h */,
+				B01E426A19798D4E0008CF41 /* ComboManagerDelegate.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -441,6 +456,7 @@
 				B01E4261197962650008CF41 /* GCManager.m in Sources */,
 				B01E4265197962EE0008CF41 /* GCAuthResult.m in Sources */,
 				B09B8027196F027000800BD4 /* ScrollScene.m in Sources */,
+				B01E426919798A410008CF41 /* ComboManager.m in Sources */,
 				B09B804A196F02AE00800BD4 /* SceneObject.m in Sources */,
 				B09B8053196F043A00800BD4 /* MarkerObject.m in Sources */,
 				B04B2C881976B091008D0528 /* ParallaxBG.m in Sources */,

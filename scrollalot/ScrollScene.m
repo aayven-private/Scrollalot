@@ -55,6 +55,8 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) float lastSpeed;
 @property (nonatomic) double initialDistance;
 
+@property (nonatomic) ComboManager *comboManager;
+
 @end
 
 @implementation ScrollScene
@@ -68,6 +70,8 @@ static CGFloat degreeInRadians = 0.0174532925;
         self.markers = [NSMutableArray array];
         self.needImpulse = NO;
         self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
+        self.comboManager = [ComboManager sharedManager];
+        self.comboManager.delegate = self;
     }
     return self;
 }
@@ -323,6 +327,11 @@ static CGFloat degreeInRadians = 0.0174532925;
 {
     [self.mainMarker.physicsBody applyImpulse:CGVectorMake(0, -velocity)];
     _impulse = CGVectorMake(0, -velocity);
+    if (velocity < 0) {
+        [_comboManager actionTaken:@"u"];
+    } else if (velocity > 0) {
+        [_comboManager actionTaken:@"d"];
+    }
     _needImpulse = YES;
 }
 
@@ -376,6 +385,11 @@ static CGFloat degreeInRadians = 0.0174532925;
             [marker.physicsBody applyImpulse:_impulse];
         }
     }
+}
+
+-(void)comboesCompleted:(NSSet *)comboes
+{
+    NSLog(@"Comboes: %@", comboes);
 }
 
 @end

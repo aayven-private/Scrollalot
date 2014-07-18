@@ -8,8 +8,9 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "ScrollSceneHandlerDelegate.h"
+#import "ComboManager.h"
 
-@interface ScrollScene : SKScene
+@interface ScrollScene : SKScene<ComboManagerDelegate>
 
 @property (nonatomic, weak) id<ScrollSceneHandlerDelegate> delegate;
 
