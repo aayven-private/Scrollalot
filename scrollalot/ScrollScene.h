@@ -15,7 +15,7 @@
 @property (nonatomic, weak) id<ScrollSceneHandlerDelegate> delegate;
 
 -(void)initEnvironment;
--(void)swipeWithVelocity:(float)velocity;
+-(void)swipeWithVelocity:(CGPoint)velocity;
 -(void)swipeInProgressAtPoint:(CGPoint)point withTranslation:(CGPoint)translation;
 
 @end

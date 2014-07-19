@@ -29,9 +29,10 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) NSTimeInterval speedCheckInterval;
 @property (nonatomic) NSTimeInterval lastSpeedCheckInterval;
 
-@property (nonatomic) NSMutableArray *markers;
+@property (nonatomic) NSMutableArray *verticalMarkers;
+@property (nonatomic) NSMutableArray *horizontalMarkers;
 @property (nonatomic) MarkerObject *mainMarker;
-@property (nonatomic) CGFloat lastMarkerPosition;
+@property (nonatomic) CGPoint lastMarkerPosition;
 @property (nonatomic) CGFloat lastSpeedCheckDistance;
 @property (nonatomic) double distance;
 
@@ -46,11 +47,10 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 @property (nonatomic) SKEmitterNode *topEmitter;
 @property (nonatomic) SKEmitterNode *bottomEmitter;
+@property (nonatomic) SKEmitterNode *leftEmitter;
+@property (nonatomic) SKEmitterNode *rightEmitter;
 
 @property (nonatomic) MarkerObject *compass_arrow;
-
-@property (nonatomic) CGVector impulse;
-@property (nonatomic) BOOL needImpulse;
 
 @property (nonatomic) float lastSpeed;
 @property (nonatomic) double initialDistance;
@@ -67,8 +67,8 @@ static CGFloat degreeInRadians = 0.0174532925;
         self.backgroundColor = [UIColor whiteColor];
         self.speedCheckInterval = 2.0;
         self.globalProps = [GlobalAppProperties sharedInstance];
-        self.markers = [NSMutableArray array];
-        self.needImpulse = NO;
+        self.verticalMarkers = [NSMutableArray array];
+        self.horizontalMarkers = [NSMutableArray array];
         self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
         self.comboManager = [ComboManager sharedManager];
         self.comboManager.delegate = self;
@@ -121,7 +121,7 @@ static CGFloat degreeInRadians = 0.0174532925;
     
     self.lastSpeedCheckDistance = self.distance;
     self.lastSpeedCheckInterval = 0;
-    self.lastMarkerPosition = self.mainMarker.position.y;
+    self.lastMarkerPosition = self.mainMarker.position;
     
     if (self.distance == 0) {
         [self addTextArray:@[@"LET", @"THE", @"SCROLL", @"BEGIN!"] completion:^{
@@ -148,13 +148,23 @@ static CGFloat degreeInRadians = 0.0174532925;
     
     MarkerObject *leftMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(200, 5)];
     leftMarker.position = CGPointMake(0, self.size.height / 2.0);
-    [self.markers addObject:leftMarker];
+    [self.horizontalMarkers addObject:leftMarker];
     [self addChild:leftMarker];
     
     MarkerObject *rightMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(200, 5)];
     rightMarker.position = CGPointMake(self.size.width, self.size.height / 2.0);
-    [self.markers addObject:rightMarker];
+    [self.horizontalMarkers addObject:rightMarker];
     [self addChild:rightMarker];
+    
+    MarkerObject *topMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(5, 300)];
+    topMarker.position = CGPointMake(self.size.width / 2.0, self.size.height);
+    [self.verticalMarkers addObject:topMarker];
+    [self addChild:topMarker];
+    
+    MarkerObject *bottomMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(5, 300)];
+    bottomMarker.position = CGPointMake(self.size.width / 2.0, 0);
+    [self.verticalMarkers addObject:bottomMarker];
+    [self addChild:bottomMarker];
     
     SKShapeNode *distanceBox = [SKShapeNode node];
     [distanceBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width - 150, self.size.height - 80, 130, 50), 8, 8, nil)];
@@ -241,7 +251,7 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 -(void)updateWithTimeSinceLastUpdate:(CFTimeInterval)timeSinceLast
 {
-    for (SKSpriteNode *marker in _markers) {
+    for (SKSpriteNode *marker in _horizontalMarkers) {
         if (marker.position.y < -marker.size.height / 2.0) {
             marker.position = CGPointMake(marker.position.x, self.size.height + marker.size.height / 2.0);
         } else if (marker.position.y > self.size.height + marker.size.height / 2.0) {
@@ -249,19 +259,55 @@ static CGFloat degreeInRadians = 0.0174532925;
         }
     }
     
-    CGFloat distanceDiff = fabsf(_lastMarkerPosition - _mainMarker.position.y);
+    for (SKSpriteNode *marker in _verticalMarkers) {
+        if (marker.position.x < -marker.size.width / 2.0) {
+            marker.position = CGPointMake(self.size.width + marker.size.width / 2.0, marker.position.y);
+        } else if (marker.position.x > self.size.width + marker.size.width / 2.0) {
+            marker.position = CGPointMake(-marker.size.width / 2.0, marker.position.y);
+        }
+    }
+    
+    CGFloat distanceDiffX = fabs(_lastMarkerPosition.x - _mainMarker.position.x);
+    CGFloat distanceDiffY = fabs(_lastMarkerPosition.y - _mainMarker.position.y);
+    
+    //CGFloat distanceDiff = fabsf(_lastMarkerPosition - _mainMarker.position.y);
+    
     //NSLog(@"%f", _mainMarker.position.y);
+    
+    CGFloat positionX = _mainMarker.position.x;
+    CGFloat positionY = _mainMarker.position.y;
+    
+    if (_mainMarker.position.x < -_mainMarker.size.width / 2.0) {
+        distanceDiffX = 0;
+        positionX = self.size.width + _mainMarker.size.width / 2.0;
+    } else if (_mainMarker.position.x > self.size.width + _mainMarker.size.width / 2.0) {
+        distanceDiffX = 0;
+        positionX = -_mainMarker.size.width / 2.0;
+    }
+    
     if (_mainMarker.position.y < -_mainMarker.size.height / 2.0) {
+        distanceDiffY = 0;
+        positionY = self.size.height + _mainMarker.size.height / 2.0;
+    } else if (_mainMarker.position.y > self.size.height + _mainMarker.size.height / 2.0) {
+        distanceDiffY = 0;
+        positionY = -_mainMarker.size.height / 2.0;
+    }
+    
+    /*if (_mainMarker.position.y < -_mainMarker.size.height / 2.0) {
         _mainMarker.position = CGPointMake(_mainMarker.position.x, self.size.height + _mainMarker.size.height / 2.0);
         distanceDiff = 0.0;
     } else if (_mainMarker.position.y > self.size.height + _mainMarker.size.height / 2.0) {
         _mainMarker.position = CGPointMake(_mainMarker.position.x, -_mainMarker.size.height / 2.0);
         distanceDiff = 0.0;
-    }
+    }*/
+    
+    _mainMarker.position = CGPointMake(positionX, positionY);
+    
+    CGFloat distanceDiff = sqrt(pow(distanceDiffX, 2) + pow(distanceDiffY, 2));
     
     _distance += distanceDiff * kmPerPixel * 2.0;
     
-    _lastMarkerPosition = _mainMarker.position.y;
+    _lastMarkerPosition = _mainMarker.position;
     
     if (_distance < 0.001) {
         _distanceLabel.text = [NSString stringWithFormat:@"%.1fcm", _distance * 100000];
@@ -306,10 +352,17 @@ static CGFloat degreeInRadians = 0.0174532925;
     //CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0);
     _compass_arrow.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
     
-    for (MarkerObject *marker in _markers) {
+    for (MarkerObject *marker in _horizontalMarkers) {
         CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - marker.position.y) / ((self.size.height + marker.size.height) / 2.0) + 0.6;
         marker.xScale = distanceFromMiddle;
         distanceFromMiddle -= 0.4;
+        marker.alpha = distanceFromMiddle * distanceFromMiddle;
+    }
+    
+    for (MarkerObject *marker in _verticalMarkers) {
+        CGFloat distanceFromMiddle = fabs(self.size.width / 2.0 - marker.position.x) / ((self.size.width + marker.size.width) / 2.0) + 0.65;
+        marker.yScale = distanceFromMiddle;
+        distanceFromMiddle -= 0.45;
         marker.alpha = distanceFromMiddle * distanceFromMiddle;
     }
     
@@ -323,16 +376,32 @@ static CGFloat degreeInRadians = 0.0174532925;
     }
 }
 
--(void)swipeWithVelocity:(float)velocity
+-(void)swipeWithVelocity:(CGPoint)velocity
 {
-    [self.mainMarker.physicsBody applyImpulse:CGVectorMake(0, -velocity)];
-    _impulse = CGVectorMake(0, -velocity);
-    if (velocity < 0) {
-        [_comboManager actionTaken:@"u"];
-    } else if (velocity > 0) {
-        [_comboManager actionTaken:@"d"];
+    if (fabs(velocity.y) >= fabs(velocity.x)) {
+        if (velocity.y < 0) {
+            NSLog(@"U");
+            [_comboManager actionTaken:@"u"];
+        } else if (velocity.y > 0) {
+            NSLog(@"D");
+            [_comboManager actionTaken:@"d"];
+        }
+    } else {
+        if (velocity.x < 0) {
+            NSLog(@"L");
+            [_comboManager actionTaken:@"l"];
+        } else if (velocity.x > 0) {
+            NSLog(@"R");
+            [_comboManager actionTaken:@"r"];
+        }
     }
-    _needImpulse = YES;
+    [self.mainMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, -velocity.y)];
+    for (SKSpriteNode *marker in _horizontalMarkers) {
+        [marker.physicsBody applyImpulse:CGVectorMake(0, -velocity.y)];
+    }
+    for (MarkerObject *marker in _verticalMarkers) {
+        [marker.physicsBody applyImpulse:CGVectorMake(velocity.x, 0)];
+    }
 }
 
 -(void)swipeInProgressAtPoint:(CGPoint)point withTranslation:(CGPoint)translation
@@ -375,16 +444,6 @@ static CGFloat degreeInRadians = 0.0174532925;
     [textLabel runAction:countDown completion:completion];
     
     [self addChild:textLabel];
-}
-
--(void)didSimulatePhysics
-{
-    if (_needImpulse) {
-        _needImpulse = NO;
-        for (SKSpriteNode *marker in _markers) {
-            [marker.physicsBody applyImpulse:_impulse];
-        }
-    }
 }
 
 -(void)comboesCompleted:(NSSet *)comboes

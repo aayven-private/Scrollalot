@@ -111,7 +111,7 @@
     {
         CGPoint vel = [recognizer velocityInView:recognizer.view];
         //NSLog(@"VelY: %f", vel.y);
-        [_scrollScene swipeWithVelocity:vel.y];
+        [_scrollScene swipeWithVelocity:vel];
 
     }
 }
