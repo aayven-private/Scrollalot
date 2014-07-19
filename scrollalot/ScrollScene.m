@@ -144,21 +144,21 @@ static CGFloat degreeInRadians = 0.0174532925;
     NSString *emitterPath = [[NSBundle mainBundle] pathForResource:@"SwipeEmitter" ofType:@"sks"];
     self.topEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.topEmitter.position = CGPointMake(self.size.width / 2.0, self.size.height + 30);
-    self.topEmitter.particlePositionRange = CGVectorMake(self.size.width, 30);
+    self.topEmitter.particlePositionRange = CGVectorMake(self.size.width + 50, 30);
     self.topEmitter.emissionAngle = 270 * degreeInRadians;
     
     self.bottomEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.bottomEmitter.position = CGPointMake(self.size.width / 2.0, -30);
-    self.bottomEmitter.particlePositionRange = CGVectorMake(self.size.width, 30);
+    self.bottomEmitter.particlePositionRange = CGVectorMake(self.size.width + 50, 30);
     
     self.leftEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.leftEmitter.position = CGPointMake(-30, self.size.height / 2.0);
-    self.leftEmitter.particlePositionRange = CGVectorMake(30, self.size.height);
+    self.leftEmitter.particlePositionRange = CGVectorMake(30, self.size.height + 50);
     self.leftEmitter.emissionAngle = 0;
     
     self.rightEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.rightEmitter.position = CGPointMake(self.size.width + 30, self.size.height / 2.0);
-    self.rightEmitter.particlePositionRange = CGVectorMake(30, self.size.height);
+    self.rightEmitter.particlePositionRange = CGVectorMake(30, self.size.height + 50);
     self.rightEmitter.emissionAngle = 180 * degreeInRadians;
     
     [self addChild:self.topEmitter];
@@ -278,6 +278,10 @@ static CGFloat degreeInRadians = 0.0174532925;
         self.leftEmitter.particleBirthRate = 0;
         self.rightEmitter.particleBirthRate = 0;
     }
+    
+    self.topEmitter.xAcceleration = self.bottomEmitter.xAcceleration = self.leftEmitter.xAcceleration = self.rightEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx;
+    
+    self.topEmitter.yAcceleration = self.bottomEmitter.yAcceleration = self.leftEmitter.yAcceleration = self.rightEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy;
     
     [self updateWithTimeSinceLastUpdate:timeSinceLast];
 }
