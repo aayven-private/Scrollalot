@@ -36,7 +36,6 @@
 		B09B804A196F02AE00800BD4 /* SceneObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8049196F02AE00800BD4 /* SceneObject.m */; };
 		B09B8053196F043A00800BD4 /* MarkerObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8052196F043A00800BD4 /* MarkerObject.m */; };
 		B09B8055197A958100800BD4 /* Combos.plist in Resources */ = {isa = PBXBuildFile; fileRef = B09B8054197A958100800BD4 /* Combos.plist */; };
-		B09B8057197AA8EA00800BD4 /* AchievedCombos.plist in Resources */ = {isa = PBXBuildFile; fileRef = B09B8056197AA8EA00800BD4 /* AchievedCombos.plist */; };
 		B09B805A197AB77500800BD4 /* AchievedComboEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8059197AB77500800BD4 /* AchievedComboEntity.m */; };
 		B0ECE167196FEC5500A6F3C5 /* square.png in Resources */ = {isa = PBXBuildFile; fileRef = B0ECE166196FEC5500A6F3C5 /* square.png */; };
 		B0ECE16B1970133D00A6F3C5 /* DBAccessLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16A1970133D00A6F3C5 /* DBAccessLayer.m */; };
@@ -103,7 +102,6 @@
 		B09B8051196F043A00800BD4 /* MarkerObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkerObject.h; sourceTree = "<group>"; };
 		B09B8052196F043A00800BD4 /* MarkerObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarkerObject.m; sourceTree = "<group>"; };
 		B09B8054197A958100800BD4 /* Combos.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Combos.plist; sourceTree = "<group>"; };
-		B09B8056197AA8EA00800BD4 /* AchievedCombos.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AchievedCombos.plist; sourceTree = "<group>"; };
 		B09B8058197AB77500800BD4 /* AchievedComboEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AchievedComboEntity.h; sourceTree = "<group>"; };
 		B09B8059197AB77500800BD4 /* AchievedComboEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AchievedComboEntity.m; sourceTree = "<group>"; };
 		B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrollSceneHandlerDelegate.h; sourceTree = "<group>"; };
@@ -276,7 +274,6 @@
 				B04B2C821976774A008D0528 /* SwipeEmitter.sks */,
 				B04B2C831976774A008D0528 /* spark.png */,
 				B09B8054197A958100800BD4 /* Combos.plist */,
-				B09B8056197AA8EA00800BD4 /* AchievedCombos.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -437,7 +434,6 @@
 			files = (
 				B09B8055197A958100800BD4 /* Combos.plist in Resources */,
 				B0ECE17619702FBB00A6F3C5 /* achievements.plist in Resources */,
-				B09B8057197AA8EA00800BD4 /* AchievedCombos.plist in Resources */,
 				B09B8018196F027000800BD4 /* InfoPlist.strings in Resources */,
 				B04B2C941978266D008D0528 /* compass@2x.png in Resources */,
 				B09B802B196F027000800BD4 /* Images.xcassets in Resources */,

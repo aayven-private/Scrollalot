@@ -79,7 +79,6 @@ static BOOL filterAchieved = YES;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             [self setCombosAchieved:achievedCombos];
         });
-        //[self setCombosAchieved:achievedCombos];
     }
 }
 
@@ -118,14 +117,6 @@ static BOOL filterAchieved = YES;
             }
         }];
     }
-    
-    /*NSString *path = [[NSBundle mainBundle] pathForResource:@"AchievedCombos" ofType:@"plist"];
-    NSError *error;
-    NSArray *saveArray = [_achievedCombos sortedArrayUsingDescriptors:nil];
-    [saveArray writeToFile:path atomically:YES];
-    if (error) {
-        NSLog(@"ERROR WRITING PLIST");
-    }*/
 }
 
 -(NSMutableSet *)getAlreadyAchievedCombos
