@@ -51,11 +51,14 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) SKEmitterNode *rightEmitter;
 
 @property (nonatomic) MarkerObject *compass_arrow;
+@property (nonatomic) MarkerObject *compass;
 
 @property (nonatomic) float lastSpeed;
 @property (nonatomic) double initialDistance;
 
 @property (nonatomic) ComboManager *comboManager;
+
+@property (nonatomic) SKAction *pulseAction;
 
 @end
 
@@ -72,12 +75,15 @@ static CGFloat degreeInRadians = 0.0174532925;
         self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
         self.comboManager = [ComboManager sharedManager];
         self.comboManager.delegate = self;
+        self.pulseAction = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:.1], [SKAction scaleTo:1.0 duration:.1]]];
     }
     return self;
 }
 
 -(void)initEnvironment
 {
+    self.name = @"itsamee";
+    
     self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
     self.physicsWorld.gravity = CGVectorMake(0, 0);
     self.physicsBody.categoryBitMask = 0;
@@ -94,13 +100,15 @@ static CGFloat degreeInRadians = 0.0174532925;
     self.mainMarker.hidden = YES;
     [self addChild:self.mainMarker];
     
-    SKSpriteNode *compass = [[SKSpriteNode alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"compass"]]];
-    compass.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    [self addChild:compass];
+    self.compass = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"compass"]]];
+    self.compass.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    self.compass.name = @"compass";
+    [self addChild:self.compass];
     
     self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"compass_arrow"]]];
     self.compass_arrow.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
     self.compass_arrow.xScale = self.compass_arrow.yScale = 0.8;
+    self.compass_arrow.name = @"compass";
     [self addChild:self.compass_arrow];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -143,8 +151,20 @@ static CGFloat degreeInRadians = 0.0174532925;
     self.bottomEmitter.position = CGPointMake(self.size.width / 2.0, -30);
     self.bottomEmitter.particlePositionRange = CGVectorMake(self.size.width, 30);
     
+    self.leftEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    self.leftEmitter.position = CGPointMake(-30, self.size.height / 2.0);
+    self.leftEmitter.particlePositionRange = CGVectorMake(30, self.size.height);
+    self.leftEmitter.emissionAngle = 0;
+    
+    self.rightEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    self.rightEmitter.position = CGPointMake(self.size.width + 30, self.size.height / 2.0);
+    self.rightEmitter.particlePositionRange = CGVectorMake(30, self.size.height);
+    self.rightEmitter.emissionAngle = 180 * degreeInRadians;
+    
     [self addChild:self.topEmitter];
     [self addChild:self.bottomEmitter];
+    [self addChild:self.leftEmitter];
+    [self addChild:self.rightEmitter];
     
     MarkerObject *leftMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(200, 5)];
     leftMarker.position = CGPointMake(0, self.size.height / 2.0);
@@ -169,14 +189,12 @@ static CGFloat degreeInRadians = 0.0174532925;
     SKShapeNode *distanceBox = [SKShapeNode node];
     [distanceBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width - 150, self.size.height - 80, 130, 50), 8, 8, nil)];
     distanceBox.strokeColor = distanceBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
-    distanceBox.name = @"leaderboards";
     [self addChild:distanceBox];
     
     self.distanceLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
     self.distanceLabel.fontSize = 18.0;
     self.distanceLabel.position = CGPointMake(self.size.width - 85, self.size.height - 60);
     self.distanceLabel.fontColor = [UIColor whiteColor];
-    self.distanceLabel.name = @"leaderboards";
     [self addChild:self.distanceLabel];
     
     SKShapeNode *speedBox = [SKShapeNode node];
@@ -194,7 +212,7 @@ static CGFloat degreeInRadians = 0.0174532925;
     SKShapeNode *maxSpeedBox = [SKShapeNode node];
     [maxSpeedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(20, self.size.height - 80, 130, 50), 8, 8, nil)];
     maxSpeedBox.strokeColor = maxSpeedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
-    maxSpeedBox.name = @"leaderboards";
+    maxSpeedBox.name = @"maxspeedbox";
     [self addChild:maxSpeedBox];
     
     self.maxSpeedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
@@ -202,7 +220,6 @@ static CGFloat degreeInRadians = 0.0174532925;
     self.maxSpeedLabel.position = CGPointMake(85, self.size.height - 60) ;
     self.maxSpeedLabel.fontColor = [UIColor whiteColor];
     self.maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", self.maxSpeed];
-    self.maxSpeedLabel.name = @"leaderboards";
     [self addChild:self.maxSpeedLabel];
 }
 
@@ -220,7 +237,10 @@ static CGFloat degreeInRadians = 0.0174532925;
     CGPoint location = [touch locationInNode:self];
     SKNode *node = [self nodeAtPoint:location];
     
-    if ([node.name isEqualToString:@"leaderboards"]) {
+    NSArray *nodes = [self nodesAtPoint:location];
+    if ([nodes containsObject:_compass] || [nodes containsObject:_compass_arrow]) {
+        [_compass runAction:_pulseAction];
+        [_compass_arrow runAction:_pulseAction];
         [_delegate presentLeaderBoards];
     }
 }
@@ -244,6 +264,19 @@ static CGFloat degreeInRadians = 0.0174532925;
     } else {
         self.topEmitter.particleBirthRate = 0;
         self.bottomEmitter.particleBirthRate = 0;
+    }
+    
+    if (self.mainMarker.physicsBody.velocity.dx < 0) {
+        self.leftEmitter.particleBirthRate = 0;
+        self.rightEmitter.particleBirthRate = 700;
+        self.rightEmitter.xAcceleration = self.mainMarker.physicsBody.velocity.dx;
+    } else if (self.mainMarker.physicsBody.velocity.dx > 0) {
+        self.leftEmitter.particleBirthRate = 700;
+        self.rightEmitter.particleBirthRate = 0;
+        self.leftEmitter.xAcceleration = self.mainMarker.physicsBody.velocity.dx;
+    } else {
+        self.leftEmitter.particleBirthRate = 0;
+        self.rightEmitter.particleBirthRate = 0;
     }
     
     [self updateWithTimeSinceLastUpdate:timeSinceLast];
@@ -293,14 +326,6 @@ static CGFloat degreeInRadians = 0.0174532925;
         positionY = -_mainMarker.size.height / 2.0;
     }
     
-    /*if (_mainMarker.position.y < -_mainMarker.size.height / 2.0) {
-        _mainMarker.position = CGPointMake(_mainMarker.position.x, self.size.height + _mainMarker.size.height / 2.0);
-        distanceDiff = 0.0;
-    } else if (_mainMarker.position.y > self.size.height + _mainMarker.size.height / 2.0) {
-        _mainMarker.position = CGPointMake(_mainMarker.position.x, -_mainMarker.size.height / 2.0);
-        distanceDiff = 0.0;
-    }*/
-    
     _mainMarker.position = CGPointMake(positionX, positionY);
     
     CGFloat distanceDiff = sqrt(pow(distanceDiffX, 2) + pow(distanceDiffY, 2));
@@ -349,7 +374,7 @@ static CGFloat degreeInRadians = 0.0174532925;
         _lastSpeedCheckDistance = _distance;
         _lastSpeedCheckInterval = 0.0;
     }
-    //CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0);
+    
     _compass_arrow.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
     
     for (MarkerObject *marker in _horizontalMarkers) {
@@ -380,18 +405,14 @@ static CGFloat degreeInRadians = 0.0174532925;
 {
     if (fabs(velocity.y) >= fabs(velocity.x)) {
         if (velocity.y < 0) {
-            NSLog(@"U");
             [_comboManager actionTaken:@"u"];
         } else if (velocity.y > 0) {
-            NSLog(@"D");
             [_comboManager actionTaken:@"d"];
         }
     } else {
         if (velocity.x < 0) {
-            NSLog(@"L");
             [_comboManager actionTaken:@"l"];
         } else if (velocity.x > 0) {
-            NSLog(@"R");
             [_comboManager actionTaken:@"r"];
         }
     }
@@ -446,9 +467,12 @@ static CGFloat degreeInRadians = 0.0174532925;
     [self addChild:textLabel];
 }
 
--(void)comboesCompleted:(NSSet *)comboes
+-(void)combosCompleted:(NSSet *)combos
 {
-    NSLog(@"Comboes: %@", comboes);
+    NSLog(@"Combos: %@", combos);
+    [self addTextArray:[combos sortedArrayUsingDescriptors:nil] completion:^{
+        
+    } andInterval:.5];
 }
 
 @end

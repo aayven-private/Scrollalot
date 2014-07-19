@@ -24,6 +24,7 @@
     [super viewDidLoad];
 
     UIPanGestureRecognizer* panSwipeRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanSwipe:)];
+    //panSwipeRecognizer.cancelsTouchesInView = NO;
     // Here you can customize for example the minimum and maximum number of fingers required
     panSwipeRecognizer.minimumNumberOfTouches = 1;
     [self.view addGestureRecognizer:panSwipeRecognizer];
@@ -69,7 +70,7 @@
     if (!skView.scene) {
         skView.showsFPS = NO;
         skView.showsNodeCount = NO;
-        //skView.showsPhysics = NO;
+        //skView.showsPhysics = YES;
         
         // Create and configure the scene.
         _scrollScene = [ScrollScene sceneWithSize:skView.bounds.size];

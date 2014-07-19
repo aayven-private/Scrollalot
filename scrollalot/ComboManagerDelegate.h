@@ -10,6 +10,6 @@
 
 @protocol ComboManagerDelegate <NSObject>
 
--(void)comboesCompleted:(NSSet *)comboes;
+-(void)combosCompleted:(NSSet *)comboes;
 
 @end
