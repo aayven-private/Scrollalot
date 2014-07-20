@@ -37,3 +37,4 @@ static NSString *kObjectTypeMarker = @"object_type_marker";
 
 static NSString *kGlobalDistanceKey = @"global_distance";
 static NSString *kMaxSpeedKey = @"max_speed";
+static NSString *kWasHelpShownKey = @"scrollalot_help_was_shown";

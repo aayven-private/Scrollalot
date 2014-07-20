@@ -9,6 +9,7 @@
 #import "ScrollViewController.h"
 #import "ScrollScene.h"
 #import "Constants.h"
+#import "GCManager.h"
 
 @interface ScrollViewController()
 
@@ -31,7 +32,7 @@
     self.gcManager = [[GCManager alloc] init];
     self.gcManager.delegate = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [self.gcManager authenticateLocalPlayer];
+        [self.gcManager authenticateLocalPlayerForced:YES];
     });
 }
 
@@ -128,6 +129,7 @@
         });
     } else {
         if (result.wasSuccessul) {
+            
             GKLocalPlayer *lp = [GKLocalPlayer localPlayer];
             NSLog(@"AUTH_SUCCESS for player: %@", lp.displayName);
             [_gcManager downloadLoadLeaderboardInfo];
@@ -154,6 +156,12 @@
 }
 
 - (void)presentLeaderBoards {
+    GCManager *gcm = [[GCManager alloc] init];
+    if (!gcm.isEnabled) {
+        [gcm authenticateLocalPlayerForced:YES];
+    } else {
+        
+    }
     GKGameCenterViewController* gameCenterController = [[GKGameCenterViewController alloc] init];
     gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
     gameCenterController.gameCenterDelegate = self;

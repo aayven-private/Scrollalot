@@ -17,7 +17,7 @@
 @property (nonatomic) BOOL isEnabled;
 @property (nonatomic) NSArray *leaderBoards;
 
--(void)authenticateLocalPlayer;
+-(void)authenticateLocalPlayerForced:(BOOL)forced;
 -(void)reportDistance:(double)distance;
 -(void)reportSpeed:(float)speed;
 -(void)downloadLoadLeaderboardInfo;

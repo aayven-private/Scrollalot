@@ -34,9 +34,9 @@ static NSString *kGCEnabledKey = @"scrollalot_gc_enabled";
     return self;
 }
 
--(void)authenticateLocalPlayer
+-(void)authenticateLocalPlayerForced:(BOOL)forced
 {
-    if (_isEnabled) {
+    if (_isEnabled || forced) {
         GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
         __weak GKLocalPlayer *blockLocalPlayer = localPlayer;
         localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error){

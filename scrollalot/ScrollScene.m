@@ -60,6 +60,10 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 @property (nonatomic) SKAction *pulseAction;
 
+@property (nonatomic) SKSpriteNode *helpNode;
+
+@property (nonatomic) BOOL helpNodeIsVisible;
+
 @end
 
 @implementation ScrollScene
@@ -76,6 +80,7 @@ static CGFloat degreeInRadians = 0.0174532925;
         self.comboManager = [ComboManager sharedManager];
         self.comboManager.delegate = self;
         self.pulseAction = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:.1], [SKAction scaleTo:1.0 duration:.1]]];
+        self.helpNodeIsVisible = NO;
     }
     return self;
 }
@@ -221,6 +226,21 @@ static CGFloat degreeInRadians = 0.0174532925;
     self.maxSpeedLabel.fontColor = [UIColor whiteColor];
     self.maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", self.maxSpeed];
     [self addChild:self.maxSpeedLabel];
+    
+    self.helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
+    self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    [self addChild:self.helpNode];
+    
+    NSNumber *wasHelpShown = [[NSUserDefaults standardUserDefaults] objectForKey:kWasHelpShownKey];
+    if (!wasHelpShown) {
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kWasHelpShownKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        self.helpNodeIsVisible = YES;
+        self.helpNode.hidden = NO;
+    } else {
+        self.helpNode.hidden = YES;
+    }
+    
 }
 
 /*-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -233,15 +253,20 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UITouch *touch = [touches anyObject];
-    CGPoint location = [touch locationInNode:self];
-    SKNode *node = [self nodeAtPoint:location];
-    
-    NSArray *nodes = [self nodesAtPoint:location];
-    if ([nodes containsObject:_compass] || [nodes containsObject:_compass_arrow]) {
-        [_compass runAction:_pulseAction];
-        [_compass_arrow runAction:_pulseAction];
-        [_delegate presentLeaderBoards];
+    if (_helpNodeIsVisible) {
+        _helpNodeIsVisible = NO;
+        _helpNode.hidden = YES;
+    } else {
+        UITouch *touch = [touches anyObject];
+        CGPoint location = [touch locationInNode:self];
+        SKNode *node = [self nodeAtPoint:location];
+        
+        NSArray *nodes = [self nodesAtPoint:location];
+        if ([nodes containsObject:_compass] || [nodes containsObject:_compass_arrow]) {
+            [_compass runAction:_pulseAction];
+            [_compass_arrow runAction:_pulseAction];
+            [_delegate presentLeaderBoards];
+        }
     }
 }
 
