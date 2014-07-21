@@ -163,7 +163,7 @@
         
     }
     GKGameCenterViewController* gameCenterController = [[GKGameCenterViewController alloc] init];
-    gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
+    gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
     gameCenterController.gameCenterDelegate = self;
     [self presentViewController:gameCenterController animated:YES completion:nil];
 }
