@@ -64,6 +64,8 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 @property (nonatomic) BOOL helpNodeIsVisible;
 
+@property (nonatomic) BOOL isDarkStyle;
+
 @end
 
 @implementation ScrollScene
@@ -76,7 +78,12 @@ static CGFloat degreeInRadians = 0.0174532925;
         self.globalProps = [GlobalAppProperties sharedInstance];
         self.verticalMarkers = [NSMutableArray array];
         self.horizontalMarkers = [NSMutableArray array];
-        self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
+        self.isDarkStyle = NO;
+        if (self.isDarkStyle) {
+            self.backgroundColor = [UIColor blackColor];
+        } else {
+            self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
+        }
         self.comboManager = [ComboManager sharedManager];
         self.comboManager.delegate = self;
         self.pulseAction = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:.1], [SKAction scaleTo:1.0 duration:.1]]];
@@ -87,8 +94,6 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 -(void)initEnvironment
 {
-    self.name = @"itsamee";
-    
     self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
     self.physicsWorld.gravity = CGVectorMake(0, 0);
     self.physicsBody.categoryBitMask = 0;
@@ -171,22 +176,53 @@ static CGFloat degreeInRadians = 0.0174532925;
     [self addChild:self.leftEmitter];
     [self addChild:self.rightEmitter];
     
-    MarkerObject *leftMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(200, 5)];
+    UIColor *markerColor;
+    if (_isDarkStyle) {
+        markerColor = [UIColor whiteColor];
+    } else {
+        markerColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0];
+    }
+    
+    /*for (int i=0; i<2; i++) {
+        MarkerObject *horizontalLeft = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
+        horizontalLeft.position = CGPointMake(0, self.size.height * (1 + i) / 3.0);
+        [self.horizontalMarkers addObject:horizontalLeft];
+        [self addChild:horizontalLeft];
+        
+        MarkerObject *horizontalRight = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
+        horizontalRight.position = CGPointMake(self.size.width, self.size.height * (1 + i) / 3.0);
+        [self.horizontalMarkers addObject:horizontalRight];
+        [self addChild:horizontalRight];
+    }
+    
+    for (int i=0; i<2; i++) {
+        MarkerObject *verticalTop = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(5, 300)];
+        verticalTop.position = CGPointMake(self.size.width * (1 + i) / 3.0, self.size.height);
+        [self.verticalMarkers addObject:verticalTop];
+        [self addChild:verticalTop];
+        
+        MarkerObject *verticalBottom = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(5, 300)];
+        verticalBottom.position = CGPointMake(self.size.width * (1 + i) / 3.0, 0);
+        [self.verticalMarkers addObject:verticalBottom];
+        [self addChild:verticalBottom];
+    }*/
+    
+    MarkerObject *leftMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
     leftMarker.position = CGPointMake(0, self.size.height / 2.0);
     [self.horizontalMarkers addObject:leftMarker];
     [self addChild:leftMarker];
     
-    MarkerObject *rightMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(200, 5)];
+    MarkerObject *rightMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
     rightMarker.position = CGPointMake(self.size.width, self.size.height / 2.0);
     [self.horizontalMarkers addObject:rightMarker];
     [self addChild:rightMarker];
     
-    MarkerObject *topMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(5, 300)];
+    MarkerObject *topMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(5, 300)];
     topMarker.position = CGPointMake(self.size.width / 2.0, self.size.height);
     [self.verticalMarkers addObject:topMarker];
     [self addChild:topMarker];
     
-    MarkerObject *bottomMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] size:CGSizeMake(5, 300)];
+    MarkerObject *bottomMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(5, 300)];
     bottomMarker.position = CGPointMake(self.size.width / 2.0, 0);
     [self.verticalMarkers addObject:bottomMarker];
     [self addChild:bottomMarker];
@@ -229,9 +265,35 @@ static CGFloat degreeInRadians = 0.0174532925;
     
     self.helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
     self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    
+    SKNode *nerdText = [SKNode node];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    a.fontSize = 16;
+    a.fontColor = [SKColor whiteColor];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    b.fontSize = 16;
+    b.fontColor = [SKColor whiteColor];
+    NSString *st1 = @"Here you can see your current speed";
+    NSString *st2 = @"and the total distance covered.";
+    b.position = CGPointMake(b.position.x, b.position.y - 20);
+    a.text = st1;
+    b.text = st2;
+    [nerdText addChild:a];
+    [nerdText addChild:b];
+    nerdText.position = CGPointMake(5, 140);
+    [self.helpNode addChild:nerdText];
+    
+    /*SKLabelNode *helpLabel1 = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    helpLabel1.fontSize = 18.0;
+    helpLabel1.position = CGPointMake(100, 100);
+    
+    helpLabel1.fontColor = [UIColor whiteColor];
+    helpLabel1.text = @"Here you can see your current speed and the total distance covered. Scroll on for more!";
+    [self.helpNode addChild:helpLabel1];*/
     [self addChild:self.helpNode];
     
     NSNumber *wasHelpShown = [[NSUserDefaults standardUserDefaults] objectForKey:kWasHelpShownKey];
+    //wasHelpShown = nil;
     if (!wasHelpShown) {
         [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kWasHelpShownKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
