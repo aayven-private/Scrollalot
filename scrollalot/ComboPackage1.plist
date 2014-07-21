@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>achievementId</key>
+		<string>scrollalot_achievement_manyup</string>
+		<key>comboName</key>
+		<string>Manyup</string>
+		<key>comboPattern</key>
+		<string>uuuuuuuuuu</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>comboPattern</key>
+		<string>ududududud</string>
+		<key>achieved</key>
+		<false/>
+		<key>achievementId</key>
+		<string>scrollalot_achievement_jumpy</string>
+		<key>comboName</key>
+		<string>Jumpy</string>
+	</dict>
+	<dict>
+		<key>comboName</key>
+		<string>Twister</string>
+		<key>comboPattern</key>
+		<string>lurd</string>
+		<key>achievementId</key>
+		<string>scrollalot_achievement_twister</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+</array>
+</plist>

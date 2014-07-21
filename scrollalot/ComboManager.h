@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ComboManagerDelegate.h"
+#import "ComboEntityHelper.h"
 
 @interface ComboManager : NSObject
 

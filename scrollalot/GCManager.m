@@ -7,6 +7,7 @@
 //
 
 #import "GCManager.h"
+#import "Constants.h"
 
 static NSString *kDistanceLeaderboardId = @"scrollalot_distance_leaderboard";
 static NSString *kSpeedLeaderboardId = @"scrollalot_speed_leaderboard";
@@ -51,6 +52,44 @@ static NSString *kGCEnabledKey = @"scrollalot_gc_enabled";
                     [self disableGameCenter];
                 } else {
                     [self enableGameCenter];
+                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                    NSNumber *distance = [defaults objectForKey:kGlobalDistanceKey];
+                    if (!distance) {
+                        distance = [NSNumber numberWithDouble:0];
+                    }
+                    NSNumber *speed = [defaults objectForKey:kMaxSpeedKey];
+                    if (!speed) {
+                        speed = [NSNumber numberWithFloat:0];
+                    }
+                    GKLeaderboard *leaderboardRequest = [[GKLeaderboard alloc] init];
+                    if (leaderboardRequest != nil) {
+                        
+                        [GKLeaderboard loadLeaderboardsWithCompletionHandler:^(NSArray *leaderboards, NSError *error) {
+                            for (GKLeaderboard *leaderBoard in leaderboards) {
+                                [leaderBoard loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error) {
+                                    if (!error) {
+                                        if ([leaderBoard.identifier isEqual:kDistanceLeaderboardId]) {
+                                            GKScore *playerDistance = leaderBoard.localPlayerScore;
+                                            double playerDistance_d = (double)playerDistance.value / 1000.0;
+                                            //NSLog(@"Distance: %f", (double)playerDistance.value / 1000.0);
+                                            
+                                            if (distance && playerDistance_d > distance.doubleValue) {
+                                                [_delegate playerDistanceDownloaded:playerDistance_d];
+                                            }
+                                            
+                                        } else if ([leaderBoard.identifier isEqual:kSpeedLeaderboardId]) {
+                                            GKScore *playerSpeed = leaderBoard.localPlayerScore;
+                                            //NSLog(@"Speed: %f", (float)playerSpeed.value / 10.0);
+                                            float playerSpeed_d = (float)playerSpeed.value / 10.0;
+                                            if (speed && playerSpeed_d > speed.floatValue) {
+                                                [_delegate playerSpeedDownloaded:playerSpeed_d];
+                                            }
+                                        }
+                                    }
+                                }];
+                            }
+                        }];
+                    }
                 }
             }
             [_delegate authenticationFinishedWithResult:result];
@@ -79,7 +118,7 @@ static NSString *kGCEnabledKey = @"scrollalot_gc_enabled";
         NSArray *scores = @[scoreReporter];
         [GKScore reportScores:scores withCompletionHandler:^(NSError *error) {
             if (!error) {
-                NSLog(@"Score report successful");
+                //NSLog(@"Score report successful");
             }
         }];
     }

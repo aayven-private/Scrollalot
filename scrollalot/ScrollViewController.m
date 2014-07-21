@@ -175,5 +175,15 @@
     }];
 }
 
+-(void)playerDistanceDownloaded:(double)distance
+{
+    _scrollScene.distance = distance;
+}
+
+-(void)playerSpeedDownloaded:(float)speed
+{
+    _scrollScene.maxSpeed = speed;
+}
+
 
 @end

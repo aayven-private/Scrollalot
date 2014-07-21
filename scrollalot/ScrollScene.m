@@ -34,14 +34,12 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) MarkerObject *mainMarker;
 @property (nonatomic) CGPoint lastMarkerPosition;
 @property (nonatomic) CGFloat lastSpeedCheckDistance;
-@property (nonatomic) double distance;
 
 @property (nonatomic) SKLabelNode *distanceLabel;
 @property (nonatomic) SKLabelNode *speedLabel;
 @property (nonatomic) SKLabelNode *maxSpeedLabel;
 
 @property (nonatomic) GlobalAppProperties *globalProps;
-@property (nonatomic) float maxSpeed;
 
 @property (nonatomic) ParallaxBG *parallaxBG;
 
@@ -564,6 +562,26 @@ static CGFloat degreeInRadians = 0.0174532925;
     [self addTextArray:[combos sortedArrayUsingDescriptors:nil] completion:^{
         
     } andInterval:.5];
+}
+
+-(void)setMaxSpeed:(float)maxSpeed
+{
+    _maxSpeed = maxSpeed;
+    _globalProps.maxSpeed = [NSNumber numberWithFloat:_maxSpeed];
+    _maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", _maxSpeed];
+}
+
+-(void)setDistance:(double)distance
+{
+    _distance = distance;
+    _globalProps.globalDistance = [NSNumber numberWithDouble:_distance];
+    if (_distance < 0.001) {
+        _distanceLabel.text = [NSString stringWithFormat:@"%.1fcm", _distance * 100000];
+    } else if (_distance < 1) {
+        _distanceLabel.text = [NSString stringWithFormat:@"%.2fm", _distance * 1000];
+    } else {
+        _distanceLabel.text = [NSString stringWithFormat:@"%.3fkm", _distance];
+    }
 }
 
 @end

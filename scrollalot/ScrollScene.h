@@ -13,6 +13,8 @@
 @interface ScrollScene : SKScene<ComboManagerDelegate>
 
 @property (nonatomic, weak) id<ScrollSceneHandlerDelegate> delegate;
+@property (nonatomic) double distance;
+@property (nonatomic) float maxSpeed;
 
 -(void)initEnvironment;
 -(void)swipeWithVelocity:(CGPoint)velocity;
