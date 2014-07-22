@@ -47,8 +47,10 @@ static int currentPackageIndex = 1;
 {
     if ([_currentRoutePattern characterAtIndex:_routeIndex.intValue] == [action characterAtIndex:0]) {
         _routeIndex = [NSNumber numberWithInt:_routeIndex.intValue + 1];
-        char nextDirection = [_currentRoutePattern characterAtIndex:_routeIndex.intValue];
-        [_delegate checkpointCompletedWithNextDirection:nextDirection andDistance:_currentRouteDistance];
+        if (_routeIndex.intValue < _currentRoutePattern.length) {
+            char nextDirection = [_currentRoutePattern characterAtIndex:_routeIndex.intValue];
+            [_delegate checkpointCompletedWithNextDirection:nextDirection andDistance:_currentRouteDistance];
+        }
     } else {
         _routeIndex = @0;
     }
@@ -144,8 +146,8 @@ static int currentPackageIndex = 1;
     NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
     
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RouteEntity"];
-    NSPredicate *notAchievedPredicate = [NSPredicate predicateWithFormat:@"achieved == NO"];
-    [request setPredicate:notAchievedPredicate];
+    //NSPredicate *notAchievedPredicate = [NSPredicate predicateWithFormat:@"achieved == NO"];
+    //[request setPredicate:notAchievedPredicate];
     [context performBlockAndWait:^{
         NSError *error = nil;
         NSArray *routes = [context executeFetchRequest:request error:&error];

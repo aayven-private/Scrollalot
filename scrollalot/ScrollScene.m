@@ -66,7 +66,10 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) BOOL isDarkStyle;
 
 @property (nonatomic) char currentRouteDirection;
-@property (nonatomic) NSNumber *currentRouteDistance;
+@property (nonatomic) float currentRouteDistance;
+
+@property (nonatomic) CGFloat routeDistanceX;
+@property (nonatomic) CGFloat routeDistanceY;
 
 @end
 
@@ -95,6 +98,9 @@ static CGFloat degreeInRadians = 0.0174532925;
         });
         self.pulseAction = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:.1], [SKAction scaleTo:1.0 duration:.1]]];
         self.helpNodeIsVisible = NO;
+        
+        self.routeDistanceX = 0;
+        self.routeDistanceY = 0;
     }
     return self;
 }
@@ -401,6 +407,40 @@ static CGFloat degreeInRadians = 0.0174532925;
     CGFloat distanceDiffX = fabs(_lastMarkerPosition.x - _mainMarker.position.x);
     CGFloat distanceDiffY = fabs(_lastMarkerPosition.y - _mainMarker.position.y);
     
+    CGFloat routeDistanceX = _lastMarkerPosition.x - _mainMarker.position.x;
+    CGFloat routeDistanceY = _lastMarkerPosition.y - _mainMarker.position.y;
+    
+    _routeDistanceX += routeDistanceX * kmPerPixel * 2.0;
+    _routeDistanceY += routeDistanceY * kmPerPixel * 2.0;
+    
+    if (_currentRouteDirection == 'u') {
+        if (_currentRouteDistance < _routeDistanceY) {
+            [_routeManager actionTaken:@"u"];
+            _routeDistanceX = 0;
+            _routeDistanceY = 0;
+        }
+    } else if (_currentRouteDirection == 'd') {
+        if (_routeDistanceY < -_currentRouteDistance) {
+            [_routeManager actionTaken:@"d"];
+            _routeDistanceX = 0;
+            _routeDistanceY = 0;
+        }
+    } else if (_currentRouteDirection == 'l') {
+        if (_routeDistanceX < -_currentRouteDistance) {
+            [_routeManager actionTaken:@"l"];
+            _routeDistanceX = 0;
+            _routeDistanceY = 0;
+        }
+    } else if (_currentRouteDirection == 'r') {
+        if (_currentRouteDistance < _routeDistanceX) {
+            [_routeManager actionTaken:@"r"];
+            _routeDistanceX = 0;
+            _routeDistanceY = 0;
+        }
+    }
+    
+    //NSLog(@"Route distance in X: %f, Route distance in Y: %f", _routeDistanceX, _routeDistanceY);
+    
     //CGFloat distanceDiff = fabsf(_lastMarkerPosition - _mainMarker.position.y);
     
     //NSLog(@"%f", _mainMarker.position.y);
@@ -596,7 +636,7 @@ static CGFloat degreeInRadians = 0.0174532925;
 -(void)nextRouteLoadedInDirection:(char)initialDirection andDistance:(NSNumber *)distance
 {
     _currentRouteDirection = initialDirection;
-    _currentRouteDistance = distance;
+    _currentRouteDistance = distance.floatValue;
 }
 
 -(void)routeCompleted:(NSString *)routeName
@@ -604,12 +644,14 @@ static CGFloat degreeInRadians = 0.0174532925;
     [self addTextArray:@[routeName, @"Completed!"] completion:^{
         
     } andInterval:.5];
+    [_routeManager loadNewRoute];
 }
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance
 {
     _currentRouteDirection = nextDirection;
-    _currentRouteDistance = distance;
+    _currentRouteDistance = distance.floatValue;
+    NSLog(@"Checkpoint completed, next direction: %c", nextDirection);
 }
 
 -(void)distanceDownloadedFromGC:(double)distance
