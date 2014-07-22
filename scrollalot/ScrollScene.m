@@ -643,7 +643,7 @@ static CGFloat degreeInRadians = 0.0174532925;
 {
     [self addTextArray:@[routeName, @"Completed!"] completion:^{
         
-    } andInterval:.5];
+    } andInterval:.7];
     [_routeManager loadNewRoute];
 }
 
@@ -652,6 +652,31 @@ static CGFloat degreeInRadians = 0.0174532925;
     _currentRouteDirection = nextDirection;
     _currentRouteDistance = distance.floatValue;
     NSLog(@"Checkpoint completed, next direction: %c", nextDirection);
+    
+    switch (nextDirection) {
+        case 'u': {
+            [self addTextArray:@[@"Go", @"UP"] completion:^{
+                
+            } andInterval:.7];
+        } break;
+        case 'd': {
+            [self addTextArray:@[@"Go", @"DOWN"] completion:^{
+                
+            } andInterval:.7];
+        } break;
+        case 'l': {
+            [self addTextArray:@[@"Go", @"LEFT"] completion:^{
+                
+            } andInterval:.7];
+        } break;
+        case 'r': {
+            [self addTextArray:@[@"Go", @"RIGHT"] completion:^{
+                
+            } andInterval:.7];
+        } break;
+        default:
+            break;
+    }
 }
 
 -(void)distanceDownloadedFromGC:(double)distance
