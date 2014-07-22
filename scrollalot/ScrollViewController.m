@@ -177,7 +177,7 @@
 
 -(void)playerDistanceDownloaded:(double)distance
 {
-    _scrollScene.distance = distance;
+    [_scrollScene distanceDownloadedFromGC:distance];
 }
 
 -(void)playerSpeedDownloaded:(float)speed

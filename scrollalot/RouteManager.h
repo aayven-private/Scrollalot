@@ -7,9 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "RouteManagerDelegate.h"
 
 @interface RouteManager : NSObject
 
-+(id)sharedManager;
+@property (nonatomic, weak) id<RouteManagerDelegate> delegate;
+
+-(id)initWithDelegate:(id<RouteManagerDelegate>)delegate;
+-(void)readRoutes;
+-(void)actionTaken:(NSString *)action;
+-(void)loadNewRoute;
 
 @end

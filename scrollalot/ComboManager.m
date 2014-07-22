@@ -14,17 +14,10 @@
 
 static NSString *kComboNameKey = @"comboName";
 static NSString *kComboPatternKey = @"comboPattern";
-static NSString *kAchievedKey = @"achieved";
-static NSString *kAchievementIdKey = @"achievementId";
+static NSString *kComboAchievedKey = @"comboAchieved";
+static NSString *kComboAchievementIdKey = @"comboAchievementId";
 
-static NSString *kLastReadPackage = @"last_read_package";
-
-static NSString *kDown100Combo = @"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd";
-static NSString *kUp100Combo = @"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu";
-static NSString *kUpDown10Combo = @"udududududududududud";
-static NSString *kUpUpDownDown5Combo = @"uudduudduudduudduudd";
-static NSString *kUpUpDown5Combo = @"uuduuduuduuduud";
-static NSString *kUpDownLeftRightCombo = @"udlr";
+static NSString *kLastReadComboPackage = @"last_read_combo_package";
 
 @interface ComboManager()
 
@@ -32,7 +25,6 @@ static NSString *kUpDownLeftRightCombo = @"udlr";
 @property (nonatomic) NSDictionary *annulateDict;
 @property (nonatomic) NSMutableDictionary *comboNames;
 @property (nonatomic) NSMutableSet *achievedCombos;
-@property (nonatomic) DBAccessLayer *dbLayer;
 
 @end
 
@@ -90,21 +82,22 @@ static int currentPackageIndex = 1;
 -(void)readCombos
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSNumber *lastReadComboPackage = [defaults objectForKey:kLastReadPackage];
+    NSNumber *lastReadComboPackage = [defaults objectForKey:kLastReadComboPackage];
     if (!lastReadComboPackage) {
         lastReadComboPackage = [NSNumber numberWithInt:0];
-        [defaults setObject:lastReadComboPackage forKey:kLastReadPackage];
+        [defaults setObject:lastReadComboPackage forKey:kLastReadComboPackage];
         [defaults synchronize];
     }
     
     if (currentPackageIndex > lastReadComboPackage.intValue) {
         NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
-        for (int i=lastReadComboPackage.integerValue + 1; i<currentPackageIndex + 1; i++) {
+        for (int i=lastReadComboPackage.intValue + 1; i<currentPackageIndex + 1; i++) {
             NSString *path = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"ComboPackage%d", i] ofType:@"plist"];
             NSArray *package = [NSArray arrayWithContentsOfFile:path];
             if (package) {
                 [self addPackage:package withContext:context];
-                [defaults setObject:[NSNumber numberWithInt:i] forKey:kLastReadPackage];
+                [defaults setObject:[NSNumber numberWithInt:i] forKey:kLastReadComboPackage];
+                [defaults synchronize];
             }
         }
     }
@@ -122,7 +115,7 @@ static int currentPackageIndex = 1;
         for (NSDictionary *comboDict in package) {
             NSString *comboName = [comboDict objectForKey:kComboNameKey];
             NSString *comboPattern = [comboDict objectForKey:kComboPatternKey];
-            NSString *achievementId = [comboDict objectForKey:kAchievementIdKey];
+            NSString *achievementId = [comboDict objectForKey:kComboAchievementIdKey];
             
             ComboEntity *combo = [NSEntityDescription insertNewObjectForEntityForName:@"ComboEntity" inManagedObjectContext:context];
             combo.achieved = [NSNumber numberWithBool:NO];

@@ -73,7 +73,7 @@ static NSString *kGCEnabledKey = @"scrollalot_gc_enabled";
                                             double playerDistance_d = (double)playerDistance.value / 1000.0;
                                             //NSLog(@"Distance: %f", (double)playerDistance.value / 1000.0);
                                             if (distance && playerDistance_d > distance.doubleValue) {
-                                                //[_delegate playerDistanceDownloaded:playerDistance_d];
+                                                [_delegate playerDistanceDownloaded:playerDistance_d];
                                             }
                                             
                                         } else if ([leaderBoard.identifier isEqual:kSpeedLeaderboardId]) {

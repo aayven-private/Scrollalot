@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13D65" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AchievedComboEntity" representedClassName="AchievedComboEntity" syncable="YES">
         <attribute name="comboName" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
     </entity>
@@ -9,8 +9,16 @@
         <attribute name="comboName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="comboPattern" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="RouteEntity" representedClassName="RouteEntity" syncable="YES">
+        <attribute name="achieved" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="achievementId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="routeDistance" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="routeName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="routePattern" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
         <element name="AchievedComboEntity" positionX="-63" positionY="-18" width="128" height="60"/>
         <element name="ComboEntity" positionX="-63" positionY="-9" width="128" height="105"/>
+        <element name="RouteEntity" positionX="-63" positionY="18" width="128" height="120"/>
     </elements>
 </model>

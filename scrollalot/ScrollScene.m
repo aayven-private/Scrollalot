@@ -55,6 +55,7 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) double initialDistance;
 
 @property (nonatomic) ComboManager *comboManager;
+@property (nonatomic) RouteManager *routeManager;
 
 @property (nonatomic) SKAction *pulseAction;
 
@@ -63,6 +64,9 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) BOOL helpNodeIsVisible;
 
 @property (nonatomic) BOOL isDarkStyle;
+
+@property (nonatomic) char currentRouteDirection;
+@property (nonatomic) NSNumber *currentRouteDistance;
 
 @end
 
@@ -84,6 +88,11 @@ static CGFloat degreeInRadians = 0.0174532925;
         }
         self.comboManager = [ComboManager sharedManager];
         self.comboManager.delegate = self;
+        self.routeManager = [[RouteManager alloc] initWithDelegate:self];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [self.routeManager readRoutes];
+            [self.routeManager loadNewRoute];
+        });
         self.pulseAction = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:.1], [SKAction scaleTo:1.0 duration:.1]]];
         self.helpNodeIsVisible = NO;
     }
@@ -582,6 +591,31 @@ static CGFloat degreeInRadians = 0.0174532925;
     } else {
         _distanceLabel.text = [NSString stringWithFormat:@"%.3fkm", _distance];
     }
+}
+
+-(void)nextRouteLoadedInDirection:(char)initialDirection andDistance:(NSNumber *)distance
+{
+    _currentRouteDirection = initialDirection;
+    _currentRouteDistance = distance;
+}
+
+-(void)routeCompleted:(NSString *)routeName
+{
+    [self addTextArray:@[routeName, @"Completed!"] completion:^{
+        
+    } andInterval:.5];
+}
+
+-(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance
+{
+    _currentRouteDirection = nextDirection;
+    _currentRouteDistance = distance;
+}
+
+-(void)distanceDownloadedFromGC:(double)distance
+{
+    _distance = distance;
+    _lastSpeedCheckDistance = distance;
 }
 
 @end

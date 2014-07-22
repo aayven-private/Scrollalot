@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>routeDistance</key>
+		<real>0.01</real>
+		<key>achieved</key>
+		<false/>
+		<key>achievementId</key>
+		<string>scrollalot_route_route10</string>
+		<key>routeName</key>
+		<string>Route10</string>
+		<key>routePattern</key>
+		<string>uldr</string>
+	</dict>
+</array>
+</plist>

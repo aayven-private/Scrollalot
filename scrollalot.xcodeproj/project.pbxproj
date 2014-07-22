@@ -40,6 +40,9 @@
 		B09B8053196F043A00800BD4 /* MarkerObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8052196F043A00800BD4 /* MarkerObject.m */; };
 		B09B8055197A958100800BD4 /* ComboPackage1.plist in Resources */ = {isa = PBXBuildFile; fileRef = B09B8054197A958100800BD4 /* ComboPackage1.plist */; };
 		B09B805A197AB77500800BD4 /* AchievedComboEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = B09B8059197AB77500800BD4 /* AchievedComboEntity.m */; };
+		B0A0C590197ED2EB000528DA /* RoutePackage1.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C58F197ED2EB000528DA /* RoutePackage1.plist */; };
+		B0A0C593197ED376000528DA /* RouteEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A0C592197ED376000528DA /* RouteEntity.m */; };
+		B0A0C596197ED387000528DA /* RouteEntityHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A0C595197ED387000528DA /* RouteEntityHelper.m */; };
 		B0ECE167196FEC5500A6F3C5 /* square.png in Resources */ = {isa = PBXBuildFile; fileRef = B0ECE166196FEC5500A6F3C5 /* square.png */; };
 		B0ECE16B1970133D00A6F3C5 /* DBAccessLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16A1970133D00A6F3C5 /* DBAccessLayer.m */; };
 		B0ECE16E1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16C1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld */; };
@@ -113,6 +116,12 @@
 		B09B8054197A958100800BD4 /* ComboPackage1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ComboPackage1.plist; sourceTree = "<group>"; };
 		B09B8058197AB77500800BD4 /* AchievedComboEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AchievedComboEntity.h; sourceTree = "<group>"; };
 		B09B8059197AB77500800BD4 /* AchievedComboEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AchievedComboEntity.m; sourceTree = "<group>"; };
+		B0A0C58F197ED2EB000528DA /* RoutePackage1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RoutePackage1.plist; sourceTree = "<group>"; };
+		B0A0C591197ED376000528DA /* RouteEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteEntity.h; sourceTree = "<group>"; };
+		B0A0C592197ED376000528DA /* RouteEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteEntity.m; sourceTree = "<group>"; };
+		B0A0C594197ED387000528DA /* RouteEntityHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteEntityHelper.h; sourceTree = "<group>"; };
+		B0A0C595197ED387000528DA /* RouteEntityHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteEntityHelper.m; sourceTree = "<group>"; };
+		B0A0C597197EDF5A000528DA /* RouteManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RouteManagerDelegate.h; sourceTree = "<group>"; };
 		B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrollSceneHandlerDelegate.h; sourceTree = "<group>"; };
 		B0ECE166196FEC5500A6F3C5 /* square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square.png; sourceTree = "<group>"; };
 		B0ECE1691970133D00A6F3C5 /* DBAccessLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBAccessLayer.h; sourceTree = "<group>"; };
@@ -293,6 +302,7 @@
 				B04B2C821976774A008D0528 /* SwipeEmitter.sks */,
 				B04B2C831976774A008D0528 /* spark.png */,
 				B09B8054197A958100800BD4 /* ComboPackage1.plist */,
+				B0A0C58F197ED2EB000528DA /* RoutePackage1.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -321,6 +331,7 @@
 				B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */,
 				B01E4262197962C40008CF41 /* GCManagerDelegate.h */,
 				B01E426A19798D4E0008CF41 /* ComboManagerDelegate.h */,
+				B0A0C597197EDF5A000528DA /* RouteManagerDelegate.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -344,6 +355,8 @@
 				B09B8059197AB77500800BD4 /* AchievedComboEntity.m */,
 				B01E426B197D334A0008CF41 /* ComboEntity.h */,
 				B01E426C197D334A0008CF41 /* ComboEntity.m */,
+				B0A0C591197ED376000528DA /* RouteEntity.h */,
+				B0A0C592197ED376000528DA /* RouteEntity.m */,
 			);
 			name = CDEntities;
 			sourceTree = "<group>";
@@ -353,6 +366,8 @@
 			children = (
 				B01E426E197D335F0008CF41 /* ComboEntityHelper.h */,
 				B01E426F197D335F0008CF41 /* ComboEntityHelper.m */,
+				B0A0C594197ED387000528DA /* RouteEntityHelper.h */,
+				B0A0C595197ED387000528DA /* RouteEntityHelper.m */,
 			);
 			name = EntityHelpers;
 			sourceTree = "<group>";
@@ -456,6 +471,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B09B8055197A958100800BD4 /* ComboPackage1.plist in Resources */,
+				B0A0C590197ED2EB000528DA /* RoutePackage1.plist in Resources */,
 				B0ECE17619702FBB00A6F3C5 /* achievements.plist in Resources */,
 				B09B8018196F027000800BD4 /* InfoPlist.strings in Resources */,
 				B04B2C941978266D008D0528 /* compass@2x.png in Resources */,
@@ -494,6 +510,7 @@
 				B01E4274197EBFC20008CF41 /* RouteManager.m in Sources */,
 				B01E426D197D334A0008CF41 /* ComboEntity.m in Sources */,
 				B09B8053196F043A00800BD4 /* MarkerObject.m in Sources */,
+				B0A0C596197ED387000528DA /* RouteEntityHelper.m in Sources */,
 				B04B2C881976B091008D0528 /* ParallaxBG.m in Sources */,
 				B0ECE17F19703D9700A6F3C5 /* RequestHelper.m in Sources */,
 				B09B8024196F027000800BD4 /* ScrollViewController.m in Sources */,
@@ -502,6 +519,7 @@
 				B09B801E196F027000800BD4 /* AppDelegate.m in Sources */,
 				B0ECE17E19703D9700A6F3C5 /* NetworkManager.m in Sources */,
 				B0ECE18019703D9700A6F3C5 /* ResponseHelper.m in Sources */,
+				B0A0C593197ED376000528DA /* RouteEntity.m in Sources */,
 				B01E4270197D335F0008CF41 /* ComboEntityHelper.m in Sources */,
 				B09B801A196F027000800BD4 /* main.m in Sources */,
 			);
