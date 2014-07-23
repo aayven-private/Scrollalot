@@ -86,6 +86,13 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 @property (nonatomic) int checkpointCount;
 
+@property (nonatomic) SKAction *rotatoToLeft;
+@property (nonatomic) SKAction *rotatoToRight;
+@property (nonatomic) SKAction *rotatoUp;
+@property (nonatomic) SKAction *rotatoDown;
+
+@property (nonatomic) BOOL compassRotationFixed;
+
 @end
 
 @implementation ScrollScene
@@ -126,6 +133,13 @@ static CGFloat degreeInRadians = 0.0174532925;
         self.arrowAction = [SKAction sequence:@[fadeInGrow, shrinkAndFlyToCorner]];
         
         self.checkpointCount = 0;
+        
+        self.rotatoToLeft = [SKAction rotateToAngle:0 duration:.1];
+        self.rotatoToRight = [SKAction rotateToAngle:M_PI_2 duration:.1];
+        self.rotatoUp = [SKAction rotateToAngle:M_PI_4 duration:.1];
+        self.rotatoToLeft = [SKAction rotateToAngle:3 * M_PI_4 duration:.1];
+        
+        self.compassRotationFixed = NO;
     }
     return self;
 }
@@ -561,7 +575,9 @@ static CGFloat degreeInRadians = 0.0174532925;
         _lastSpeedCheckInterval = 0.0;
     }
     
-    _compass_arrow.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
+    //if (!_compassRotationFixed) {
+        _compass_arrow.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
+    //}
     
     for (MarkerObject *marker in _horizontalMarkers) {
         CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - marker.position.y) / ((self.size.height + marker.size.height) / 2.0) + 0.6;
@@ -708,7 +724,7 @@ static CGFloat degreeInRadians = 0.0174532925;
     for (MarkerObject *marker in _verticalMarkers) {
         [marker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
     }*/
-    
+    _compassRotationFixed = NO;
     _distance += _currentRouteDistance * (_checkpointCount + 1);
     _lastSpeedCheckDistance = _distance;
     [_distanceLabel runAction:_pulseAction_long];
@@ -725,6 +741,7 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance
 {
+    _compassRotationFixed = YES;
     _checkpointCount++;
     _lastRouteDirection = _currentRouteDirection;
     _currentRouteDirection = nextDirection;
@@ -747,15 +764,19 @@ static CGFloat degreeInRadians = 0.0174532925;
         switch (nextDirection) {
             case 'u': {
                 _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowUpTexture];
+                //[_compass_arrow runAction:_rotatoUp];
             } break;
             case 'd': {
                 _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowDownTexture];
+                //[_compass_arrow runAction:_rotatoDown];
             } break;
             case 'l': {
                 _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowLeftTexture];
+                //[_compass_arrow runAction:_rotatoToLeft];
             } break;
             case 'r': {
                 _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowRightTexture];
+                //[_compass_arrow runAction:_rotatoToRight];
             } break;
             default:
             break;
