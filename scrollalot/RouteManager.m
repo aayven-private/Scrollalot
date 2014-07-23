@@ -59,8 +59,9 @@ static int currentPackageIndex = 1;
         //Route complete
         [_delegate routeCompleted:_currentRouteName];
         _routeIndex = @0;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             [self setCurrentRouteAchieved];
+            [self loadNewRoute];
         });
     }
 }
@@ -115,7 +116,7 @@ static int currentPackageIndex = 1;
 {
     if (filterAchieved) {
         NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
-        [context performBlock:^{
+        [context performBlockAndWait:^{
             NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RouteEntity"];
             NSPredicate *namePredicate = [NSPredicate predicateWithFormat:@"routeName == %@", _currentRouteName];
             [request setPredicate:namePredicate];
@@ -133,7 +134,7 @@ static int currentPackageIndex = 1;
                     }
                 }
                 if ([context hasChanges]) {
-                    [DBAccessLayer saveContext:context async:YES];
+                    [DBAccessLayer saveContext:context async:NO];
                 }
             }
         }];
@@ -163,11 +164,44 @@ static int currentPackageIndex = 1;
     return result;
 }
 
+-(RouteEntityHelper *)getAvailableRouteWithLeastDistance
+{
+    __block RouteEntityHelper *result;
+    NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RouteEntity"];
+    NSPredicate *notAchievedPredicate = [NSPredicate predicateWithFormat:@"achieved == NO"];
+    [request setPredicate:notAchievedPredicate];
+    
+    NSSortDescriptor *sortByDistance = [[NSSortDescriptor alloc] initWithKey:@"routeDistance" ascending:YES];
+    [request setSortDescriptors:@[sortByDistance]];
+    
+    [context performBlockAndWait:^{
+        NSError *error = nil;
+        NSArray *routes = [context executeFetchRequest:request error:&error];
+        
+        if (!error) {
+            RouteEntity *minimumDistanceEntity = [routes objectAtIndex:0];
+            result = [[RouteEntityHelper alloc] initWithEntity:minimumDistanceEntity];
+        }
+    }];
+    
+    return result;
+}
+
 -(void)loadNewRoute
 {
-    NSMutableSet *availableRoutes = [self getAvailableRoutes];
+    /*NSMutableSet *availableRoutes = [self getAvailableRoutes];
     if (availableRoutes.count > 0) {
         RouteEntityHelper *nextRoute = [availableRoutes anyObject];
+        _currentRoutePattern = nextRoute.routePattern;
+        _currentRouteName = nextRoute.routeName;
+        _currentRouteDistance = nextRoute.routeDistance;
+        _currentAchievementId = nextRoute.achievementId;
+        [_delegate nextRouteLoadedInDirection:[_currentRoutePattern characterAtIndex:0] andDistance:_currentRouteDistance];
+    }*/
+    RouteEntityHelper *nextRoute = [self getAvailableRouteWithLeastDistance];
+    if (nextRoute) {
         _currentRoutePattern = nextRoute.routePattern;
         _currentRouteName = nextRoute.routeName;
         _currentRouteDistance = nextRoute.routeDistance;

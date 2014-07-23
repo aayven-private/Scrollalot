@@ -437,6 +437,9 @@ static CGFloat degreeInRadians = 0.0174532925;
             _routeDistanceX = 0;
             _routeDistanceY = 0;
         }
+    } else {
+        _routeDistanceX = 0;
+        _routeDistanceY = 0;
     }
     
     //NSLog(@"Route distance in X: %f, Route distance in Y: %f", _routeDistanceX, _routeDistanceY);
@@ -644,7 +647,7 @@ static CGFloat degreeInRadians = 0.0174532925;
     [self addTextArray:@[routeName, @"Completed!"] completion:^{
         
     } andInterval:.7];
-    [_routeManager loadNewRoute];
+    //[_routeManager loadNewRoute];
 }
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance

@@ -3,6 +3,18 @@
 <plist version="1.0">
 <array>
 	<dict>
+		<key>routeName</key>
+		<string>Route5</string>
+		<key>routeDistance</key>
+		<real>0.005</real>
+		<key>achieved</key>
+		<false/>
+		<key>achievementId</key>
+		<string>scrollalot_route_route5</string>
+		<key>routePattern</key>
+		<string>lurd</string>
+	</dict>
+	<dict>
 		<key>routeDistance</key>
 		<real>0.01</real>
 		<key>achieved</key>
