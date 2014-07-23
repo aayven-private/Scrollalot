@@ -4,6 +4,30 @@
 <array>
 	<dict>
 		<key>routeName</key>
+		<string>Maze5</string>
+		<key>routeDistance</key>
+		<real>0.005</real>
+		<key>achieved</key>
+		<false/>
+		<key>achievementId</key>
+		<string>scrollalot_route_maze5</string>
+		<key>routePattern</key>
+		<string>drururdldrd</string>
+	</dict>
+	<dict>
+		<key>routeName</key>
+		<string>Cross5</string>
+		<key>routeDistance</key>
+		<real>0.005</real>
+		<key>achieved</key>
+		<false/>
+		<key>achievementId</key>
+		<string>scrollalot_route_cross5</string>
+		<key>routePattern</key>
+		<string>ururdrdldlul</string>
+	</dict>
+	<dict>
+		<key>routeName</key>
 		<string>Circle10</string>
 		<key>routeDistance</key>
 		<real>0.01</real>
