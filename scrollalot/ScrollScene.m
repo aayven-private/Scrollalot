@@ -418,11 +418,15 @@ static CGFloat degreeInRadians = 0.0174532925;
             [_routeManager actionTaken:@"u"];
             _routeDistanceX = 0;
             _routeDistanceY = 0;
+        } else if (_routeDistanceY < 0) {
+            _routeDistanceY = 0;
         }
     } else if (_currentRouteDirection == 'd') {
         if (_routeDistanceY < -_currentRouteDistance) {
             [_routeManager actionTaken:@"d"];
             _routeDistanceX = 0;
+            _routeDistanceY = 0;
+        } else if (_routeDistanceY > 0) {
             _routeDistanceY = 0;
         }
     } else if (_currentRouteDirection == 'l') {
@@ -430,12 +434,16 @@ static CGFloat degreeInRadians = 0.0174532925;
             [_routeManager actionTaken:@"l"];
             _routeDistanceX = 0;
             _routeDistanceY = 0;
+        } else if (_routeDistanceX > 0) {
+            _routeDistanceX = 0;
         }
     } else if (_currentRouteDirection == 'r') {
         if (_currentRouteDistance < _routeDistanceX) {
             [_routeManager actionTaken:@"r"];
             _routeDistanceX = 0;
             _routeDistanceY = 0;
+        } else if (_routeDistanceX < 0) {
+            _routeDistanceX = 0;
         }
     } else {
         _routeDistanceX = 0;
@@ -546,15 +554,19 @@ static CGFloat degreeInRadians = 0.0174532925;
 {
     if (fabs(velocity.y) >= fabs(velocity.x)) {
         if (velocity.y < 0) {
-            [_comboManager actionTaken:@"u"];
-        } else if (velocity.y > 0) {
             [_comboManager actionTaken:@"d"];
+            //NSLog(@"D");
+        } else if (velocity.y > 0) {
+            [_comboManager actionTaken:@"u"];
+            //NSLog(@"U");
         }
     } else {
         if (velocity.x < 0) {
-            [_comboManager actionTaken:@"l"];
-        } else if (velocity.x > 0) {
             [_comboManager actionTaken:@"r"];
+            //NSLog(@"R");
+        } else if (velocity.x > 0) {
+            [_comboManager actionTaken:@"l"];
+            //NSLog(@"L");
         }
     }
     [self.mainMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, -velocity.y)];
@@ -680,6 +692,12 @@ static CGFloat degreeInRadians = 0.0174532925;
         default:
             break;
     }
+}
+
+-(void)noAvailableRoutes
+{
+    _currentRouteDirection = 'n';
+    _currentRouteDistance = 0.0;
 }
 
 -(void)distanceDownloadedFromGC:(double)distance

@@ -147,8 +147,8 @@ static int currentPackageIndex = 1;
     NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
     
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RouteEntity"];
-    //NSPredicate *notAchievedPredicate = [NSPredicate predicateWithFormat:@"achieved == NO"];
-    //[request setPredicate:notAchievedPredicate];
+    NSPredicate *notAchievedPredicate = [NSPredicate predicateWithFormat:@"achieved == NO"];
+    [request setPredicate:notAchievedPredicate];
     [context performBlockAndWait:^{
         NSError *error = nil;
         NSArray *routes = [context executeFetchRequest:request error:&error];
@@ -166,7 +166,7 @@ static int currentPackageIndex = 1;
 
 -(RouteEntityHelper *)getAvailableRouteWithLeastDistance
 {
-    __block RouteEntityHelper *result;
+    __block RouteEntityHelper *result = nil;
     NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
     
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RouteEntity"];
@@ -180,7 +180,7 @@ static int currentPackageIndex = 1;
         NSError *error = nil;
         NSArray *routes = [context executeFetchRequest:request error:&error];
         
-        if (!error) {
+        if (!error && routes.count > 0) {
             RouteEntity *minimumDistanceEntity = [routes objectAtIndex:0];
             result = [[RouteEntityHelper alloc] initWithEntity:minimumDistanceEntity];
         }
@@ -191,15 +191,6 @@ static int currentPackageIndex = 1;
 
 -(void)loadNewRoute
 {
-    /*NSMutableSet *availableRoutes = [self getAvailableRoutes];
-    if (availableRoutes.count > 0) {
-        RouteEntityHelper *nextRoute = [availableRoutes anyObject];
-        _currentRoutePattern = nextRoute.routePattern;
-        _currentRouteName = nextRoute.routeName;
-        _currentRouteDistance = nextRoute.routeDistance;
-        _currentAchievementId = nextRoute.achievementId;
-        [_delegate nextRouteLoadedInDirection:[_currentRoutePattern characterAtIndex:0] andDistance:_currentRouteDistance];
-    }*/
     RouteEntityHelper *nextRoute = [self getAvailableRouteWithLeastDistance];
     if (nextRoute) {
         _currentRoutePattern = nextRoute.routePattern;
@@ -207,6 +198,8 @@ static int currentPackageIndex = 1;
         _currentRouteDistance = nextRoute.routeDistance;
         _currentAchievementId = nextRoute.achievementId;
         [_delegate nextRouteLoadedInDirection:[_currentRoutePattern characterAtIndex:0] andDistance:_currentRouteDistance];
+    } else {
+        [_delegate noAvailableRoutes];
     }
 }
 
