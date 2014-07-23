@@ -60,6 +60,8 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) SKAction *pulseAction;
 @property (nonatomic) SKAction *pulseAction_long;
 
+@property (nonatomic) SKAction *arrowAction;
+
 @property (nonatomic) SKSpriteNode *helpNode;
 
 @property (nonatomic) BOOL helpNodeIsVisible;
@@ -74,6 +76,13 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) CGFloat routeDistanceY;
 
 @property (nonatomic) SKShapeNode *maxSpeedBox;
+
+@property (nonatomic) SKSpriteNode *directionMarker;
+
+@property (nonatomic) SKTexture *arrowLeftTexture;
+@property (nonatomic) SKTexture *arrowRightTexture;
+@property (nonatomic) SKTexture *arrowUpTexture;
+@property (nonatomic) SKTexture *arrowDownTexture;
 
 @end
 
@@ -106,6 +115,16 @@ static CGFloat degreeInRadians = 0.0174532925;
         
         self.routeDistanceX = 0;
         self.routeDistanceY = 0;
+        
+        self.arrowDownTexture = [SKTexture textureWithImageNamed:@"arrow_down"];
+        self.arrowUpTexture = [SKTexture textureWithImageNamed:@"arrow_up"];
+        self.arrowLeftTexture = [SKTexture textureWithImageNamed:@"arrow_left"];
+        self.arrowRightTexture = [SKTexture textureWithImageNamed:@"arrow_right"];
+        
+        SKAction *fadeInGrow = [SKAction group:@[[SKAction fadeAlphaTo:1.0 duration:.5], [SKAction scaleTo:2.5 duration:.5]]];
+        SKAction *shrinkAndFlyToCorner = [SKAction group:@[[SKAction scaleTo:1.0 duration:.3], [SKAction moveTo:CGPointMake(self.size.width - 45, 65) duration:.3]]];
+        
+        self.arrowAction = [SKAction sequence:@[fadeInGrow, shrinkAndFlyToCorner]];
     }
     return self;
 }
@@ -263,7 +282,7 @@ static CGFloat degreeInRadians = 0.0174532925;
     
     self.speedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
     self.speedLabel.fontSize = 18.0;
-    self.speedLabel.position = CGPointMake(self.size.width / 2.0, 60);;
+    self.speedLabel.position = CGPointMake(self.size.width / 2.0, 60);
     self.speedLabel.fontColor = [UIColor whiteColor];
     self.speedLabel.text = @"0.0Km/h";
     [self addChild:self.speedLabel];
@@ -300,6 +319,10 @@ static CGFloat degreeInRadians = 0.0174532925;
     [nerdText addChild:b];
     nerdText.position = CGPointMake(5, 140);
     [self.helpNode addChild:nerdText];
+    
+    self.currentRouteDirection = 'n';
+    self.lastRouteDirection = 'n';
+    self.currentRouteDistance = 0;
     
     /*SKLabelNode *helpLabel1 = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
     helpLabel1.fontSize = 18.0;
@@ -630,7 +653,7 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 -(void)combosCompleted:(NSSet *)combos
 {
-    NSLog(@"Combos: %@", combos);
+    //NSLog(@"Combos: %@", combos);
     [self addTextArray:[combos sortedArrayUsingDescriptors:nil] completion:^{
         
     } andInterval:.5];
@@ -659,11 +682,22 @@ static CGFloat degreeInRadians = 0.0174532925;
 -(void)nextRouteLoadedInDirection:(char)initialDirection andDistance:(NSNumber *)distance
 {
     _currentRouteDirection = initialDirection;
+    _lastRouteDirection = 'n';
     _currentRouteDistance = distance.floatValue;
+    if (_directionMarker) {
+        [_directionMarker removeFromParent];
+        _directionMarker = nil;
+    }
 }
 
 -(void)routeCompleted:(NSString *)routeName
 {
+    _currentRouteDirection = 'n';
+    _currentRouteDistance = 0;
+    _lastRouteDirection = 'n';
+    if (_directionMarker) {
+        [_directionMarker runAction:[SKAction sequence:@[[SKAction group:@[[SKAction fadeAlphaTo:0.0 duration:.5], [SKAction scaleTo:3.5 duration:.5]]], [SKAction removeFromParent]]]];
+    }
     [self addTextArray:@[routeName, @"Completed!"] completion:^{
         
     } andInterval:.7];
@@ -677,35 +711,39 @@ static CGFloat degreeInRadians = 0.0174532925;
     _currentRouteDistance = distance.floatValue;
     NSLog(@"Checkpoint completed, next direction: %c", nextDirection);
     
+    BOOL isNewMarker = YES;
+    
     if (_lastRouteDirection == _currentRouteDirection) {
-        [self addTextArray:@[@"Go", @"on!"] completion:^{
-            
-        } andInterval:.7];
-    } else {
+        if (_directionMarker) {
+            [_directionMarker runAction:_pulseAction_long];
+            isNewMarker = NO;
+        }
+    }
+    if (isNewMarker) {
+        if (_directionMarker) {
+            [_directionMarker removeFromParent];
+            _directionMarker = nil;
+        }
         switch (nextDirection) {
             case 'u': {
-                [self addTextArray:@[@"Go", @"UP"] completion:^{
-                    
-                } andInterval:.7];
+                _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowUpTexture];
             } break;
             case 'd': {
-                [self addTextArray:@[@"Go", @"DOWN"] completion:^{
-                    
-                } andInterval:.7];
+                _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowDownTexture];
             } break;
             case 'l': {
-                [self addTextArray:@[@"Go", @"LEFT"] completion:^{
-                    
-                } andInterval:.7];
+                _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowLeftTexture];
             } break;
             case 'r': {
-                [self addTextArray:@[@"Go", @"RIGHT"] completion:^{
-                    
-                } andInterval:.7];
+                _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowRightTexture];
             } break;
             default:
             break;
         }
+        _directionMarker.alpha = 0.0;
+        _directionMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+        [_directionMarker runAction:_arrowAction];
+        [self addChild:_directionMarker];
     }
 }
 
