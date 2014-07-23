@@ -58,6 +58,7 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) RouteManager *routeManager;
 
 @property (nonatomic) SKAction *pulseAction;
+@property (nonatomic) SKAction *pulseAction_long;
 
 @property (nonatomic) SKSpriteNode *helpNode;
 
@@ -66,10 +67,13 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) BOOL isDarkStyle;
 
 @property (nonatomic) char currentRouteDirection;
+@property (nonatomic) char lastRouteDirection;
 @property (nonatomic) float currentRouteDistance;
 
 @property (nonatomic) CGFloat routeDistanceX;
 @property (nonatomic) CGFloat routeDistanceY;
+
+@property (nonatomic) SKShapeNode *maxSpeedBox;
 
 @end
 
@@ -97,6 +101,7 @@ static CGFloat degreeInRadians = 0.0174532925;
             [self.routeManager loadNewRoute];
         });
         self.pulseAction = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:.1], [SKAction scaleTo:1.0 duration:.1]]];
+        self.pulseAction_long = [SKAction sequence:@[[SKAction scaleTo:1.5 duration:.2], [SKAction scaleTo:1.0 duration:.2]]];
         self.helpNodeIsVisible = NO;
         
         self.routeDistanceX = 0;
@@ -263,11 +268,11 @@ static CGFloat degreeInRadians = 0.0174532925;
     self.speedLabel.text = @"0.0Km/h";
     [self addChild:self.speedLabel];
     
-    SKShapeNode *maxSpeedBox = [SKShapeNode node];
-    [maxSpeedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(20, self.size.height - 80, 130, 50), 8, 8, nil)];
-    maxSpeedBox.strokeColor = maxSpeedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
-    maxSpeedBox.name = @"maxspeedbox";
-    [self addChild:maxSpeedBox];
+    self.maxSpeedBox = [SKShapeNode node];
+    [self.maxSpeedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(20, self.size.height - 80, 130, 50), 8, 8, nil)];
+    self.maxSpeedBox.strokeColor = self.maxSpeedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
+    self.maxSpeedBox.name = @"maxspeedbox";
+    [self addChild:self.maxSpeedBox];
     
     self.maxSpeedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
     self.maxSpeedLabel.fontSize = 18.0;
@@ -513,9 +518,12 @@ static CGFloat degreeInRadians = 0.0174532925;
         if (speed < _lastSpeed && _lastSpeed == _maxSpeed) {
             [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:_maxSpeed] forKey:kMaxSpeedKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
-            [self addTextArray:@[@"Speed", @"Record!"] completion:^{
+            
+            //[_maxSpeedBox runAction:_pulseAction];
+            [_maxSpeedLabel runAction:_pulseAction_long];
+            //[self addTextArray:@[@"Speed", @"Record!"] completion:^{
                 
-            } andInterval:.5];
+            //} andInterval:.5];
         }
         
         _lastSpeed = speed;
@@ -664,39 +672,47 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance
 {
+    _lastRouteDirection = _currentRouteDirection;
     _currentRouteDirection = nextDirection;
     _currentRouteDistance = distance.floatValue;
     NSLog(@"Checkpoint completed, next direction: %c", nextDirection);
     
-    switch (nextDirection) {
-        case 'u': {
-            [self addTextArray:@[@"Go", @"UP"] completion:^{
-                
-            } andInterval:.7];
-        } break;
-        case 'd': {
-            [self addTextArray:@[@"Go", @"DOWN"] completion:^{
-                
-            } andInterval:.7];
-        } break;
-        case 'l': {
-            [self addTextArray:@[@"Go", @"LEFT"] completion:^{
-                
-            } andInterval:.7];
-        } break;
-        case 'r': {
-            [self addTextArray:@[@"Go", @"RIGHT"] completion:^{
-                
-            } andInterval:.7];
-        } break;
-        default:
+    if (_lastRouteDirection == _currentRouteDirection) {
+        [self addTextArray:@[@"Go", @"on!"] completion:^{
+            
+        } andInterval:.7];
+    } else {
+        switch (nextDirection) {
+            case 'u': {
+                [self addTextArray:@[@"Go", @"UP"] completion:^{
+                    
+                } andInterval:.7];
+            } break;
+            case 'd': {
+                [self addTextArray:@[@"Go", @"DOWN"] completion:^{
+                    
+                } andInterval:.7];
+            } break;
+            case 'l': {
+                [self addTextArray:@[@"Go", @"LEFT"] completion:^{
+                    
+                } andInterval:.7];
+            } break;
+            case 'r': {
+                [self addTextArray:@[@"Go", @"RIGHT"] completion:^{
+                    
+                } andInterval:.7];
+            } break;
+            default:
             break;
+        }
     }
 }
 
 -(void)noAvailableRoutes
 {
     _currentRouteDirection = 'n';
+    _lastRouteDirection = 'n';
     _currentRouteDistance = 0.0;
 }
 
