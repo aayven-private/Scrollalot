@@ -84,6 +84,8 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) SKTexture *arrowUpTexture;
 @property (nonatomic) SKTexture *arrowDownTexture;
 
+@property (nonatomic) int checkpointCount;
+
 @end
 
 @implementation ScrollScene
@@ -105,10 +107,7 @@ static CGFloat degreeInRadians = 0.0174532925;
         self.comboManager = [ComboManager sharedManager];
         self.comboManager.delegate = self;
         self.routeManager = [[RouteManager alloc] initWithDelegate:self];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            [self.routeManager readRoutes];
-            [self.routeManager loadNewRoute];
-        });
+        
         self.pulseAction = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:.1], [SKAction scaleTo:1.0 duration:.1]]];
         self.pulseAction_long = [SKAction sequence:@[[SKAction scaleTo:1.5 duration:.2], [SKAction scaleTo:1.0 duration:.2]]];
         self.helpNodeIsVisible = NO;
@@ -125,6 +124,8 @@ static CGFloat degreeInRadians = 0.0174532925;
         SKAction *shrinkAndFlyToCorner = [SKAction group:@[[SKAction scaleTo:1.0 duration:.3], [SKAction moveTo:CGPointMake(self.size.width - 45, 65) duration:.3]]];
         
         self.arrowAction = [SKAction sequence:@[fadeInGrow, shrinkAndFlyToCorner]];
+        
+        self.checkpointCount = 0;
     }
     return self;
 }
@@ -343,6 +344,11 @@ static CGFloat degreeInRadians = 0.0174532925;
     } else {
         self.helpNode.hidden = YES;
     }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [self.routeManager readRoutes];
+        [self.routeManager loadNewRoute];
+    });
     
 }
 
@@ -692,6 +698,20 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 -(void)routeCompleted:(NSString *)routeName
 {
+    /*CGPoint currentMarkerDirection = rwNormalize(CGPointMake(_mainMarker.physicsBody.velocity.dx, _mainMarker.physicsBody.velocity.dy));
+    CGVector bonusImpulse = CGVectorMake(currentMarkerDirection.x * _currentRouteDistance * 10000000, -currentMarkerDirection.y * _currentRouteDistance * 10000000);
+    [_mainMarker.physicsBody applyImpulse:bonusImpulse];
+    
+    for (SKSpriteNode *marker in _horizontalMarkers) {
+        [marker.physicsBody applyImpulse:CGVectorMake(0, bonusImpulse.dy)];
+    }
+    for (MarkerObject *marker in _verticalMarkers) {
+        [marker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
+    }*/
+    
+    _distance += _currentRouteDistance * (_checkpointCount + 1);
+    _lastSpeedCheckDistance = _distance;
+    [_distanceLabel runAction:_pulseAction_long];
     _currentRouteDirection = 'n';
     _currentRouteDistance = 0;
     _lastRouteDirection = 'n';
@@ -701,11 +721,11 @@ static CGFloat degreeInRadians = 0.0174532925;
     [self addTextArray:@[routeName, @"Completed!"] completion:^{
         
     } andInterval:.7];
-    //[_routeManager loadNewRoute];
 }
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance
 {
+    _checkpointCount++;
     _lastRouteDirection = _currentRouteDirection;
     _currentRouteDirection = nextDirection;
     _currentRouteDistance = distance.floatValue;
@@ -752,6 +772,7 @@ static CGFloat degreeInRadians = 0.0174532925;
     _currentRouteDirection = 'n';
     _lastRouteDirection = 'n';
     _currentRouteDistance = 0.0;
+    _checkpointCount = 0;
 }
 
 -(void)distanceDownloadedFromGC:(double)distance
