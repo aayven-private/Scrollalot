@@ -346,7 +346,7 @@ static NSString *kHadComboKey = @"had_combo";
     [self.helpNode addChild:helpLabel1];*/
     
     NSNumber *wasHelpShown = [[NSUserDefaults standardUserDefaults] objectForKey:kWasHelpShownKey];
-    wasHelpShown = nil;
+    //wasHelpShown = nil;
     if (!wasHelpShown) {
         self.helpNode = [self createBasicHelp1];
         self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
@@ -362,7 +362,7 @@ static NSString *kHadComboKey = @"had_combo";
     NSNumber *hadRoute = [[NSUserDefaults standardUserDefaults] objectForKey:kHadRouteKey];
     NSNumber *hadCombo = [[NSUserDefaults standardUserDefaults] objectForKey:kHadComboKey];
     
-    hadRoute = hadCombo = nil;
+    //hadRoute = hadCombo = nil;
     
     if (!hadRoute) {
         self.isRouteTutorial = YES;
@@ -808,7 +808,7 @@ static NSString *kHadComboKey = @"had_combo";
     if (_directionMarker) {
         [_directionMarker runAction:[SKAction sequence:@[[SKAction group:@[[SKAction fadeAlphaTo:0.0 duration:.5], [SKAction scaleTo:3.5 duration:.5]]], [SKAction removeFromParent]]]];
     }
-    
+    //if (NO) {
     if ([routeName isEqualToString:@"Tutorial"]) {
         _helpNode = [self createRouteFinishedHelp];
         _helpNodeIsVisible = YES;
@@ -820,6 +820,19 @@ static NSString *kHadComboKey = @"had_combo";
             
         } andInterval:.7];
     }
+    NSString *boomPath =[[NSBundle mainBundle] pathForResource:@"RewardEffect" ofType:@"sks"];
+    SKEmitterNode *boom = [NSKeyedUnarchiver unarchiveObjectWithFile:boomPath];
+    boom.targetNode = self;
+    boom.particlePositionRange = CGVectorMake(10, 10);
+    boom.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    
+    SKAction *boomAction = [SKAction sequence:@[[SKAction runBlock:^{
+        [self addChild:boom];
+    }], [SKAction waitForDuration:3], [SKAction runBlock:^{
+        [boom removeFromParent];
+    }]]];
+    
+    [self runAction:boomAction];
     
     [_compass_arrow runAction:[SKAction scaleTo:1.0 duration:0]];
 }
