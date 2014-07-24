@@ -86,10 +86,11 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 @property (nonatomic) int checkpointCount;
 
-@property (nonatomic) SKAction *rotatoToLeft;
-@property (nonatomic) SKAction *rotatoToRight;
-@property (nonatomic) SKAction *rotatoUp;
-@property (nonatomic) SKAction *rotatoDown;
+@property (nonatomic) SKAction *rotateToLeft;
+@property (nonatomic) SKAction *rotateToRight;
+@property (nonatomic) SKAction *rotateToTop;
+@property (nonatomic) SKAction *rotateToBottom;
+@property (nonatomic) SKAction *pulseAction_route;
 
 @property (nonatomic) BOOL compassRotationFixed;
 
@@ -117,6 +118,8 @@ static CGFloat degreeInRadians = 0.0174532925;
         
         self.pulseAction = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:.1], [SKAction scaleTo:1.0 duration:.1]]];
         self.pulseAction_long = [SKAction sequence:@[[SKAction scaleTo:1.5 duration:.2], [SKAction scaleTo:1.0 duration:.2]]];
+        self.pulseAction_route = [SKAction repeatActionForever:[SKAction sequence:@[[SKAction scaleTo:1.2 duration:.3], [SKAction scaleTo:1.0 duration:.3]]]];
+        
         self.helpNodeIsVisible = NO;
         
         self.routeDistanceX = 0;
@@ -133,12 +136,11 @@ static CGFloat degreeInRadians = 0.0174532925;
         self.arrowAction = [SKAction sequence:@[fadeInGrow, shrinkAndFlyToCorner]];
         
         self.checkpointCount = 0;
-        
-        self.rotatoToLeft = [SKAction rotateToAngle:0 duration:.1];
-        self.rotatoToRight = [SKAction rotateToAngle:M_PI_2 duration:.1];
-        self.rotatoUp = [SKAction rotateToAngle:M_PI_4 duration:.1];
-        self.rotatoToLeft = [SKAction rotateToAngle:3 * M_PI_4 duration:.1];
-        
+
+        self.rotateToLeft = [SKAction rotateToAngle:-M_PI_2 duration:.1 shortestUnitArc:YES];
+        self.rotateToRight = [SKAction rotateToAngle:M_PI_2 duration:.1 shortestUnitArc:YES];
+        self.rotateToTop = [SKAction rotateToAngle:-M_PI duration:.1 shortestUnitArc:YES];
+        self.rotateToBottom = [SKAction rotateToAngle:0 duration:.1 shortestUnitArc:YES];
         self.compassRotationFixed = NO;
     }
     return self;
@@ -167,9 +169,9 @@ static CGFloat degreeInRadians = 0.0174532925;
     self.compass.name = @"compass";
     [self addChild:self.compass];
     
-    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"compass_arrow"]]];
+    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"arrow"]]];
     self.compass_arrow.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    self.compass_arrow.xScale = self.compass_arrow.yScale = 0.8;
+    //self.compass_arrow.xScale = self.compass_arrow.yScale = 0.8;
     self.compass_arrow.name = @"compass";
     [self addChild:self.compass_arrow];
     
@@ -364,6 +366,7 @@ static CGFloat degreeInRadians = 0.0174532925;
         [self.routeManager loadNewRoute];
     });
     
+    [self.compass_arrow runAction:self.rotateToTop];
 }
 
 /*-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -575,9 +578,9 @@ static CGFloat degreeInRadians = 0.0174532925;
         _lastSpeedCheckInterval = 0.0;
     }
     
-    //if (!_compassRotationFixed) {
-        _compass_arrow.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
-    //}
+    if (!_compassRotationFixed) {
+        //_compass_arrow.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
+    }
     
     for (MarkerObject *marker in _horizontalMarkers) {
         CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - marker.position.y) / ((self.size.height + marker.size.height) / 2.0) + 0.6;
@@ -608,20 +611,24 @@ static CGFloat degreeInRadians = 0.0174532925;
     if (fabs(velocity.y) >= fabs(velocity.x)) {
         if (velocity.y < 0) {
             [_comboManager actionTaken:@"d"];
-            //NSLog(@"D");
+            //[_compass_arrow runAction:_rotateToBottom];
         } else if (velocity.y > 0) {
             [_comboManager actionTaken:@"u"];
-            //NSLog(@"U");
+            //[_compass_arrow runAction:_rotateToTop];
         }
     } else {
         if (velocity.x < 0) {
             [_comboManager actionTaken:@"r"];
-            //NSLog(@"R");
+            //[_compass_arrow runAction:_rotateToRight];
         } else if (velocity.x > 0) {
             [_comboManager actionTaken:@"l"];
-            //NSLog(@"L");
+            //[_compass_arrow runAction:_rotateToLeft];
         }
     }
+    if (!_compassRotationFixed) {
+        [_compass_arrow runAction:[SKAction rotateToAngle:atan2(-velocity.x, -velocity.y) duration:.1 shortestUnitArc:YES]];
+    }
+    
     [self.mainMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, -velocity.y)];
     for (SKSpriteNode *marker in _horizontalMarkers) {
         [marker.physicsBody applyImpulse:CGVectorMake(0, -velocity.y)];
@@ -725,6 +732,8 @@ static CGFloat degreeInRadians = 0.0174532925;
         [marker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
     }*/
     _compassRotationFixed = NO;
+    [_compass_arrow removeAllActions];
+    
     _distance += _currentRouteDistance * (_checkpointCount + 1);
     _lastSpeedCheckDistance = _distance;
     [_distanceLabel runAction:_pulseAction_long];
@@ -737,11 +746,15 @@ static CGFloat degreeInRadians = 0.0174532925;
     [self addTextArray:@[routeName, @"Completed!"] completion:^{
         
     } andInterval:.7];
+    [_compass_arrow runAction:[SKAction scaleTo:1.0 duration:0]];
 }
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance
 {
-    _compassRotationFixed = YES;
+    if (!_compassRotationFixed) {
+        _compassRotationFixed = YES;
+        [_compass_arrow runAction:_pulseAction_route];
+    }
     _checkpointCount++;
     _lastRouteDirection = _currentRouteDirection;
     _currentRouteDirection = nextDirection;
@@ -764,19 +777,19 @@ static CGFloat degreeInRadians = 0.0174532925;
         switch (nextDirection) {
             case 'u': {
                 _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowUpTexture];
-                //[_compass_arrow runAction:_rotatoUp];
+                [_compass_arrow runAction:_rotateToTop];
             } break;
             case 'd': {
                 _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowDownTexture];
-                //[_compass_arrow runAction:_rotatoDown];
+                [_compass_arrow runAction:_rotateToBottom];
             } break;
             case 'l': {
                 _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowLeftTexture];
-                //[_compass_arrow runAction:_rotatoToLeft];
+                [_compass_arrow runAction:_rotateToLeft];
             } break;
             case 'r': {
                 _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowRightTexture];
-                //[_compass_arrow runAction:_rotatoToRight];
+                [_compass_arrow runAction:_rotateToRight];
             } break;
             default:
             break;
