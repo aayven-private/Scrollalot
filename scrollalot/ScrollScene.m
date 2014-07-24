@@ -346,7 +346,7 @@ static NSString *kHadComboKey = @"had_combo";
     [self.helpNode addChild:helpLabel1];*/
     
     NSNumber *wasHelpShown = [[NSUserDefaults standardUserDefaults] objectForKey:kWasHelpShownKey];
-    //wasHelpShown = nil;
+    wasHelpShown = nil;
     if (!wasHelpShown) {
         self.helpNode = [self createBasicHelp1];
         self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
@@ -362,7 +362,7 @@ static NSString *kHadComboKey = @"had_combo";
     NSNumber *hadRoute = [[NSUserDefaults standardUserDefaults] objectForKey:kHadRouteKey];
     NSNumber *hadCombo = [[NSUserDefaults standardUserDefaults] objectForKey:kHadComboKey];
     
-    //hadRoute = hadCombo = nil;
+    hadRoute = hadCombo = nil;
     
     if (!hadRoute) {
         self.isRouteTutorial = YES;
@@ -409,7 +409,10 @@ static NSString *kHadComboKey = @"had_combo";
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (_helpNodeIsVisible) {
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInNode:self];
+    NSArray *nodes = [self nodesAtPoint:location];
+    if ([nodes containsObject:_helpNode]) {
         NSString *helpName = _helpNode.name;
         _helpNodeIsVisible = NO;
         [_helpNode removeFromParent];
@@ -435,11 +438,11 @@ static NSString *kHadComboKey = @"had_combo";
             [self addChild:_helpNode];
         }
     } else {
-        UITouch *touch = [touches anyObject];
-        CGPoint location = [touch locationInNode:self];
+        //UITouch *touch = [touches anyObject];
+        //CGPoint location = [touch locationInNode:self];
         //SKNode *node = [self nodeAtPoint:location];
         
-        NSArray *nodes = [self nodesAtPoint:location];
+        //NSArray *nodes = [self nodesAtPoint:location];
         if ([nodes containsObject:_compass] || [nodes containsObject:_compass_arrow]) {
             [_compass runAction:_pulseAction];
             [_compass_arrow runAction:_pulseAction];
