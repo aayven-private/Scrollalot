@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "RouteManagerDelegate.h"
+#import "RouteEntityHelper.h"
 
 @interface RouteManager : NSObject
 
@@ -17,5 +18,6 @@
 -(void)readRoutes;
 -(void)actionTaken:(NSString *)action;
 -(void)loadNewRoute;
+-(void)loadRouteManually:(RouteEntityHelper *)route;
 
 @end

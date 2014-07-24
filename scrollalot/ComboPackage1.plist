@@ -4,9 +4,39 @@
 <array>
 	<dict>
 		<key>achievementId</key>
+		<string>scrollalot_achievement_manyright</string>
+		<key>comboName</key>
+		<string>ManyRight</string>
+		<key>comboPattern</key>
+		<string>rrrrrrrrrr</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>achievementId</key>
+		<string>scrollalot_achievement_manyleft</string>
+		<key>comboName</key>
+		<string>ManyLeft</string>
+		<key>comboPattern</key>
+		<string>llllllllll</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>achievementId</key>
+		<string>scrollalot_achievement_manydown</string>
+		<key>comboName</key>
+		<string>ManyDown</string>
+		<key>comboPattern</key>
+		<string>dddddddddd</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>achievementId</key>
 		<string>scrollalot_achievement_manyup</string>
 		<key>comboName</key>
-		<string>Manyup</string>
+		<string>ManyUp</string>
 		<key>comboPattern</key>
 		<string>uuuuuuuuuu</string>
 		<key>achieved</key>

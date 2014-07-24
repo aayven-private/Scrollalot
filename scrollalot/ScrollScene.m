@@ -23,6 +23,9 @@ static CGFloat kmPSecInKmPH = 3600.;
 
 static CGFloat degreeInRadians = 0.0174532925;
 
+static NSString *kHadRouteKey = @"had_route";
+static NSString *kHadComboKey = @"had_combo";
+
 @interface ScrollScene()
 
 @property (nonatomic) NSTimeInterval lastUpdateTimeInterval;
@@ -93,6 +96,9 @@ static CGFloat degreeInRadians = 0.0174532925;
 @property (nonatomic) SKAction *pulseAction_route;
 
 @property (nonatomic) BOOL compassRotationFixed;
+
+@property (nonatomic) BOOL isRouteTutorial;
+@property (nonatomic) BOOL isComboTutorial;
 
 @end
 
@@ -194,16 +200,6 @@ static CGFloat degreeInRadians = 0.0174532925;
     self.lastSpeedCheckDistance = self.distance;
     self.lastSpeedCheckInterval = 0;
     self.lastMarkerPosition = self.mainMarker.position;
-    
-    if (self.distance == 0) {
-        [self addTextArray:@[@"LET", @"THE", @"SCROLL", @"BEGIN!"] completion:^{
-            
-        } andInterval:.7];
-    } else {
-        [self addTextArray:@[@"Back", @"for", @"MORE", @"SCROLL?:)"] completion:^{
-            
-        } andInterval:.7];
-    }
     
     NSString *emitterPath = [[NSBundle mainBundle] pathForResource:@"SwipeEmitter" ofType:@"sks"];
     self.topEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
@@ -317,7 +313,7 @@ static CGFloat degreeInRadians = 0.0174532925;
     self.maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", self.maxSpeed];
     [self addChild:self.maxSpeedLabel];
     
-    self.helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
+    /*self.helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
     self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
     
     SKNode *nerdText = [SKNode node];
@@ -335,7 +331,7 @@ static CGFloat degreeInRadians = 0.0174532925;
     [nerdText addChild:a];
     [nerdText addChild:b];
     nerdText.position = CGPointMake(5, 140);
-    [self.helpNode addChild:nerdText];
+    [self.helpNode addChild:nerdText];*/
     
     self.currentRouteDirection = 'n';
     self.lastRouteDirection = 'n';
@@ -348,23 +344,57 @@ static CGFloat degreeInRadians = 0.0174532925;
     helpLabel1.fontColor = [UIColor whiteColor];
     helpLabel1.text = @"Here you can see your current speed and the total distance covered. Scroll on for more!";
     [self.helpNode addChild:helpLabel1];*/
-    [self addChild:self.helpNode];
     
     NSNumber *wasHelpShown = [[NSUserDefaults standardUserDefaults] objectForKey:kWasHelpShownKey];
     //wasHelpShown = nil;
     if (!wasHelpShown) {
+        self.helpNode = [self createBasicHelp1];
+        self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
         [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kWasHelpShownKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
         self.helpNodeIsVisible = YES;
         self.helpNode.hidden = NO;
+        [self addChild:self.helpNode];
     } else {
         self.helpNode.hidden = YES;
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [self.routeManager readRoutes];
-        [self.routeManager loadNewRoute];
-    });
+    NSNumber *hadRoute = [[NSUserDefaults standardUserDefaults] objectForKey:kHadRouteKey];
+    NSNumber *hadCombo = [[NSUserDefaults standardUserDefaults] objectForKey:kHadComboKey];
+    
+    //hadRoute = hadCombo = nil;
+    
+    if (!hadRoute) {
+        self.isRouteTutorial = YES;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [self.routeManager readRoutes];
+            RouteEntityHelper *tutorialRoute = [[RouteEntityHelper alloc] init];
+            tutorialRoute.routePattern = @"uldr";
+            tutorialRoute.routeName = @"Tutorial";
+            tutorialRoute.routeDistance = [NSNumber numberWithFloat:0.001];
+            [self.routeManager loadRouteManually:tutorialRoute];
+        });
+    } else {
+        self.isRouteTutorial = NO;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [self.routeManager readRoutes];
+            [self.routeManager loadNewRoute];
+        });
+    }
+    
+    if (!hadCombo) {
+        self.isComboTutorial = YES;
+    } else {
+        self.isComboTutorial = NO;
+    }
+    
+    if (!wasHelpShown) {
+        
+    } else {
+        [self addTextArray:@[@"Back", @"for", @"MORE", @"SCROLL?:)"] completion:^{
+            
+        } andInterval:.7];
+    }
     
     [self.compass_arrow runAction:self.rotateToTop];
 }
@@ -380,12 +410,34 @@ static CGFloat degreeInRadians = 0.0174532925;
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (_helpNodeIsVisible) {
+        NSString *helpName = _helpNode.name;
         _helpNodeIsVisible = NO;
-        _helpNode.hidden = YES;
+        [_helpNode removeFromParent];
+        _helpNode = nil;
+        if ([helpName isEqualToString:@"basic1"]) {
+            _helpNode = [self createBasicHelp2];
+        } else if ([helpName isEqualToString:@"basic2"]) {
+            _helpNode = [self createBasicHelp3];
+        } else if ([helpName isEqualToString:@"basic3"]) {
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kWasHelpShownKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            [self addTextArray:@[@"LET", @"THE", @"SCROLL", @"BEGIN!"] completion:^{
+                
+            } andInterval:.7];
+        } else if ([helpName isEqualToString:@"combo"]) {
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kHadComboKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        if (_helpNode) {
+            _helpNodeIsVisible = YES;
+            _helpNode.hidden = NO;
+            [self addChild:_helpNode];
+        }
     } else {
         UITouch *touch = [touches anyObject];
         CGPoint location = [touch locationInNode:self];
-        SKNode *node = [self nodeAtPoint:location];
+        //SKNode *node = [self nodeAtPoint:location];
         
         NSArray *nodes = [self nodesAtPoint:location];
         if ([nodes containsObject:_compass] || [nodes containsObject:_compass_arrow]) {
@@ -608,33 +660,35 @@ static CGFloat degreeInRadians = 0.0174532925;
 
 -(void)swipeWithVelocity:(CGPoint)velocity
 {
-    if (fabs(velocity.y) >= fabs(velocity.x)) {
-        if (velocity.y < 0) {
-            [_comboManager actionTaken:@"d"];
-            //[_compass_arrow runAction:_rotateToBottom];
-        } else if (velocity.y > 0) {
-            [_comboManager actionTaken:@"u"];
-            //[_compass_arrow runAction:_rotateToTop];
+    if (!_helpNodeIsVisible) {
+        if (fabs(velocity.y) >= fabs(velocity.x)) {
+            if (velocity.y < 0) {
+                [_comboManager actionTaken:@"d"];
+                //[_compass_arrow runAction:_rotateToBottom];
+            } else if (velocity.y > 0) {
+                [_comboManager actionTaken:@"u"];
+                //[_compass_arrow runAction:_rotateToTop];
+            }
+        } else {
+            if (velocity.x < 0) {
+                [_comboManager actionTaken:@"r"];
+                //[_compass_arrow runAction:_rotateToRight];
+            } else if (velocity.x > 0) {
+                [_comboManager actionTaken:@"l"];
+                //[_compass_arrow runAction:_rotateToLeft];
+            }
         }
-    } else {
-        if (velocity.x < 0) {
-            [_comboManager actionTaken:@"r"];
-            //[_compass_arrow runAction:_rotateToRight];
-        } else if (velocity.x > 0) {
-            [_comboManager actionTaken:@"l"];
-            //[_compass_arrow runAction:_rotateToLeft];
+        if (!_compassRotationFixed) {
+            [_compass_arrow runAction:[SKAction rotateToAngle:atan2(-velocity.x, -velocity.y) duration:.1 shortestUnitArc:YES]];
         }
-    }
-    if (!_compassRotationFixed) {
-        [_compass_arrow runAction:[SKAction rotateToAngle:atan2(-velocity.x, -velocity.y) duration:.1 shortestUnitArc:YES]];
-    }
-    
-    [self.mainMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, -velocity.y)];
-    for (SKSpriteNode *marker in _horizontalMarkers) {
-        [marker.physicsBody applyImpulse:CGVectorMake(0, -velocity.y)];
-    }
-    for (MarkerObject *marker in _verticalMarkers) {
-        [marker.physicsBody applyImpulse:CGVectorMake(velocity.x, 0)];
+        
+        [self.mainMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, -velocity.y)];
+        for (SKSpriteNode *marker in _horizontalMarkers) {
+            [marker.physicsBody applyImpulse:CGVectorMake(0, -velocity.y)];
+        }
+        for (MarkerObject *marker in _verticalMarkers) {
+            [marker.physicsBody applyImpulse:CGVectorMake(velocity.x, 0)];
+        }
     }
 }
 
@@ -683,9 +737,17 @@ static CGFloat degreeInRadians = 0.0174532925;
 -(void)combosCompleted:(NSSet *)combos
 {
     //NSLog(@"Combos: %@", combos);
-    [self addTextArray:[combos sortedArrayUsingDescriptors:nil] completion:^{
+    if (_isComboTutorial) {
+        _isComboTutorial = NO;
         
-    } andInterval:.5];
+        _helpNode = [self createComboHelpWithComboName:[combos anyObject]];
+        _helpNodeIsVisible = YES;
+        [self addChild:_helpNode];
+    } else {
+        [self addTextArray:[combos sortedArrayUsingDescriptors:nil] completion:^{
+            
+        } andInterval:.5];
+    }
 }
 
 -(void)setMaxSpeed:(float)maxSpeed
@@ -743,14 +805,30 @@ static CGFloat degreeInRadians = 0.0174532925;
     if (_directionMarker) {
         [_directionMarker runAction:[SKAction sequence:@[[SKAction group:@[[SKAction fadeAlphaTo:0.0 duration:.5], [SKAction scaleTo:3.5 duration:.5]]], [SKAction removeFromParent]]]];
     }
-    [self addTextArray:@[routeName, @"Completed!"] completion:^{
-        
-    } andInterval:.7];
+    
+    if ([routeName isEqualToString:@"Tutorial"]) {
+        _helpNode = [self createRouteFinishedHelp];
+        _helpNodeIsVisible = YES;
+        [self addChild:_helpNode];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kHadRouteKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+        [self addTextArray:@[routeName, @"Completed!"] completion:^{
+            
+        } andInterval:.7];
+    }
+    
     [_compass_arrow runAction:[SKAction scaleTo:1.0 duration:0]];
 }
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance
 {
+    if (_isRouteTutorial) {
+        _helpNode = [self createRouteHelp];
+        [self addChild:_helpNode];
+        _helpNodeIsVisible = YES;
+        _isRouteTutorial = NO;
+    }
     if (!_compassRotationFixed) {
         _compassRotationFixed = YES;
         [_compass_arrow runAction:_pulseAction_route];
@@ -813,6 +891,440 @@ static CGFloat degreeInRadians = 0.0174532925;
 {
     _distance = distance;
     _lastSpeedCheckDistance = distance;
+}
+
+-(SKSpriteNode *)createBasicHelp1
+{
+    SKSpriteNode *helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
+    helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    
+    helpNode.name = @"basic1";
+    
+    SKNode *captionBox = [SKNode node];
+    SKLabelNode *caption = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    caption.fontSize = 28;
+    caption.fontColor = [SKColor whiteColor];
+    NSString *cpt = @"Welcome to scrollalot!";
+    caption.text = cpt;
+    [captionBox addChild:caption];
+    captionBox.position = CGPointMake(0, 130);
+    
+    SKNode *nerdText1 = [SKNode node];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    a.fontSize = 16;
+    a.fontColor = [SKColor whiteColor];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    b.fontSize = 16;
+    b.fontColor = [SKColor whiteColor];
+    NSString *st1 = @"First of all, thanks for downloading";
+    NSString *st2 = @"the game. Let me explain you the basics:)";
+    b.position = CGPointMake(a.position.x, a.position.y - 20);
+    a.text = st1;
+    b.text = st2;
+    [nerdText1 addChild:a];
+    [nerdText1 addChild:b];
+    nerdText1.position = CGPointMake(0, 80);
+    
+    SKNode *nerdText2 = [SKNode node];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    c.fontSize = 16;
+    c.fontColor = [SKColor whiteColor];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    d.fontSize = 16;
+    d.fontColor = [SKColor whiteColor];
+    st1 = @"The goal is to scroll as much as you can.";
+    st2 = @"That's right, it is that easy!";
+    NSString *st3 = @"All you have to do is swipe in any direction.";
+    d.position = CGPointMake(c.position.x, c.position.y - 20);
+    c.text = st1;
+    d.text = st2;
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    e.fontSize = 16;
+    e.fontColor = [SKColor whiteColor];
+    e.text = st3;
+    e.position = CGPointMake(d.position.x, d.position.y - 20);
+    [nerdText2 addChild:c];
+    [nerdText2 addChild:d];
+    [nerdText2 addChild:e];
+    nerdText2.position = CGPointMake(0, 30);
+    
+    SKNode *nerdText3 = [SKNode node];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    f.fontSize = 16;
+    f.fontColor = [SKColor whiteColor];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    g.fontSize = 16;
+    g.fontColor = [SKColor whiteColor];
+    st1 = @"Tap on the screen and I will show you";
+    st2 = @"everything you need to know.";
+    g.position = CGPointMake(f.position.x, f.position.y - 20);
+    f.text = st1;
+    g.text = st2;
+    [nerdText3 addChild:f];
+    [nerdText3 addChild:g];
+    nerdText3.position = CGPointMake(0, -40);
+    
+    [helpNode addChild:captionBox];
+    [helpNode addChild:nerdText1];
+    [helpNode addChild:nerdText2];
+    [helpNode addChild:nerdText3];
+    
+    return helpNode;
+}
+
+-(SKSpriteNode *)createBasicHelp2
+{
+    SKSpriteNode *helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
+    helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    
+    helpNode.name = @"basic2";
+    
+    SKNode *nerdText1 = [SKNode node];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    a.fontSize = 16;
+    a.fontColor = [SKColor whiteColor];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    b.fontSize = 16;
+    b.fontColor = [SKColor whiteColor];
+    NSString *st1 = @"Here you can see speed record";
+    NSString *st2 = @"and the total distance covered.";
+    b.position = CGPointMake(a.position.x, a.position.y - 20);
+    a.text = st1;
+    b.text = st2;
+    [nerdText1 addChild:a];
+    [nerdText1 addChild:b];
+    nerdText1.position = CGPointMake(0, 140);
+    
+    SKNode *nerdText2 = [SKNode node];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    c.fontSize = 16;
+    c.fontColor = [SKColor whiteColor];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    d.fontSize = 16;
+    d.fontColor = [SKColor whiteColor];
+    st1 = @"Here is the compass showing";
+    st2 = @"your current direction.";
+    NSString *st3 = @"Tap it to see your results in Game Center!";
+    d.position = CGPointMake(c.position.x, c.position.y - 20);
+    c.text = st1;
+    d.text = st2;
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    e.fontSize = 16;
+    e.fontColor = [SKColor whiteColor];
+    e.text = st3;
+    e.position = CGPointMake(d.position.x, d.position.y - 20);
+    [nerdText2 addChild:c];
+    [nerdText2 addChild:d];
+    [nerdText2 addChild:e];
+    nerdText2.position = CGPointMake(0, 30);
+    
+    SKNode *nerdText3 = [SKNode node];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    f.fontSize = 16;
+    f.fontColor = [SKColor whiteColor];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    g.fontSize = 16;
+    g.fontColor = [SKColor whiteColor];
+    st1 = @"Here you can see your current speed";
+    st2 = @"of scrolling.";
+    g.position = CGPointMake(f.position.x, f.position.y - 20);
+    f.text = st1;
+    g.text = st2;
+    [nerdText3 addChild:f];
+    [nerdText3 addChild:g];
+    nerdText3.position = CGPointMake(0, -120);
+    
+    [helpNode addChild:nerdText1];
+    [helpNode addChild:nerdText2];
+    [helpNode addChild:nerdText3];
+    
+    return helpNode;
+}
+
+-(SKSpriteNode *)createBasicHelp3
+{
+    SKSpriteNode *helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
+    helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    
+    helpNode.name = @"basic3";
+    
+    SKNode *nerdText1 = [SKNode node];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    a.fontSize = 16;
+    a.fontColor = [SKColor whiteColor];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    b.fontSize = 16;
+    b.fontColor = [SKColor whiteColor];
+    NSString *st1 = @"That' all you need to know for now.";
+    NSString *st2 = @"Quite simple, huh?:)";
+    b.position = CGPointMake(a.position.x, a.position.y - 20);
+    a.text = st1;
+    b.text = st2;
+    [nerdText1 addChild:a];
+    [nerdText1 addChild:b];
+    nerdText1.position = CGPointMake(0, 80);
+    
+    SKNode *nerdText2 = [SKNode node];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    c.fontSize = 16;
+    c.fontColor = [SKColor whiteColor];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    d.fontSize = 16;
+    d.fontColor = [SKColor whiteColor];
+    st1 = @"I know, I know... Why should I do this?";
+    st2 = @"Well, if you advance in the game,";
+    NSString *st3 = @"you will see that there's more in it.";
+    d.position = CGPointMake(c.position.x, c.position.y - 20);
+    c.text = st1;
+    d.text = st2;
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    e.fontSize = 16;
+    e.fontColor = [SKColor whiteColor];
+    e.text = st3;
+    e.position = CGPointMake(d.position.x, d.position.y - 20);
+    [nerdText2 addChild:c];
+    [nerdText2 addChild:d];
+    [nerdText2 addChild:e];
+    nerdText2.position = CGPointMake(0, 30);
+    
+    SKNode *nerdText3 = [SKNode node];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    f.fontSize = 16;
+    f.fontColor = [SKColor whiteColor];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    g.fontSize = 16;
+    g.fontColor = [SKColor whiteColor];
+    st1 = @"But more on that later...";
+    st2 = @"Just tap on the screen if you feel ready!";
+    g.position = CGPointMake(f.position.x, f.position.y - 20);
+    f.text = st1;
+    g.text = st2;
+    [nerdText3 addChild:f];
+    [nerdText3 addChild:g];
+    nerdText3.position = CGPointMake(0, -40);
+    
+    [helpNode addChild:nerdText1];
+    [helpNode addChild:nerdText2];
+    [helpNode addChild:nerdText3];
+    
+    return helpNode;
+}
+
+-(SKSpriteNode *)createRouteHelp
+{
+    SKSpriteNode *helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
+    helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    
+    helpNode.name = @"route1";
+    
+    SKNode *nerdText1 = [SKNode node];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    a.fontSize = 16;
+    a.fontColor = [SKColor whiteColor];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    b.fontSize = 16;
+    b.fontColor = [SKColor whiteColor];
+    NSString *st1 = @"You have found a route!";
+    NSString *st2 = @"Complete it by following the compass.";
+    b.position = CGPointMake(a.position.x, a.position.y - 20);
+    a.text = st1;
+    b.text = st2;
+    [nerdText1 addChild:a];
+    [nerdText1 addChild:b];
+    nerdText1.position = CGPointMake(0, 80);
+    
+    SKNode *nerdText2 = [SKNode node];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    c.fontSize = 16;
+    c.fontColor = [SKColor whiteColor];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    d.fontSize = 16;
+    d.fontColor = [SKColor whiteColor];
+    st1 = @"When you find a route, the compass";
+    st2 = @"shows you which direction to go";
+    NSString *st3 = @"to reach the next checkpoint.";
+    d.position = CGPointMake(c.position.x, c.position.y - 20);
+    c.text = st1;
+    d.text = st2;
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    e.fontSize = 16;
+    e.fontColor = [SKColor whiteColor];
+    e.text = st3;
+    e.position = CGPointMake(d.position.x, d.position.y - 20);
+    [nerdText2 addChild:c];
+    [nerdText2 addChild:d];
+    [nerdText2 addChild:e];
+    nerdText2.position = CGPointMake(0, 30);
+    
+    SKNode *nerdText3 = [SKNode node];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    f.fontSize = 16;
+    f.fontColor = [SKColor whiteColor];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    g.fontSize = 16;
+    g.fontColor = [SKColor whiteColor];
+    st1 = @"If you complete the route,";
+    st2 = @"you get a badge and bonus distance.";
+    g.position = CGPointMake(f.position.x, f.position.y - 20);
+    f.text = st1;
+    g.text = st2;
+    [nerdText3 addChild:f];
+    [nerdText3 addChild:g];
+    nerdText3.position = CGPointMake(0, -40);
+    
+    [helpNode addChild:nerdText1];
+    [helpNode addChild:nerdText2];
+    [helpNode addChild:nerdText3];
+    
+    return helpNode;
+}
+
+-(SKSpriteNode *)createRouteFinishedHelp
+{
+    SKSpriteNode *helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
+    helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    
+    helpNode.name = @"route2";
+    
+    SKNode *nerdText1 = [SKNode node];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    a.fontSize = 16;
+    a.fontColor = [SKColor whiteColor];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    b.fontSize = 16;
+    b.fontColor = [SKColor whiteColor];
+    NSString *st1 = @"Congratulations!";
+    NSString *st2 = @"You just finished you first route!";
+    b.position = CGPointMake(a.position.x, a.position.y - 20);
+    a.text = st1;
+    b.text = st2;
+    [nerdText1 addChild:a];
+    [nerdText1 addChild:b];
+    nerdText1.position = CGPointMake(0, 80);
+    
+    SKNode *nerdText2 = [SKNode node];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    c.fontSize = 16;
+    c.fontColor = [SKColor whiteColor];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    d.fontSize = 16;
+    d.fontColor = [SKColor whiteColor];
+    st1 = @"You can find plenty of routes";
+    st2 = @"during the game. Just start scrolling in";
+    NSString *st3 = @"a direction and watch the compass!";
+    d.position = CGPointMake(c.position.x, c.position.y - 20);
+    c.text = st1;
+    d.text = st2;
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    e.fontSize = 16;
+    e.fontColor = [SKColor whiteColor];
+    e.text = st3;
+    e.position = CGPointMake(d.position.x, d.position.y - 20);
+    [nerdText2 addChild:c];
+    [nerdText2 addChild:d];
+    [nerdText2 addChild:e];
+    nerdText2.position = CGPointMake(0, 30);
+    
+    SKNode *nerdText3 = [SKNode node];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    f.fontSize = 16;
+    f.fontColor = [SKColor whiteColor];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    g.fontSize = 16;
+    g.fontColor = [SKColor whiteColor];
+    st1 = @"When the compass is fixed in a direction,";
+    st2 = @"just follow it as you did now!";
+    g.position = CGPointMake(f.position.x, f.position.y - 20);
+    f.text = st1;
+    g.text = st2;
+    [nerdText3 addChild:f];
+    [nerdText3 addChild:g];
+    nerdText3.position = CGPointMake(0, -40);
+    
+    [helpNode addChild:nerdText1];
+    [helpNode addChild:nerdText2];
+    [helpNode addChild:nerdText3];
+    
+    return helpNode;
+}
+
+-(SKSpriteNode *)createComboHelpWithComboName:(NSString *)comboName
+{
+    SKSpriteNode *helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
+    helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    
+    helpNode.name = @"combo";
+    
+    SKNode *captionBox = [SKNode node];
+    SKLabelNode *caption = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    caption.fontSize = 28;
+    caption.fontColor = [SKColor whiteColor];
+    NSString *cpt = comboName;
+    caption.text = cpt;
+    [captionBox addChild:caption];
+    captionBox.position = CGPointMake(0, 130);
+    
+    SKNode *nerdText1 = [SKNode node];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    a.fontSize = 16;
+    a.fontColor = [SKColor whiteColor];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    b.fontSize = 16;
+    b.fontColor = [SKColor whiteColor];
+    NSString *st1 = @"Congratulations!";
+    NSString *st2 = @"You just found a combo!";
+    b.position = CGPointMake(a.position.x, a.position.y - 20);
+    a.text = st1;
+    b.text = st2;
+    [nerdText1 addChild:a];
+    [nerdText1 addChild:b];
+    nerdText1.position = CGPointMake(0, 80);
+    
+    SKNode *nerdText2 = [SKNode node];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    c.fontSize = 16;
+    c.fontColor = [SKColor whiteColor];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    d.fontSize = 16;
+    d.fontColor = [SKColor whiteColor];
+    st1 = @"A combo is a special sequence of actions";
+    st2 = @"All combos have their own pattern.";
+    NSString *st3 = @"If you find a combo, you get a badge.";
+    d.position = CGPointMake(c.position.x, c.position.y - 20);
+    c.text = st1;
+    d.text = st2;
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    e.fontSize = 16;
+    e.fontColor = [SKColor whiteColor];
+    e.text = st3;
+    e.position = CGPointMake(d.position.x, d.position.y - 20);
+    [nerdText2 addChild:c];
+    [nerdText2 addChild:d];
+    [nerdText2 addChild:e];
+    nerdText2.position = CGPointMake(0, 30);
+    
+    SKNode *nerdText3 = [SKNode node];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    f.fontSize = 16;
+    f.fontColor = [SKColor whiteColor];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    g.fontSize = 16;
+    g.fontColor = [SKColor whiteColor];
+    st1 = @"You can only achieve each combo";
+    st2 = @"once in the game. Collect them all!:)";
+    g.position = CGPointMake(f.position.x, f.position.y - 20);
+    f.text = st1;
+    g.text = st2;
+    [nerdText3 addChild:f];
+    [nerdText3 addChild:g];
+    nerdText3.position = CGPointMake(0, -40);
+    
+    [helpNode addChild:captionBox];
+    [helpNode addChild:nerdText1];
+    [helpNode addChild:nerdText2];
+    [helpNode addChild:nerdText3];
+    
+    return helpNode;
 }
 
 @end

@@ -13,7 +13,7 @@
 static NSString *kRouteNameKey = @"routeName";
 static NSString *kRoutePatternKey = @"routePattern";
 static NSString *kRouteAchievedKey = @"routeAchieved";
-static NSString *kRouteAchievementIdKey = @"routeAchievementId";
+static NSString *kRouteAchievementIdKey = @"achievementId";
 static NSString *kRouteDistanceKey = @"routeDistance";
 
 static NSString *kLastReadRoutePackage = @"last_read_route_package";
@@ -60,7 +60,9 @@ static int currentPackageIndex = 1;
         [_delegate routeCompleted:_currentRouteName];
         _routeIndex = @0;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            [self setCurrentRouteAchieved];
+            if (_currentAchievementId && ![_currentAchievementId isEqualToString:@""]) {
+                [self setCurrentRouteAchieved];
+            }
             [self loadNewRoute];
         });
     }
@@ -201,6 +203,15 @@ static int currentPackageIndex = 1;
     } else {
         [_delegate noAvailableRoutes];
     }
+}
+
+-(void)loadRouteManually:(RouteEntityHelper *)route
+{
+    _currentRouteName = route.routeName;
+    _currentRouteDistance = route.routeDistance;
+    _currentRoutePattern = route.routePattern;
+    _currentAchievementId = nil;
+    [_delegate nextRouteLoadedInDirection:[_currentRoutePattern characterAtIndex:0] andDistance:_currentRouteDistance];
 }
 
 @end
