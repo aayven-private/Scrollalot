@@ -923,16 +923,16 @@ static BOOL startWithTutorials = YES;
     CGVector bonusImpulse;
     switch (_currentRouteDirection) {
         case 'u': {
-            bonusImpulse = CGVectorMake(0, -(_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 50000);
+            bonusImpulse = CGVectorMake(0, -(_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 30000);
         } break;
         case 'd': {
-            bonusImpulse = CGVectorMake(0, (_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 50000);
+            bonusImpulse = CGVectorMake(0, (_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 30000);
         } break;
         case 'l': {
-            bonusImpulse = CGVectorMake((_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 50000, 0);
+            bonusImpulse = CGVectorMake((_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 30000, 0);
         } break;
         case 'r': {
-            bonusImpulse = CGVectorMake(-(_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 50000, 0);
+            bonusImpulse = CGVectorMake(-(_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 30000, 0);
         } break;
         default:
         break;
