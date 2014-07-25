@@ -9,6 +9,7 @@
 #import "RouteManager.h"
 #import "DBAccessLayer.h"
 #import "RouteEntityHelper.h"
+#import "CommonTools.h"
 
 static NSString *kRouteNameKey = @"routeName";
 static NSString *kRoutePatternKey = @"routePattern";
@@ -183,7 +184,10 @@ static int currentPackageIndex = 1;
         NSArray *routes = [context executeFetchRequest:request error:&error];
         
         if (!error && routes.count > 0) {
-            RouteEntity *minimumDistanceEntity = [routes objectAtIndex:0];
+            
+            int rnd = [CommonTools getRandomNumberFromInt:0 toInt:routes.count - 1];
+            
+            RouteEntity *minimumDistanceEntity = [routes objectAtIndex:rnd];
             result = [[RouteEntityHelper alloc] initWithEntity:minimumDistanceEntity];
         }
     }];
@@ -195,6 +199,7 @@ static int currentPackageIndex = 1;
 {
     RouteEntityHelper *nextRoute = [self getAvailableRouteWithLeastDistance];
     if (nextRoute) {
+        NSLog(@"Route loaded: %@", nextRoute.routeName);
         _currentRoutePattern = nextRoute.routePattern;
         _currentRouteName = nextRoute.routeName;
         _currentRouteDistance = nextRoute.routeDistance;

@@ -109,9 +109,13 @@ static NSString *kHadComboKey = @"had_combo";
 @property (nonatomic) BOOL isRouteTutorial;
 @property (nonatomic) BOOL isComboTutorial;
 
+@property (nonatomic) BOOL startedRouteTutorial;
+
 @end
 
 @implementation ScrollScene
+
+static BOOL startWithTutorials = YES;
 
 -(id)initWithSize:(CGSize)size {    
     if (self = [super initWithSize:size]) {
@@ -392,7 +396,13 @@ static NSString *kHadComboKey = @"had_combo";
     self.compass_arrow.zRotation = -M_PI;
     
     NSNumber *wasHelpShown = [[NSUserDefaults standardUserDefaults] objectForKey:kWasHelpShownKey];
-    //wasHelpShown = nil;
+    NSNumber *hadRoute = [[NSUserDefaults standardUserDefaults] objectForKey:kHadRouteKey];
+    NSNumber *hadCombo = [[NSUserDefaults standardUserDefaults] objectForKey:kHadComboKey];
+    
+    if (startWithTutorials) {
+        wasHelpShown = hadRoute = hadCombo = nil;
+    }
+    
     if (!wasHelpShown) {
         self.helpNode = [self createBasicHelp1];
         self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
@@ -403,13 +413,11 @@ static NSString *kHadComboKey = @"had_combo";
         self.helpNode.hidden = YES;
     }
     
-    NSNumber *hadRoute = [[NSUserDefaults standardUserDefaults] objectForKey:kHadRouteKey];
-    NSNumber *hadCombo = [[NSUserDefaults standardUserDefaults] objectForKey:kHadComboKey];
-    
-    hadRoute = hadCombo = nil;
+    self.startedRouteTutorial = NO;
     
     if (!hadRoute) {
         self.isRouteTutorial = YES;
+        self.startedRouteTutorial = YES;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             [self.routeManager readRoutes];
             RouteEntityHelper *tutorialRoute = [[RouteEntityHelper alloc] init];
@@ -482,6 +490,8 @@ static NSString *kHadComboKey = @"had_combo";
         } else if ([helpName isEqualToString:@"basic2"]) {
             _helpNode = [self createBasicHelp3];
         } else if ([helpName isEqualToString:@"basic3"]) {
+            _helpNode = [self createBasicHelp4];
+        } else if ([helpName isEqual:@"basic4"]) {
             [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kWasHelpShownKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
@@ -491,6 +501,8 @@ static NSString *kHadComboKey = @"had_combo";
         } else if ([helpName isEqualToString:@"combo"]) {
             [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kHadComboKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
+        } else if ([helpName isEqualToString:@"route2"]) {
+            _isRouteTutorial = NO;
         }
         if (_helpNode) {
             _helpNodeIsVisible = YES;
@@ -601,32 +613,44 @@ static NSString *kHadComboKey = @"had_combo";
             [_routeManager actionTaken:@"u"];
             _routeDistanceX = 0;
             _routeDistanceY = 0;
-        } else if (_routeDistanceY < 0) {
+        } else if (_routeDistanceY < -_currentRouteDistance) {
             _routeDistanceY = 0;
+            if (!_isRouteTutorial) {
+                [self cancelRoute];
+            }
         }
     } else if (_currentRouteDirection == 'd') {
         if (_routeDistanceY < -_currentRouteDistance) {
             [_routeManager actionTaken:@"d"];
             _routeDistanceX = 0;
             _routeDistanceY = 0;
-        } else if (_routeDistanceY > 0) {
+        } else if (_routeDistanceY > _currentRouteDistance) {
             _routeDistanceY = 0;
+            if (!_isRouteTutorial) {
+                [self cancelRoute];
+            }
         }
     } else if (_currentRouteDirection == 'l') {
         if (_routeDistanceX < -_currentRouteDistance) {
             [_routeManager actionTaken:@"l"];
             _routeDistanceX = 0;
             _routeDistanceY = 0;
-        } else if (_routeDistanceX > 0) {
+        } else if (_routeDistanceX > _currentRouteDistance) {
             _routeDistanceX = 0;
+            if (!_isRouteTutorial) {
+                [self cancelRoute];
+            }
         }
     } else if (_currentRouteDirection == 'r') {
         if (_currentRouteDistance < _routeDistanceX) {
             [_routeManager actionTaken:@"r"];
             _routeDistanceX = 0;
             _routeDistanceY = 0;
-        } else if (_routeDistanceX < 0) {
+        } else if (_routeDistanceX < -_currentRouteDistance) {
             _routeDistanceX = 0;
+            if (!_isRouteTutorial) {
+                [self cancelRoute];
+            }
         }
     } else {
         _routeDistanceX = 0;
@@ -736,6 +760,23 @@ static NSString *kHadComboKey = @"had_combo";
             [[NSUserDefaults standardUserDefaults] synchronize];
         });
     }
+}
+
+-(void)cancelRoute
+{
+    _routeDistanceX = 0;
+    _routeDistanceY = 0;
+    _currentRouteDistance = 0;
+    _currentRouteDirection = 'n';
+    _lastRouteDirection = 'n';
+    _compassRotationFixed = NO;
+    [_compass_arrow removeAllActions];
+    [_compass_arrow runAction:[SKAction scaleTo:1.0 duration:0]];
+    _rightRouteEmitter.particleBirthRate = _leftRouteEmitter.particleBirthRate = _topRouteEmitter.particleBirthRate = _bottomRouteEmitter.particleBirthRate = 0;
+    if (_directionMarker) {
+        [_directionMarker runAction:[SKAction sequence:@[[SKAction group:@[[SKAction fadeAlphaTo:0.0 duration:.5], [SKAction scaleTo:3.5 duration:.5]]], [SKAction removeFromParent]]]];
+    }
+    [_routeManager loadNewRoute];
 }
 
 -(void)swipeWithVelocity:(CGPoint)velocity
@@ -876,8 +917,6 @@ static NSString *kHadComboKey = @"had_combo";
         [marker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
     }*/
     
-    [self runAction:[SKAction sequence:@[[SKAction fadeAlphaTo:0.1 duration:.2], [SKAction fadeAlphaTo:1.0 duration:.2]]]];
-    
     //_currentRouteDistance = 0.1;
     //_checkpointCount = 10;
     
@@ -903,10 +942,10 @@ static NSString *kHadComboKey = @"had_combo";
     
     [self.mainMarker.physicsBody applyImpulse:bonusImpulse];
     for (SKSpriteNode *marker in _horizontalMarkers) {
-        [marker.physicsBody applyImpulse:bonusImpulse];
+        [marker.physicsBody applyImpulse:CGVectorMake(0, bonusImpulse.dy)];
     }
     for (MarkerObject *marker in _verticalMarkers) {
-        [marker.physicsBody applyImpulse:bonusImpulse];
+        [marker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
     }
     
     _rightRouteEmitter.particleBirthRate = _leftRouteEmitter.particleBirthRate = _topRouteEmitter.particleBirthRate = _bottomRouteEmitter.particleBirthRate = 0;
@@ -920,6 +959,7 @@ static NSString *kHadComboKey = @"had_combo";
     _currentRouteDirection = 'n';
     _currentRouteDistance = 0;
     _lastRouteDirection = 'n';
+    
     if (_directionMarker) {
         [_directionMarker runAction:[SKAction sequence:@[[SKAction group:@[[SKAction fadeAlphaTo:0.0 duration:.5], [SKAction scaleTo:3.5 duration:.5]]], [SKAction removeFromParent]]]];
     }
@@ -931,6 +971,7 @@ static NSString *kHadComboKey = @"had_combo";
         [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kHadRouteKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
+        [self runAction:[SKAction sequence:@[[SKAction fadeAlphaTo:0.1 duration:.2], [SKAction fadeAlphaTo:1.0 duration:.2]]]];
         [self addTextArray:@[routeName, @"Completed!"] completion:^{
             
         } andInterval:.7];
@@ -950,17 +991,23 @@ static NSString *kHadComboKey = @"had_combo";
     [self runAction:boomAction];*/
     
     [_compass_arrow runAction:[SKAction scaleTo:1.0 duration:0]];
+    
+    _routeDistanceX = 0;
+    _routeDistanceY = 0;
 }
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance
 {
     _rightRouteEmitter.particleBirthRate = _leftRouteEmitter.particleBirthRate = _topRouteEmitter.particleBirthRate = _bottomRouteEmitter.particleBirthRate = 0;
     
-    if (_isRouteTutorial) {
+    _routeDistanceX = 0;
+    _routeDistanceY = 0;
+    
+    if (_startedRouteTutorial) {
         _helpNode = [self createRouteHelp];
         [self addChild:_helpNode];
         _helpNodeIsVisible = YES;
-        _isRouteTutorial = NO;
+        _startedRouteTutorial = NO;
     }
     if (!_compassRotationFixed) {
         _compassRotationFixed = YES;
@@ -1206,7 +1253,7 @@ static NSString *kHadComboKey = @"had_combo";
     SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
     d.fontSize = 16;
     d.fontColor = [SKColor whiteColor];
-    st1 = @"I know, I know... Why should I do this?";
+    st1 = @"I know, I know... Why should you do this?";
     st2 = @"Well, if you advance in the game,";
     NSString *st3 = @"you will see that there's more in it.";
     d.position = CGPointMake(c.position.x, c.position.y - 20);
@@ -1226,21 +1273,56 @@ static NSString *kHadComboKey = @"had_combo";
     SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
     f.fontSize = 16;
     f.fontColor = [SKColor whiteColor];
-    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
-    g.fontSize = 16;
-    g.fontColor = [SKColor whiteColor];
+    //SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    //g.fontSize = 16;
+    //g.fontColor = [SKColor whiteColor];
     st1 = @"But more on that later...";
-    st2 = @"Just tap on the screen if you feel ready!";
-    g.position = CGPointMake(f.position.x, f.position.y - 20);
+    //st2 = @"Just tap on the screen if you feel ready!";
+    //g.position = CGPointMake(f.position.x, f.position.y - 20);
     f.text = st1;
-    g.text = st2;
+    //g.text = st2;
     [nerdText3 addChild:f];
-    [nerdText3 addChild:g];
+    //[nerdText3 addChild:g];
     nerdText3.position = CGPointMake(0, -40);
     
     [helpNode addChild:nerdText1];
     [helpNode addChild:nerdText2];
     [helpNode addChild:nerdText3];
+    
+    return helpNode;
+}
+
+-(SKSpriteNode *)createBasicHelp4
+{
+    SKSpriteNode *helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
+    helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    
+    helpNode.name = @"basic4";
+    
+    SKNode *nerdText2 = [SKNode node];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    c.fontSize = 16;
+    c.fontColor = [SKColor whiteColor];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    d.fontSize = 16;
+    d.fontColor = [SKColor whiteColor];
+    NSString *st1 = @"Hint: try scrolling";
+    NSString *st2 = @"in different directions.";
+    NSString *st3 = @"Tap on the screen if you're ready:)";
+    d.position = CGPointMake(c.position.x, c.position.y - 20);
+    c.text = st1;
+    d.text = st2;
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    e.fontSize = 16;
+    e.fontColor = [SKColor whiteColor];
+    e.text = st3;
+    e.position = CGPointMake(d.position.x, d.position.y - 20);
+    [nerdText2 addChild:c];
+    [nerdText2 addChild:d];
+    [nerdText2 addChild:e];
+    nerdText2.position = CGPointMake(0, 30);
+    
+    [helpNode addChild:nerdText2];
     
     return helpNode;
 }
