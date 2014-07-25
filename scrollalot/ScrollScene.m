@@ -51,6 +51,11 @@ static NSString *kHadComboKey = @"had_combo";
 @property (nonatomic) SKEmitterNode *leftEmitter;
 @property (nonatomic) SKEmitterNode *rightEmitter;
 
+/*@property (nonatomic) SKEmitterNode *topRouteEmitter;
+@property (nonatomic) SKEmitterNode *bottomRouteEmitter;
+@property (nonatomic) SKEmitterNode *leftRouteEmitter;
+@property (nonatomic) SKEmitterNode *rightRouteEmitter;*/
+
 @property (nonatomic) MarkerObject *compass_arrow;
 @property (nonatomic) MarkerObject *compass;
 
@@ -94,6 +99,7 @@ static NSString *kHadComboKey = @"had_combo";
 @property (nonatomic) SKAction *rotateToTop;
 @property (nonatomic) SKAction *rotateToBottom;
 @property (nonatomic) SKAction *pulseAction_route;
+@property (nonatomic) SKAction *vibrateAction;
 
 @property (nonatomic) BOOL compassRotationFixed;
 
@@ -148,6 +154,8 @@ static NSString *kHadComboKey = @"had_combo";
         self.rotateToTop = [SKAction rotateToAngle:-M_PI duration:.1 shortestUnitArc:YES];
         self.rotateToBottom = [SKAction rotateToAngle:0 duration:.1 shortestUnitArc:YES];
         self.compassRotationFixed = NO;
+        
+        
     }
     return self;
 }
@@ -206,25 +214,56 @@ static NSString *kHadComboKey = @"had_combo";
     self.topEmitter.position = CGPointMake(self.size.width / 2.0, self.size.height + 30);
     self.topEmitter.particlePositionRange = CGVectorMake(self.size.width + 50, 30);
     self.topEmitter.emissionAngle = 270 * degreeInRadians;
+    self.topEmitter.particleRotation = 0;
     
     self.bottomEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.bottomEmitter.position = CGPointMake(self.size.width / 2.0, -30);
     self.bottomEmitter.particlePositionRange = CGVectorMake(self.size.width + 50, 30);
+    self.bottomEmitter.particleRotation = 180 * degreeInRadians;
     
     self.leftEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.leftEmitter.position = CGPointMake(-30, self.size.height / 2.0);
     self.leftEmitter.particlePositionRange = CGVectorMake(30, self.size.height + 50);
     self.leftEmitter.emissionAngle = 0;
+    self.leftEmitter.particleRotation = 90 * degreeInRadians;
     
     self.rightEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.rightEmitter.position = CGPointMake(self.size.width + 30, self.size.height / 2.0);
     self.rightEmitter.particlePositionRange = CGVectorMake(30, self.size.height + 50);
     self.rightEmitter.emissionAngle = 180 * degreeInRadians;
+    self.rightEmitter.particleRotation = 270 * degreeInRadians;
     
     [self addChild:self.topEmitter];
     [self addChild:self.bottomEmitter];
     [self addChild:self.leftEmitter];
     [self addChild:self.rightEmitter];
+    
+    /*emitterPath = [[NSBundle mainBundle] pathForResource:@"RouteEffect" ofType:@"sks"];
+    self.topRouteEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    self.topRouteEmitter.position = CGPointMake(self.size.width / 2.0, self.size.height + 30);
+    self.topRouteEmitter.particlePositionRange = CGVectorMake(50, 30);
+    self.topRouteEmitter.emissionAngle = 270 * degreeInRadians;
+    
+    self.bottomRouteEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    self.bottomRouteEmitter.position = CGPointMake(self.size.width / 2.0, -30);
+    self.bottomRouteEmitter.particlePositionRange = CGVectorMake(50, 30);
+    
+    self.leftRouteEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    self.leftRouteEmitter.position = CGPointMake(-30, self.size.height / 2.0);
+    self.leftRouteEmitter.particlePositionRange = CGVectorMake(30, 50);
+    self.leftRouteEmitter.emissionAngle = 0;
+    
+    self.rightRouteEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    self.rightRouteEmitter.position = CGPointMake(self.size.width + 30, self.size.height / 2.0);
+    self.rightRouteEmitter.particlePositionRange = CGVectorMake(30, 50);
+    self.rightRouteEmitter.emissionAngle = 180 * degreeInRadians;
+    
+    self.rightRouteEmitter.particleBirthRate = self.leftRouteEmitter.particleBirthRate = self.topRouteEmitter.particleBirthRate = self.bottomRouteEmitter.particleBirthRate = 0;
+    
+    [self addChild:self.topRouteEmitter];
+    [self addChild:self.bottomRouteEmitter];
+    [self addChild:self.leftRouteEmitter];
+    [self addChild:self.rightRouteEmitter];*/
     
     UIColor *markerColor;
     if (_isDarkStyle) {
@@ -362,7 +401,7 @@ static NSString *kHadComboKey = @"had_combo";
     NSNumber *hadRoute = [[NSUserDefaults standardUserDefaults] objectForKey:kHadRouteKey];
     NSNumber *hadCombo = [[NSUserDefaults standardUserDefaults] objectForKey:kHadComboKey];
     
-    //hadRoute = hadCombo = nil;
+    hadRoute = hadCombo = nil;
     
     if (!hadRoute) {
         self.isRouteTutorial = YES;
@@ -485,9 +524,15 @@ static NSString *kHadComboKey = @"had_combo";
         self.rightEmitter.particleBirthRate = 0;
     }
     
-    self.topEmitter.xAcceleration = self.bottomEmitter.xAcceleration = self.leftEmitter.xAcceleration = self.rightEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx;
+    /*_leftRouteEmitter.xAcceleration = _rightRouteEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx;
+    _topRouteEmitter.xAcceleration = _bottomRouteEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx / 5;
+    _topRouteEmitter.yAcceleration = _bottomRouteEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy;
+    _leftRouteEmitter.yAcceleration = _rightRouteEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy / 5;*/
     
+    self.topEmitter.xAcceleration = self.bottomEmitter.xAcceleration = self.leftEmitter.xAcceleration = self.rightEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx;
     self.topEmitter.yAcceleration = self.bottomEmitter.yAcceleration = self.leftEmitter.yAcceleration = self.rightEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy;
+    
+    self.topEmitter.particleRotation = self.bottomEmitter.particleRotation = self.leftEmitter.particleRotation = self.rightEmitter.particleRotation = /*90 * degreeInRadians + */atan2(_mainMarker.physicsBody.velocity.dx, -_mainMarker.physicsBody.velocity.dy);
     
     [self updateWithTimeSinceLastUpdate:timeSinceLast];
 }
@@ -775,6 +820,7 @@ static NSString *kHadComboKey = @"had_combo";
 
 -(void)nextRouteLoadedInDirection:(char)initialDirection andDistance:(NSNumber *)distance
 {
+    NSLog(@"New route direction: %c", initialDirection);
     _currentRouteDirection = initialDirection;
     _lastRouteDirection = 'n';
     _currentRouteDistance = distance.floatValue;
@@ -796,6 +842,8 @@ static NSString *kHadComboKey = @"had_combo";
     for (MarkerObject *marker in _verticalMarkers) {
         [marker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
     }*/
+    //_rightRouteEmitter.particleBirthRate = _leftRouteEmitter.particleBirthRate = _topRouteEmitter.particleBirthRate = _bottomRouteEmitter.particleBirthRate = 0;
+    
     _compassRotationFixed = NO;
     [_compass_arrow removeAllActions];
     
@@ -820,7 +868,8 @@ static NSString *kHadComboKey = @"had_combo";
             
         } andInterval:.7];
     }
-    NSString *boomPath =[[NSBundle mainBundle] pathForResource:@"RewardEffect" ofType:@"sks"];
+    
+    /*NSString *boomPath =[[NSBundle mainBundle] pathForResource:@"RewardEffect" ofType:@"sks"];
     SKEmitterNode *boom = [NSKeyedUnarchiver unarchiveObjectWithFile:boomPath];
     boom.targetNode = self;
     boom.particlePositionRange = CGVectorMake(10, 10);
@@ -831,14 +880,15 @@ static NSString *kHadComboKey = @"had_combo";
     }], [SKAction waitForDuration:3], [SKAction runBlock:^{
         [boom removeFromParent];
     }]]];
-    
-    [self runAction:boomAction];
+    [self runAction:boomAction];*/
     
     [_compass_arrow runAction:[SKAction scaleTo:1.0 duration:0]];
 }
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance
 {
+    //_rightRouteEmitter.particleBirthRate = _leftRouteEmitter.particleBirthRate = _topRouteEmitter.particleBirthRate = _bottomRouteEmitter.particleBirthRate = 0;
+    
     if (_isRouteTutorial) {
         _helpNode = [self createRouteHelp];
         [self addChild:_helpNode];
@@ -855,43 +905,45 @@ static NSString *kHadComboKey = @"had_combo";
     _currentRouteDistance = distance.floatValue;
     NSLog(@"Checkpoint completed, next direction: %c", nextDirection);
     
-    BOOL isNewMarker = YES;
+    SKTexture *arrowTexture = nil;
+    BOOL isNewMarker = NO;
     
-    if (_lastRouteDirection == _currentRouteDirection) {
-        if (_directionMarker) {
-            [_directionMarker runAction:_pulseAction_long];
-            isNewMarker = NO;
-        }
+    isNewMarker = !_directionMarker;
+    
+    switch (nextDirection) {
+        case 'u': {
+            arrowTexture = _arrowUpTexture;
+            //_topRouteEmitter.particleBirthRate = 500;
+            [_compass_arrow runAction:_rotateToTop];
+        } break;
+        case 'd': {
+            arrowTexture = _arrowDownTexture;
+            //_bottomRouteEmitter.particleBirthRate = 500;
+            [_compass_arrow runAction:_rotateToBottom];
+        } break;
+        case 'l': {
+            arrowTexture = _arrowLeftTexture;
+            //_leftRouteEmitter.particleBirthRate = 500;
+            [_compass_arrow runAction:_rotateToLeft];
+        } break;
+        case 'r': {
+            arrowTexture = _arrowRightTexture;
+            //_rightRouteEmitter.particleBirthRate = 500;
+            [_compass_arrow runAction:_rotateToRight];
+        } break;
+        default:
+        break;
     }
+    
     if (isNewMarker) {
-        if (_directionMarker) {
-            [_directionMarker removeFromParent];
-            _directionMarker = nil;
-        }
-        switch (nextDirection) {
-            case 'u': {
-                _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowUpTexture];
-                [_compass_arrow runAction:_rotateToTop];
-            } break;
-            case 'd': {
-                _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowDownTexture];
-                [_compass_arrow runAction:_rotateToBottom];
-            } break;
-            case 'l': {
-                _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowLeftTexture];
-                [_compass_arrow runAction:_rotateToLeft];
-            } break;
-            case 'r': {
-                _directionMarker = [[SKSpriteNode alloc] initWithTexture:_arrowRightTexture];
-                [_compass_arrow runAction:_rotateToRight];
-            } break;
-            default:
-            break;
-        }
+        _directionMarker = [[SKSpriteNode alloc] initWithTexture:arrowTexture];
         _directionMarker.alpha = 0.0;
         _directionMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
         [_directionMarker runAction:_arrowAction];
         [self addChild:_directionMarker];
+    } else {
+        _directionMarker.texture = arrowTexture;
+        [_directionMarker runAction:_pulseAction_long];
     }
 }
 
