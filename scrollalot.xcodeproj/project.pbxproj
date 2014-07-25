@@ -24,6 +24,7 @@
 		B01E4284198257F20008CF41 /* RouteEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = B01E4283198257F20008CF41 /* RouteEffect.sks */; };
 		B01E4286198261060008CF41 /* raindrop.png in Resources */ = {isa = PBXBuildFile; fileRef = B01E4285198261060008CF41 /* raindrop.png */; };
 		B01E4288198280FA0008CF41 /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = B01E4287198280FA0008CF41 /* line.png */; };
+		B01E428B1982AAEA0008CF41 /* CommonTools.m in Sources */ = {isa = PBXBuildFile; fileRef = B01E428A1982AAEA0008CF41 /* CommonTools.m */; };
 		B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C821976774A008D0528 /* SwipeEmitter.sks */; };
 		B04B2C851976774A008D0528 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C831976774A008D0528 /* spark.png */; };
 		B04B2C881976B091008D0528 /* ParallaxBG.m in Sources */ = {isa = PBXBuildFile; fileRef = B04B2C871976B091008D0528 /* ParallaxBG.m */; };
@@ -99,6 +100,8 @@
 		B01E4283198257F20008CF41 /* RouteEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = RouteEffect.sks; sourceTree = "<group>"; };
 		B01E4285198261060008CF41 /* raindrop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = raindrop.png; sourceTree = "<group>"; };
 		B01E4287198280FA0008CF41 /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line.png; sourceTree = "<group>"; };
+		B01E42891982AAEA0008CF41 /* CommonTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonTools.h; sourceTree = "<group>"; };
+		B01E428A1982AAEA0008CF41 /* CommonTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonTools.m; sourceTree = "<group>"; };
 		B04B2C821976774A008D0528 /* SwipeEmitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SwipeEmitter.sks; sourceTree = "<group>"; };
 		B04B2C831976774A008D0528 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		B04B2C861976B091008D0528 /* ParallaxBG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallaxBG.h; sourceTree = "<group>"; };
@@ -405,6 +408,8 @@
 		B0ECE1711970138D00A6F3C5 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B01E42891982AAEA0008CF41 /* CommonTools.h */,
+				B01E428A1982AAEA0008CF41 /* CommonTools.m */,
 				B0ECE172197013AB00A6F3C5 /* GlobalAppProperties.h */,
 				B0ECE173197013AB00A6F3C5 /* GlobalAppProperties.m */,
 			);
@@ -542,6 +547,7 @@
 			files = (
 				B0ECE174197013AB00A6F3C5 /* GlobalAppProperties.m in Sources */,
 				B09B805A197AB77500800BD4 /* AchievedComboEntity.m in Sources */,
+				B01E428B1982AAEA0008CF41 /* CommonTools.m in Sources */,
 				B01E4261197962650008CF41 /* GCManager.m in Sources */,
 				B01E4265197962EE0008CF41 /* GCAuthResult.m in Sources */,
 				B09B8027196F027000800BD4 /* ScrollScene.m in Sources */,

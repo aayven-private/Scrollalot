@@ -11,6 +11,7 @@
 #import "MarkerObject.h"
 #import "GlobalAppProperties.h"
 #import "ParallaxBG.h"
+#import "CommonTools.h"
 
 //static CGFloat mmPerPixel = 0.078125;
 //static CGFloat cmPerPixel = 0.0078125;
@@ -126,9 +127,6 @@ static NSString *kHadComboKey = @"had_combo";
         } else {
             self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
         }
-        self.comboManager = [ComboManager sharedManager];
-        self.comboManager.delegate = self;
-        self.routeManager = [[RouteManager alloc] initWithDelegate:self];
         
         self.pulseAction = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:.1], [SKAction scaleTo:1.0 duration:.1]]];
         self.pulseAction_long = [SKAction sequence:@[[SKAction scaleTo:1.5 duration:.2], [SKAction scaleTo:1.0 duration:.2]]];
@@ -164,6 +162,10 @@ static NSString *kHadComboKey = @"had_combo";
 
 -(void)initEnvironment
 {
+    self.comboManager = [ComboManager sharedManager];
+    self.comboManager.delegate = self;
+    self.routeManager = [[RouteManager alloc] initWithDelegate:self];
+    
     self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
     self.physicsWorld.gravity = CGVectorMake(0, 0);
     self.physicsBody.categoryBitMask = 0;
@@ -233,21 +235,21 @@ static NSString *kHadComboKey = @"had_combo";
     emitterPath = [[NSBundle mainBundle] pathForResource:@"RouteEffect" ofType:@"sks"];
     self.topRouteEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.topRouteEmitter.position = CGPointMake(self.size.width / 2.0, self.size.height + 30);
-    self.topRouteEmitter.particlePositionRange = CGVectorMake(50, 30);
+    self.topRouteEmitter.particlePositionRange = CGVectorMake(80, 30);
     self.topRouteEmitter.emissionAngle = 270 * degreeInRadians;
     
     self.bottomRouteEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.bottomRouteEmitter.position = CGPointMake(self.size.width / 2.0, -30);
-    self.bottomRouteEmitter.particlePositionRange = CGVectorMake(50, 30);
+    self.bottomRouteEmitter.particlePositionRange = CGVectorMake(80, 30);
     
     self.leftRouteEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.leftRouteEmitter.position = CGPointMake(-30, self.size.height / 2.0);
-    self.leftRouteEmitter.particlePositionRange = CGVectorMake(30, 50);
+    self.leftRouteEmitter.particlePositionRange = CGVectorMake(30, 80);
     self.leftRouteEmitter.emissionAngle = 0;
     
     self.rightRouteEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.rightRouteEmitter.position = CGPointMake(self.size.width + 30, self.size.height / 2.0);
-    self.rightRouteEmitter.particlePositionRange = CGVectorMake(30, 50);
+    self.rightRouteEmitter.particlePositionRange = CGVectorMake(30, 80);
     self.rightRouteEmitter.emissionAngle = 180 * degreeInRadians;
     
     self.rightRouteEmitter.particleBirthRate = self.leftRouteEmitter.particleBirthRate = self.topRouteEmitter.particleBirthRate = self.bottomRouteEmitter.particleBirthRate = 0;
@@ -400,7 +402,23 @@ static NSString *kHadComboKey = @"had_combo";
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             [self.routeManager readRoutes];
             RouteEntityHelper *tutorialRoute = [[RouteEntityHelper alloc] init];
-            tutorialRoute.routePattern = @"uldr";
+            int rnd = [CommonTools getRandomNumberFromInt:0 toInt:3];
+            switch (rnd) {
+                case 0:
+                tutorialRoute.routePattern = @"urdl";
+                break;
+                case 1:
+                tutorialRoute.routePattern = @"dlur";
+                break;
+                case 2:
+                tutorialRoute.routePattern = @"lurd";
+                break;
+                case 3:
+                tutorialRoute.routePattern = @"rdlu";
+                break;
+                default:
+                break;
+            }
             tutorialRoute.routeName = @"Tutorial";
             tutorialRoute.routeDistance = [NSNumber numberWithFloat:0.001];
             [self.routeManager loadRouteManually:tutorialRoute];
@@ -438,7 +456,9 @@ static NSString *kHadComboKey = @"had_combo";
     self.compass_arrow.name = @"compass";
     [self addChild:self.compass_arrow];
     
-    [self.compass_arrow runAction:self.rotateToTop];
+    self.compass_arrow.zRotation = -M_PI;
+    
+    //[self.compass_arrow runAction:self.rotateToTop];
 }
 
 /*-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -723,6 +743,7 @@ static NSString *kHadComboKey = @"had_combo";
 -(void)swipeWithVelocity:(CGPoint)velocity
 {
     if (!_helpNodeIsVisible) {
+        //NSLog(@"Impulse: (%f, %f)", velocity.x, velocity.y);
         if (fabs(velocity.y) >= fabs(velocity.x)) {
             if (velocity.y < 0) {
                 [_comboManager actionTaken:@"d"];
@@ -857,13 +878,46 @@ static NSString *kHadComboKey = @"had_combo";
         [marker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
     }*/
     
+    [self runAction:[SKAction sequence:@[[SKAction fadeAlphaTo:0.1 duration:.2], [SKAction fadeAlphaTo:1.0 duration:.2]]]];
+    
+    //_currentRouteDistance = 0.1;
+    //_checkpointCount = 10;
+    
+    CGVector bonusImpulse;
+    switch (_currentRouteDirection) {
+        case 'u': {
+            bonusImpulse = CGVectorMake(0, -(_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 50000);
+        } break;
+        case 'd': {
+            bonusImpulse = CGVectorMake(0, (_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 50000);
+        } break;
+        case 'l': {
+            bonusImpulse = CGVectorMake((_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 50000, 0);
+        } break;
+        case 'r': {
+            bonusImpulse = CGVectorMake(-(_currentRouteDistance * 1000 * (_checkpointCount + 1)) * 50000, 0);
+        } break;
+        default:
+        break;
+    }
+    
+    //NSLog(@"Impulse: (%f, %f)", bonusImpulse.dx, bonusImpulse.dy);
+    
+    [self.mainMarker.physicsBody applyImpulse:bonusImpulse];
+    for (SKSpriteNode *marker in _horizontalMarkers) {
+        [marker.physicsBody applyImpulse:bonusImpulse];
+    }
+    for (MarkerObject *marker in _verticalMarkers) {
+        [marker.physicsBody applyImpulse:bonusImpulse];
+    }
+    
     _rightRouteEmitter.particleBirthRate = _leftRouteEmitter.particleBirthRate = _topRouteEmitter.particleBirthRate = _bottomRouteEmitter.particleBirthRate = 0;
     
     _compassRotationFixed = NO;
     [_compass_arrow removeAllActions];
     
-    _distance += _currentRouteDistance * (_checkpointCount + 1);
-    _lastSpeedCheckDistance = _distance;
+    //_distance += _currentRouteDistance * (_checkpointCount + 1);
+    //_lastSpeedCheckDistance = _distance;
     [_distanceLabel runAction:_pulseAction_long];
     _currentRouteDirection = 'n';
     _currentRouteDistance = 0;
@@ -1277,7 +1331,7 @@ static NSString *kHadComboKey = @"had_combo";
     b.fontSize = 16;
     b.fontColor = [SKColor whiteColor];
     NSString *st1 = @"Congratulations!";
-    NSString *st2 = @"You just finished you first route!";
+    NSString *st2 = @"You just finished your first route!";
     b.position = CGPointMake(a.position.x, a.position.y - 20);
     a.text = st1;
     b.text = st2;
