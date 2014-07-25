@@ -378,13 +378,24 @@ static NSString *kHadComboKey = @"had_combo";
     helpLabel1.text = @"Here you can see your current speed and the total distance covered. Scroll on for more!";
     [self.helpNode addChild:helpLabel1];*/
     
+    self.compass = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"compass"]]];
+    self.compass.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    self.compass.name = @"compass";
+    [self addChild:self.compass];
+    
+    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"arrow"]]];
+    self.compass_arrow.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    //self.compass_arrow.xScale = self.compass_arrow.yScale = 0.8;
+    self.compass_arrow.name = @"compass";
+    [self addChild:self.compass_arrow];
+    
+    self.compass_arrow.zRotation = -M_PI;
+    
     NSNumber *wasHelpShown = [[NSUserDefaults standardUserDefaults] objectForKey:kWasHelpShownKey];
     //wasHelpShown = nil;
     if (!wasHelpShown) {
         self.helpNode = [self createBasicHelp1];
         self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kWasHelpShownKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
         self.helpNodeIsVisible = YES;
         self.helpNode.hidden = NO;
         [self addChild:self.helpNode];
@@ -444,19 +455,6 @@ static NSString *kHadComboKey = @"had_combo";
             
         } andInterval:.7];
     }
-    
-    self.compass = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"compass"]]];
-    self.compass.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    self.compass.name = @"compass";
-    [self addChild:self.compass];
-    
-    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"arrow"]]];
-    self.compass_arrow.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    //self.compass_arrow.xScale = self.compass_arrow.yScale = 0.8;
-    self.compass_arrow.name = @"compass";
-    [self addChild:self.compass_arrow];
-    
-    self.compass_arrow.zRotation = -M_PI;
     
     //[self.compass_arrow runAction:self.rotateToTop];
 }
