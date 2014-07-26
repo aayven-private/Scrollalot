@@ -33,8 +33,8 @@ static NSString *kHadComboKey = @"had_combo";
 @property (nonatomic) NSTimeInterval speedCheckInterval;
 @property (nonatomic) NSTimeInterval lastSpeedCheckInterval;
 
-@property (nonatomic) NSMutableArray *verticalMarkers;
-@property (nonatomic) NSMutableArray *horizontalMarkers;
+//@property (nonatomic) NSMutableArray *verticalMarkers;
+//@property (nonatomic) NSMutableArray *horizontalMarkers;
 @property (nonatomic) MarkerObject *mainMarker;
 @property (nonatomic) CGPoint lastMarkerPosition;
 @property (nonatomic) CGFloat lastSpeedCheckDistance;
@@ -57,7 +57,7 @@ static NSString *kHadComboKey = @"had_combo";
 @property (nonatomic) SKEmitterNode *leftRouteEmitter;
 @property (nonatomic) SKEmitterNode *rightRouteEmitter;
 
-//@property (nonatomic) SKEmitterNode *bgEmitter;
+@property (nonatomic) SKEmitterNode *bgEmitter;
 
 @property (nonatomic) MarkerObject *compass_arrow;
 @property (nonatomic) MarkerObject *compass;
@@ -123,9 +123,9 @@ static BOOL startWithTutorials = YES;
         self.backgroundColor = [UIColor whiteColor];
         self.speedCheckInterval = 2.0;
         self.globalProps = [GlobalAppProperties sharedInstance];
-        self.verticalMarkers = [NSMutableArray array];
-        self.horizontalMarkers = [NSMutableArray array];
-        self.isDarkStyle = NO;
+        //self.verticalMarkers = [NSMutableArray array];
+        //self.horizontalMarkers = [NSMutableArray array];
+        self.isDarkStyle = YES;
         if (self.isDarkStyle) {
             self.backgroundColor = [UIColor blackColor];
         } else {
@@ -231,10 +231,10 @@ static BOOL startWithTutorials = YES;
     [self addChild:self.leftEmitter];
     [self addChild:self.rightEmitter];
     
-    /*emitterPath = [[NSBundle mainBundle] pathForResource:@"RouteEffect" ofType:@"sks"];
+    emitterPath = [[NSBundle mainBundle] pathForResource:@"BgEffect" ofType:@"sks"];
     self.bgEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.bgEmitter.position = CGPointMake(self.size.width / 2.0, self.size.height /2.0);
-    [self addChild:self.bgEmitter];*/
+    [self addChild:self.bgEmitter];
     
     emitterPath = [[NSBundle mainBundle] pathForResource:@"RouteEffect" ofType:@"sks"];
     self.topRouteEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
@@ -256,6 +256,7 @@ static BOOL startWithTutorials = YES;
     self.rightRouteEmitter.particlePositionRange = CGVectorMake(30, 80);
     self.rightRouteEmitter.emissionAngle = 180 * degreeInRadians;
     
+    self.topEmitter.targetNode = self.bottomEmitter.targetNode = self.rightEmitter.targetNode = self.leftEmitter.targetNode = self;
     self.rightRouteEmitter.particleBirthRate = self.leftRouteEmitter.particleBirthRate = self.topRouteEmitter.particleBirthRate = self.bottomRouteEmitter.particleBirthRate = 0;
     
     [self addChild:self.topRouteEmitter];
@@ -294,7 +295,7 @@ static BOOL startWithTutorials = YES;
         [self addChild:verticalBottom];
     }*/
     
-    MarkerObject *leftMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
+    /*MarkerObject *leftMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
     leftMarker.position = CGPointMake(0, self.size.height / 2.0);
     [self.horizontalMarkers addObject:leftMarker];
     [self addChild:leftMarker];
@@ -312,7 +313,7 @@ static BOOL startWithTutorials = YES;
     MarkerObject *bottomMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(5, 300)];
     bottomMarker.position = CGPointMake(self.size.width / 2.0, 0);
     [self.verticalMarkers addObject:bottomMarker];
-    [self addChild:bottomMarker];
+    [self addChild:bottomMarker];*/
     
     SKShapeNode *distanceBox = [SKShapeNode node];
     [distanceBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width - 150, self.size.height - 80, 130, 50), 8, 8, nil)];
@@ -572,8 +573,8 @@ static BOOL startWithTutorials = YES;
     //_topRouteEmitter.yAcceleration = _bottomRouteEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy;
     //_leftRouteEmitter.yAcceleration = _rightRouteEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy / 10;
     
-    self.topEmitter.xAcceleration = self.bottomEmitter.xAcceleration = self.leftEmitter.xAcceleration = self.rightEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx;
-    self.topEmitter.yAcceleration = self.bottomEmitter.yAcceleration = self.leftEmitter.yAcceleration = self.rightEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy;
+    self.topEmitter.xAcceleration = self.bottomEmitter.xAcceleration = self.leftEmitter.xAcceleration = self.rightEmitter.xAcceleration = _bgEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx;
+    self.topEmitter.yAcceleration = self.bottomEmitter.yAcceleration = self.leftEmitter.yAcceleration = self.rightEmitter.yAcceleration = _bgEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy;
     
     self.topEmitter.particleRotation = self.bottomEmitter.particleRotation = self.leftEmitter.particleRotation = self.rightEmitter.particleRotation = atan2(_mainMarker.physicsBody.velocity.dx, -_mainMarker.physicsBody.velocity.dy);
     self.topRouteEmitter.particleRotation = self.bottomRouteEmitter.particleRotation = self.leftRouteEmitter.particleRotation = self.rightRouteEmitter.particleRotation = atan2(_mainMarker.physicsBody.velocity.dx, -_mainMarker.physicsBody.velocity.dy);
@@ -583,7 +584,7 @@ static BOOL startWithTutorials = YES;
 
 -(void)updateWithTimeSinceLastUpdate:(CFTimeInterval)timeSinceLast
 {
-    for (SKSpriteNode *marker in _horizontalMarkers) {
+    /*for (SKSpriteNode *marker in _horizontalMarkers) {
         if (marker.position.y < -marker.size.height / 2.0) {
             marker.position = CGPointMake(marker.position.x, self.size.height + marker.size.height / 2.0);
         } else if (marker.position.y > self.size.height + marker.size.height / 2.0) {
@@ -597,7 +598,7 @@ static BOOL startWithTutorials = YES;
         } else if (marker.position.x > self.size.width + marker.size.width / 2.0) {
             marker.position = CGPointMake(-marker.size.width / 2.0, marker.position.y);
         }
-    }
+    }*/
     
     CGFloat distanceDiffX = fabs(_lastMarkerPosition.x - _mainMarker.position.x);
     CGFloat distanceDiffY = fabs(_lastMarkerPosition.y - _mainMarker.position.y);
@@ -738,7 +739,7 @@ static BOOL startWithTutorials = YES;
         //_compass_arrow.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
     }
     
-    for (MarkerObject *marker in _horizontalMarkers) {
+    /*for (MarkerObject *marker in _horizontalMarkers) {
         CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - marker.position.y) / ((self.size.height + marker.size.height) / 2.0) + 0.6;
         marker.xScale = distanceFromMiddle;
         distanceFromMiddle -= 0.4;
@@ -750,7 +751,7 @@ static BOOL startWithTutorials = YES;
         marker.yScale = distanceFromMiddle;
         distanceFromMiddle -= 0.45;
         marker.alpha = distanceFromMiddle * distanceFromMiddle;
-    }
+    }*/
     
     if (_distance * 1000 > _initialDistance * 1000 + 10) {
         _initialDistance = _distance;
@@ -805,12 +806,12 @@ static BOOL startWithTutorials = YES;
         }
         
         [self.mainMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, -velocity.y)];
-        for (SKSpriteNode *marker in _horizontalMarkers) {
+        /*for (SKSpriteNode *marker in _horizontalMarkers) {
             [marker.physicsBody applyImpulse:CGVectorMake(0, -velocity.y)];
         }
         for (MarkerObject *marker in _verticalMarkers) {
             [marker.physicsBody applyImpulse:CGVectorMake(velocity.x, 0)];
-        }
+        }*/
     }
 }
 
@@ -826,7 +827,7 @@ static BOOL startWithTutorials = YES;
 -(void)addTextArray:(NSArray *)textArray completion:(void(^)())completion andInterval:(float)interval
 {
     SKLabelNode *textLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
-    textLabel.fontColor = [UIColor blackColor];
+    textLabel.fontColor = [UIColor whiteColor];
     textLabel.fontSize = 25;
     
     NSMutableArray *textActions = [NSMutableArray array];
@@ -940,13 +941,18 @@ static BOOL startWithTutorials = YES;
     
     //NSLog(@"Impulse: (%f, %f)", bonusImpulse.dx, bonusImpulse.dy);
     
-    [self.mainMarker.physicsBody applyImpulse:bonusImpulse];
-    for (SKSpriteNode *marker in _horizontalMarkers) {
+    [self runAction:[SKAction sequence:@[[SKAction runBlock:^{
+        [_mainMarker.physicsBody applyImpulse:bonusImpulse];
+    }], [SKAction waitForDuration:3], [SKAction runBlock:^{
+        [_routeManager loadNewRoute];
+    }]]]];
+    
+    /*for (SKSpriteNode *marker in _horizontalMarkers) {
         [marker.physicsBody applyImpulse:CGVectorMake(0, bonusImpulse.dy)];
     }
     for (MarkerObject *marker in _verticalMarkers) {
         [marker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
-    }
+    }*/
     
     _rightRouteEmitter.particleBirthRate = _leftRouteEmitter.particleBirthRate = _topRouteEmitter.particleBirthRate = _bottomRouteEmitter.particleBirthRate = 0;
     

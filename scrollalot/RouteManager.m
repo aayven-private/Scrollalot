@@ -58,13 +58,13 @@ static int currentPackageIndex = 1;
     
     if (_routeIndex.intValue == _currentRoutePattern.length) {
         //Route complete
-        [_delegate routeCompleted:_currentRouteName];
         _routeIndex = @0;
+        [_delegate routeCompleted:_currentRouteName];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             if (_currentAchievementId && ![_currentAchievementId isEqualToString:@""]) {
                 [self setCurrentRouteAchieved];
             }
-            [self loadNewRoute];
+            //[self loadNewRoute];
         });
     }
 }
@@ -172,14 +172,17 @@ static int currentPackageIndex = 1;
     __block RouteEntityHelper *result = nil;
     NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
     
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RouteEntity"];
-    NSPredicate *notAchievedPredicate = [NSPredicate predicateWithFormat:@"achieved == NO"];
-    [request setPredicate:notAchievedPredicate];
-    
-    NSSortDescriptor *sortByDistance = [[NSSortDescriptor alloc] initWithKey:@"routeDistance" ascending:YES];
-    [request setSortDescriptors:@[sortByDistance]];
-    
     [context performBlockAndWait:^{
+        float leastDistance = [self getMinimumAvailableRouteDistanceWithContext:context];
+        
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RouteEntity"];
+        NSPredicate *notAchievedPredicate = [NSPredicate predicateWithFormat:@"achieved == NO AND routeDistance == %@", [NSNumber numberWithFloat:leastDistance]];
+        [request setPredicate:notAchievedPredicate];
+        
+        NSSortDescriptor *sortByDistance = [[NSSortDescriptor alloc] initWithKey:@"routeDistance" ascending:YES];
+        [request setSortDescriptors:@[sortByDistance]];
+        
+        
         NSError *error = nil;
         NSArray *routes = [context executeFetchRequest:request error:&error];
         
@@ -199,7 +202,7 @@ static int currentPackageIndex = 1;
 {
     RouteEntityHelper *nextRoute = [self getAvailableRouteWithLeastDistance];
     if (nextRoute) {
-        NSLog(@"Route loaded: %@", nextRoute.routeName);
+        //NSLog(@"Route loaded: %@", nextRoute.routeName);
         _currentRoutePattern = nextRoute.routePattern;
         _currentRouteName = nextRoute.routeName;
         _currentRouteDistance = nextRoute.routeDistance;
@@ -217,6 +220,38 @@ static int currentPackageIndex = 1;
     _currentRoutePattern = route.routePattern;
     _currentAchievementId = nil;
     [_delegate nextRouteLoadedInDirection:[_currentRoutePattern characterAtIndex:0] andDistance:_currentRouteDistance];
+}
+
+-(float)getMinimumAvailableRouteDistanceWithContext:(NSManagedObjectContext *)context
+{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"RouteEntity"
+                                              inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    [fetchRequest setResultType:NSDictionaryResultType];
+    
+    NSPredicate *notAchievedPredicate = [NSPredicate predicateWithFormat:@"achieved == NO"];
+    [fetchRequest setPredicate:notAchievedPredicate];
+    
+    NSExpression *keyPathExpression = [NSExpression expressionForKeyPath:@"routeDistance"];
+    NSExpression *leastDistanceExpression = [NSExpression
+                                        expressionForFunction:@"min:"
+                                        arguments:[NSArray arrayWithObject:keyPathExpression]];
+    
+    NSExpressionDescription *leastDistanceExpressionDescription =
+    [[NSExpressionDescription alloc] init];
+    [leastDistanceExpressionDescription setName:@"routeDistance"];
+    [leastDistanceExpressionDescription setExpression:leastDistanceExpression];
+    [leastDistanceExpressionDescription setExpressionResultType:NSDecimalAttributeType];
+    
+    [fetchRequest setPropertiesToFetch:[NSArray arrayWithObject:
+                                        leastDistanceExpressionDescription]];
+    NSError *error = nil;
+    NSArray *fetchResults = [context executeFetchRequest:fetchRequest error:&error];
+    NSNumber *distance = [[fetchResults lastObject] valueForKey:@"routeDistance"];
+    
+    return distance.floatValue;
+
 }
 
 @end
