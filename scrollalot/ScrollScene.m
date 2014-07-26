@@ -15,7 +15,7 @@
 
 //static CGFloat mmPerPixel = 0.078125;
 //static CGFloat cmPerPixel = 0.0078125;
-//static CGFloat mPerPixel = 0.000078125;
+static CGFloat mPerPixel = 0.000078125;
 static CGFloat kmPerPixel = 0.000000078125;
 
 //static CGFloat mmPSecInKmPH = 0.0036;
@@ -27,11 +27,15 @@ static CGFloat degreeInRadians = 0.0174532925;
 static NSString *kHadRouteKey = @"had_route";
 static NSString *kHadComboKey = @"had_combo";
 
+static CGFloat positionEpsilon = 0.2;
+
 @interface ScrollScene()
 
 @property (nonatomic) NSTimeInterval lastUpdateTimeInterval;
 @property (nonatomic) NSTimeInterval speedCheckInterval;
 @property (nonatomic) NSTimeInterval lastSpeedCheckInterval;
+@property (nonatomic) NSTimeInterval meteorSpawnInterval;
+@property (nonatomic) NSTimeInterval lastMeteorSpawnInterval;
 
 //@property (nonatomic) NSMutableArray *verticalMarkers;
 //@property (nonatomic) NSMutableArray *horizontalMarkers;
@@ -94,6 +98,7 @@ static NSString *kHadComboKey = @"had_combo";
 @property (nonatomic) SKTexture *arrowRightTexture;
 @property (nonatomic) SKTexture *arrowUpTexture;
 @property (nonatomic) SKTexture *arrowDownTexture;
+@property (nonatomic) SKTexture *meteorTexture;
 
 @property (nonatomic) int checkpointCount;
 
@@ -111,11 +116,16 @@ static NSString *kHadComboKey = @"had_combo";
 
 @property (nonatomic) BOOL startedRouteTutorial;
 
+@property (nonatomic) CGPoint globalPosition;
+@property (nonatomic) CGPoint bonusPosition;
+
+//@property (nonatomic) BOOL isMinigameRunning;
+
 @end
 
 @implementation ScrollScene
 
-static BOOL startWithTutorials = YES;
+static BOOL startWithTutorials = NO;
 
 -(id)initWithSize:(CGSize)size {    
     if (self = [super initWithSize:size]) {
@@ -145,6 +155,7 @@ static BOOL startWithTutorials = YES;
         self.arrowUpTexture = [SKTexture textureWithImageNamed:@"arrow_up"];
         self.arrowLeftTexture = [SKTexture textureWithImageNamed:@"arrow_left"];
         self.arrowRightTexture = [SKTexture textureWithImageNamed:@"arrow_right"];
+        //self.meteorTexture = [SKTexture textureWithImageNamed:@"meteor"];
         
         SKAction *fadeInGrow = [SKAction group:@[[SKAction fadeAlphaTo:1.0 duration:.5], [SKAction scaleTo:2.5 duration:.5]]];
         SKAction *shrinkAndFlyToCorner = [SKAction group:@[[SKAction scaleTo:1.0 duration:.3], [SKAction moveTo:CGPointMake(self.size.width - 45, 65) duration:.3]]];
@@ -159,7 +170,9 @@ static BOOL startWithTutorials = YES;
         self.rotateToBottom = [SKAction rotateToAngle:0 duration:.1 shortestUnitArc:YES];
         self.compassRotationFixed = NO;
         
-        
+        self.globalPosition = CGPointMake(0, 0);
+        self.bonusPosition = CGPointMake(5, 5);
+        //self.isMinigameRunning = NO;
     }
     return self;
 }
@@ -180,6 +193,7 @@ static BOOL startWithTutorials = YES;
     self.physicsBody.usesPreciseCollisionDetection = YES;
     self.physicsBody.linearDamping = 1.0;
     self.scaleMode = SKSceneScaleModeAspectFill;
+    self.physicsWorld.contactDelegate = self;
     
     self.mainMarker = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"square"]]];
     self.mainMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
@@ -205,6 +219,9 @@ static BOOL startWithTutorials = YES;
     self.lastSpeedCheckDistance = self.distance;
     self.lastSpeedCheckInterval = 0;
     self.lastMarkerPosition = self.mainMarker.position;
+    
+    //self.lastMeteorSpawnInterval = 0;
+    //self.meteorSpawnInterval = 2;
     
     NSString *emitterPath = [[NSBundle mainBundle] pathForResource:@"SwipeEmitter" ofType:@"sks"];
     self.topEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
@@ -383,12 +400,12 @@ static BOOL startWithTutorials = YES;
     helpLabel1.text = @"Here you can see your current speed and the total distance covered. Scroll on for more!";
     [self.helpNode addChild:helpLabel1];*/
     
-    self.compass = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"compass"]]];
+    self.compass = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"iranytu_alap"]]];
     self.compass.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
     self.compass.name = @"compass";
     [self addChild:self.compass];
     
-    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"arrow"]]];
+    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"iranytu"]]];
     self.compass_arrow.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
     //self.compass_arrow.xScale = self.compass_arrow.yScale = 0.8;
     self.compass_arrow.name = @"compass";
@@ -533,13 +550,13 @@ static BOOL startWithTutorials = YES;
     _lastUpdateTimeInterval = currentTime;
     
     if (self.mainMarker.physicsBody.velocity.dy < 0) {
-        self.topEmitter.particleBirthRate = 1000;
-        self.topEmitter.yAcceleration = self.mainMarker.physicsBody.velocity.dy;
+        _topEmitter.particleBirthRate = 0.15 * fabs(_mainMarker.physicsBody.velocity.dy);
+        //self.topEmitter.yAcceleration = self.mainMarker.physicsBody.velocity.dy;
         self.bottomEmitter.particleBirthRate = 0;
     } else if (self.mainMarker.physicsBody.velocity.dy > 0) {
         self.topEmitter.particleBirthRate = 0;
-        self.bottomEmitter.particleBirthRate = 1000;
-        self.bottomEmitter.yAcceleration = self.mainMarker.physicsBody.velocity.dy;
+        _bottomEmitter.particleBirthRate = 0.15 * fabs(_mainMarker.physicsBody.velocity.dy);
+        //self.bottomEmitter.yAcceleration = self.mainMarker.physicsBody.velocity.dy;
     } else {
         self.topEmitter.particleBirthRate = 0;
         self.bottomEmitter.particleBirthRate = 0;
@@ -547,12 +564,12 @@ static BOOL startWithTutorials = YES;
     
     if (self.mainMarker.physicsBody.velocity.dx < 0) {
         self.leftEmitter.particleBirthRate = 0;
-        self.rightEmitter.particleBirthRate = 1000;
-        self.rightEmitter.xAcceleration = self.mainMarker.physicsBody.velocity.dx;
+        self.rightEmitter.particleBirthRate = 0.15 * fabs(_mainMarker.physicsBody.velocity.dx);
+        //self.rightEmitter.xAcceleration = self.mainMarker.physicsBody.velocity.dx;
     } else if (self.mainMarker.physicsBody.velocity.dx > 0) {
-        self.leftEmitter.particleBirthRate = 1000;
+        self.leftEmitter.particleBirthRate = 0.15 * fabs(_mainMarker.physicsBody.velocity.dx);
         self.rightEmitter.particleBirthRate = 0;
-        self.leftEmitter.xAcceleration = self.mainMarker.physicsBody.velocity.dx;
+        //self.leftEmitter.xAcceleration = self.mainMarker.physicsBody.velocity.dx;
     } else {
         self.leftEmitter.particleBirthRate = 0;
         self.rightEmitter.particleBirthRate = 0;
@@ -573,8 +590,12 @@ static BOOL startWithTutorials = YES;
     //_topRouteEmitter.yAcceleration = _bottomRouteEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy;
     //_leftRouteEmitter.yAcceleration = _rightRouteEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy / 10;
     
+    
+    
     self.topEmitter.xAcceleration = self.bottomEmitter.xAcceleration = self.leftEmitter.xAcceleration = self.rightEmitter.xAcceleration = _bgEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx;
     self.topEmitter.yAcceleration = self.bottomEmitter.yAcceleration = self.leftEmitter.yAcceleration = self.rightEmitter.yAcceleration = _bgEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy;
+    
+    //NSLog(@"%f", _mainMarker.physicsBody.velocity.dy);
     
     self.topEmitter.particleRotation = self.bottomEmitter.particleRotation = self.leftEmitter.particleRotation = self.rightEmitter.particleRotation = atan2(_mainMarker.physicsBody.velocity.dx, -_mainMarker.physicsBody.velocity.dy);
     self.topRouteEmitter.particleRotation = self.bottomRouteEmitter.particleRotation = self.leftRouteEmitter.particleRotation = self.rightRouteEmitter.particleRotation = atan2(_mainMarker.physicsBody.velocity.dx, -_mainMarker.physicsBody.velocity.dy);
@@ -599,6 +620,17 @@ static BOOL startWithTutorials = YES;
             marker.position = CGPointMake(-marker.size.width / 2.0, marker.position.y);
         }
     }*/
+    
+    
+    
+    CGFloat globalPositionDiffX = (_lastMarkerPosition.x - _mainMarker.position.x) * mPerPixel * 2.0;
+    CGFloat globalPositionDiffY = (_lastMarkerPosition.y - _mainMarker.position.y) * mPerPixel * 2.0;
+    
+    _globalPosition = CGPointMake(_globalPosition.x + globalPositionDiffX, _globalPosition.y + globalPositionDiffY);
+    
+    //if (_bonusPosition.x - positionEpsilon < _globalPosition.x && _bonusPosition.x + positionEpsilon > _globalPosition.x && _bonusPosition.y - positionEpsilon < _globalPosition.y && _bonusPosition.y + positionEpsilon > _globalPosition.y) {
+        //NSLog(@"IN_PLACE");
+    //}
     
     CGFloat distanceDiffX = fabs(_lastMarkerPosition.x - _mainMarker.position.x);
     CGFloat distanceDiffY = fabs(_lastMarkerPosition.y - _mainMarker.position.y);
@@ -702,6 +734,7 @@ static BOOL startWithTutorials = YES;
     _globalProps.globalDistance = [NSNumber numberWithDouble:_distance];
     
     _lastSpeedCheckInterval += timeSinceLast;
+    
     if (_lastSpeedCheckInterval > _speedCheckInterval) {
         
         CGFloat measureDistance = fabs(_distance - _lastSpeedCheckDistance);
@@ -735,9 +768,24 @@ static BOOL startWithTutorials = YES;
         _lastSpeedCheckInterval = 0.0;
     }
     
-    if (!_compassRotationFixed) {
+    /*_lastMeteorSpawnInterval += timeSinceLast;
+    if (_lastMeteorSpawnInterval > _meteorSpawnInterval) {
+        _lastMeteorSpawnInterval = 0;
+        _meteorSpawnInterval = [CommonTools getRandomFloatFromFloat:1.5 toFloat:2.5];
+        int rndDirection = [CommonTools getRandomNumberFromInt:0 toInt:3];
+        
+    }*/
+    
+    //if (!_compassRotationFixed) {
         //_compass_arrow.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
-    }
+    //}
+    
+    //CGFloat distY = (fabs(self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0));
+    //CGFloat distX = (fabs(self.size.width / 2.0 - _mainMarker.position.x) / ((self.size.width + _mainMarker.size.width) / 2.0));
+    
+    _compass.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
+    
+    //_compass.zRotation = distY * M_PI;
     
     /*for (MarkerObject *marker in _horizontalMarkers) {
         CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - marker.position.y) / ((self.size.height + marker.size.height) / 2.0) + 0.6;
@@ -782,6 +830,7 @@ static BOOL startWithTutorials = YES;
 
 -(void)swipeWithVelocity:(CGPoint)velocity
 {
+    //NSLog(@"Global position: %@", NSStringFromCGPoint(_globalPosition));
     if (!_helpNodeIsVisible) {
         //NSLog(@"Impulse: (%f, %f)", velocity.x, velocity.y);
         if (fabs(velocity.y) >= fabs(velocity.x)) {
@@ -1549,5 +1598,28 @@ static BOOL startWithTutorials = YES;
     
     return helpNode;
 }
+
+/*-(void)addMeteorInDirection:(int)direction
+{
+    Meteor *meteor = [[Meteor alloc] initWithTexture:_meteorTexture];
+    switch (direction) {
+        case 0: {
+        } break;
+        case 1: {
+            
+        } break;
+        case 2: {
+            
+        } break;
+        case 3: {
+            
+        } break;
+    }
+}*/
+
+/*-(void)didBeginContact:(SKPhysicsContact *)contact
+{
+    NSLog(@"CONTACT");
+}*/
 
 @end

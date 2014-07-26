@@ -11,7 +11,7 @@
 #import "ComboManager.h"
 #import "RouteManager.h"
 
-@interface ScrollScene : SKScene<ComboManagerDelegate, RouteManagerDelegate>
+@interface ScrollScene : SKScene<ComboManagerDelegate, RouteManagerDelegate, SKPhysicsContactDelegate>
 
 @property (nonatomic, weak) id<ScrollSceneHandlerDelegate> delegate;
 @property (nonatomic) double distance;

@@ -15,9 +15,10 @@
     if (self = [super initWithTexture:texture]) {
         self.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:texture.size];
         self.objectType = kObjectTypeMarker;
+        self.physicsBody.categoryBitMask = playerCategory;
         self.physicsBody.dynamic = YES;
         self.physicsBody.affectedByGravity = NO;
-        self.physicsBody.contactTestBitMask = 0;
+        self.physicsBody.contactTestBitMask = meteorCategory;
         self.physicsBody.collisionBitMask = 0;
         self.physicsBody.mass = 3;
         self.physicsBody.linearDamping = 1.0;
@@ -30,9 +31,10 @@
     if (self = [super initWithColor:color size:size]) {
         self.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:size];
         self.objectType = kObjectTypeMarker;
+        self.physicsBody.categoryBitMask = playerCategory;
         self.physicsBody.dynamic = YES;
         self.physicsBody.affectedByGravity = NO;
-        self.physicsBody.contactTestBitMask = 0;
+        self.physicsBody.contactTestBitMask = meteorCategory;
         self.physicsBody.collisionBitMask = 0;
         self.physicsBody.mass = 3;
         self.physicsBody.linearDamping = 1.0;
