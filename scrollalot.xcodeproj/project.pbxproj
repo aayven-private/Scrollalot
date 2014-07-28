@@ -37,9 +37,13 @@
 		B01EF5E61986736200B412C6 /* AchievementsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B01EF5E41986736200B412C6 /* AchievementsViewController.m */; };
 		B01EF5E71986736200B412C6 /* AchievementsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5E51986736200B412C6 /* AchievementsViewController.xib */; };
 		B01EF5E9198678EC00B412C6 /* AchievementHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5E8198678EC00B412C6 /* AchievementHeader.xib */; };
-		B01EF5EE1986809F00B412C6 /* scrollalot_achievement_jumpy.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5EB1986809F00B412C6 /* scrollalot_achievement_jumpy.png */; };
-		B01EF5EF1986809F00B412C6 /* scrollalot_achievement_manyup.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5EC1986809F00B412C6 /* scrollalot_achievement_manyup.png */; };
-		B01EF5F01986809F00B412C6 /* scrollalot_achievement_twister.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5ED1986809F00B412C6 /* scrollalot_achievement_twister.png */; };
+		B01EF5EE1986809F00B412C6 /* scrollalot_achievement_jumpy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5EB1986809F00B412C6 /* scrollalot_achievement_jumpy@2x.png */; };
+		B01EF5EF1986809F00B412C6 /* scrollalot_achievement_manyup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5EC1986809F00B412C6 /* scrollalot_achievement_manyup@2x.png */; };
+		B01EF5F01986809F00B412C6 /* scrollalot_achievement_twister@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5ED1986809F00B412C6 /* scrollalot_achievement_twister@2x.png */; };
+		B01EF5F319869B4100B412C6 /* scrollalot_header@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5F119869B4100B412C6 /* scrollalot_header@2x.png */; };
+		B01EF5F81986A40900B412C6 /* iarnytu_alap120@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5F61986A40900B412C6 /* iarnytu_alap120@2x.png */; };
+		B01EF5F91986A40900B412C6 /* iranytu120@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5F71986A40900B412C6 /* iranytu120@2x.png */; };
+		B01EF5FB1986A8EE00B412C6 /* Tekton Pro Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B01EF5FA1986A8EE00B412C6 /* Tekton Pro Bold.ttf */; };
 		B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C821976774A008D0528 /* SwipeEmitter.sks */; };
 		B04B2C851976774A008D0528 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C831976774A008D0528 /* spark.png */; };
 		B04B2C881976B091008D0528 /* ParallaxBG.m in Sources */ = {isa = PBXBuildFile; fileRef = B04B2C871976B091008D0528 /* ParallaxBG.m */; };
@@ -132,9 +136,13 @@
 		B01EF5E41986736200B412C6 /* AchievementsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AchievementsViewController.m; sourceTree = "<group>"; };
 		B01EF5E51986736200B412C6 /* AchievementsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AchievementsViewController.xib; sourceTree = "<group>"; };
 		B01EF5E8198678EC00B412C6 /* AchievementHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AchievementHeader.xib; sourceTree = "<group>"; };
-		B01EF5EB1986809F00B412C6 /* scrollalot_achievement_jumpy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrollalot_achievement_jumpy.png; sourceTree = "<group>"; };
-		B01EF5EC1986809F00B412C6 /* scrollalot_achievement_manyup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrollalot_achievement_manyup.png; sourceTree = "<group>"; };
-		B01EF5ED1986809F00B412C6 /* scrollalot_achievement_twister.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrollalot_achievement_twister.png; sourceTree = "<group>"; };
+		B01EF5EB1986809F00B412C6 /* scrollalot_achievement_jumpy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_achievement_jumpy@2x.png"; sourceTree = "<group>"; };
+		B01EF5EC1986809F00B412C6 /* scrollalot_achievement_manyup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_achievement_manyup@2x.png"; sourceTree = "<group>"; };
+		B01EF5ED1986809F00B412C6 /* scrollalot_achievement_twister@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_achievement_twister@2x.png"; sourceTree = "<group>"; };
+		B01EF5F119869B4100B412C6 /* scrollalot_header@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_header@2x.png"; sourceTree = "<group>"; };
+		B01EF5F61986A40900B412C6 /* iarnytu_alap120@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iarnytu_alap120@2x.png"; sourceTree = "<group>"; };
+		B01EF5F71986A40900B412C6 /* iranytu120@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iranytu120@2x.png"; sourceTree = "<group>"; };
+		B01EF5FA1986A8EE00B412C6 /* Tekton Pro Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Tekton Pro Bold.ttf"; sourceTree = "<group>"; };
 		B04B2C821976774A008D0528 /* SwipeEmitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SwipeEmitter.sks; sourceTree = "<group>"; };
 		B04B2C831976774A008D0528 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		B04B2C861976B091008D0528 /* ParallaxBG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallaxBG.h; sourceTree = "<group>"; };
@@ -263,9 +271,9 @@
 		B01EF5EA1986809500B412C6 /* Badges */ = {
 			isa = PBXGroup;
 			children = (
-				B01EF5EB1986809F00B412C6 /* scrollalot_achievement_jumpy.png */,
-				B01EF5EC1986809F00B412C6 /* scrollalot_achievement_manyup.png */,
-				B01EF5ED1986809F00B412C6 /* scrollalot_achievement_twister.png */,
+				B01EF5EB1986809F00B412C6 /* scrollalot_achievement_jumpy@2x.png */,
+				B01EF5EC1986809F00B412C6 /* scrollalot_achievement_manyup@2x.png */,
+				B01EF5ED1986809F00B412C6 /* scrollalot_achievement_twister@2x.png */,
 			);
 			name = Badges;
 			sourceTree = "<group>";
@@ -373,6 +381,10 @@
 		B09B804B196F02F400800BD4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B01EF5FA1986A8EE00B412C6 /* Tekton Pro Bold.ttf */,
+				B01EF5F61986A40900B412C6 /* iarnytu_alap120@2x.png */,
+				B01EF5F71986A40900B412C6 /* iranytu120@2x.png */,
+				B01EF5F119869B4100B412C6 /* scrollalot_header@2x.png */,
 				B01EF5EA1986809500B412C6 /* Badges */,
 				B01EF5C91983F88500B412C6 /* iranytu_alap@2x.png */,
 				B01EF5CA1983F88500B412C6 /* iranytu@2x.png */,
@@ -569,7 +581,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B01EF5F01986809F00B412C6 /* scrollalot_achievement_twister.png in Resources */,
+				B01EF5F01986809F00B412C6 /* scrollalot_achievement_twister@2x.png in Resources */,
 				B09B8055197A958100800BD4 /* ComboPackage1.plist in Resources */,
 				B01E4286198261060008CF41 /* raindrop.png in Resources */,
 				B01EF5CC1983F88500B412C6 /* iranytu@2x.png in Resources */,
@@ -587,21 +599,25 @@
 				B04B2C851976774A008D0528 /* spark.png in Resources */,
 				B01EF5E71986736200B412C6 /* AchievementsViewController.xib in Resources */,
 				B01EF5E9198678EC00B412C6 /* AchievementHeader.xib in Resources */,
+				B01EF5FB1986A8EE00B412C6 /* Tekton Pro Bold.ttf in Resources */,
 				B01E4284198257F20008CF41 /* RouteEffect.sks in Resources */,
 				B04B2C9819782721008D0528 /* compass_arrow@2x.png in Resources */,
+				B01EF5F91986A40900B412C6 /* iranytu120@2x.png in Resources */,
 				B01E4279197FD5DD0008CF41 /* arrow_down@2x.png in Resources */,
 				B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */,
 				B01E427C197FD5DD0008CF41 /* arrow_up@2x.png in Resources */,
 				B0ECE167196FEC5500A6F3C5 /* square.png in Resources */,
-				B01EF5EF1986809F00B412C6 /* scrollalot_achievement_manyup.png in Resources */,
+				B01EF5EF1986809F00B412C6 /* scrollalot_achievement_manyup@2x.png in Resources */,
+				B01EF5F81986A40900B412C6 /* iarnytu_alap120@2x.png in Resources */,
 				B01EF5C11983CE6200B412C6 /* line_white.png in Resources */,
 				B01EF5C51983EE9B00B412C6 /* meteor@2x.png in Resources */,
 				B01E4288198280FA0008CF41 /* line.png in Resources */,
 				B09B8021196F027000800BD4 /* Main.storyboard in Resources */,
+				B01EF5F319869B4100B412C6 /* scrollalot_header@2x.png in Resources */,
 				B04B2C8E1976E326008D0528 /* spiral@2x.png in Resources */,
 				B01E427E1980F9CA0008CF41 /* arrow@2x.png in Resources */,
 				B01E427A197FD5DD0008CF41 /* arrow_left@2x.png in Resources */,
-				B01EF5EE1986809F00B412C6 /* scrollalot_achievement_jumpy.png in Resources */,
+				B01EF5EE1986809F00B412C6 /* scrollalot_achievement_jumpy@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

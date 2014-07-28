@@ -26,6 +26,8 @@
     if (self) {
         // Custom initialization
         self.achievementsDict = [NSMutableDictionary dictionary];
+        self.achievementsCollectionView.backgroundColor = [UIColor clearColor];
+        //self.view.backgroundColor = [UIColor lightGrayColor];
         //self.achievementsCollectionView.delegate = self;
         //self.achievementsCollectionView.dataSource = self;
     }
@@ -95,6 +97,10 @@
     
     cell.nameLabel.text = achievementName;
     
+    cell.layer.borderWidth=1.0f;
+    cell.layer.borderColor=[UIColor blackColor].CGColor;
+    cell.layer.cornerRadius = 8.0;
+    
     return cell;
 }
 
@@ -108,7 +114,7 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(90, 130);
+    return CGSizeMake(120, 160);
 }
 
 - (UICollectionReusableView *)collectionView: (UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {

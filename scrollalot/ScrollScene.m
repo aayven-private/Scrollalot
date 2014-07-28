@@ -29,6 +29,8 @@ static NSString *kHadComboKey = @"had_combo";
 
 static CGFloat positionEpsilon = 0.2;
 
+static NSString *fontName = @"TektonPro-Bold";
+
 @interface ScrollScene()
 
 @property (nonatomic) NSTimeInterval lastUpdateTimeInterval;
@@ -288,6 +290,10 @@ static BOOL startWithTutorials = NO;
         markerColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0];
     }
     
+    SKSpriteNode *header = [[SKSpriteNode alloc] initWithTexture:[SKTexture textureWithImageNamed:@"scrollalot_header"]];
+    header.position = CGPointMake(header.size.width / 2.0, self.size.height - header.size.height / 2.0);
+    [self addChild:header];
+    
     /*for (int i=0; i<2; i++) {
         MarkerObject *horizontalLeft = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
         horizontalLeft.position = CGPointMake(0, self.size.height * (1 + i) / 3.0);
@@ -332,38 +338,38 @@ static BOOL startWithTutorials = NO;
     [self.verticalMarkers addObject:bottomMarker];
     [self addChild:bottomMarker];*/
     
-    SKShapeNode *distanceBox = [SKShapeNode node];
+    /*SKShapeNode *distanceBox = [SKShapeNode node];
     [distanceBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width - 150, self.size.height - 80, 130, 50), 8, 8, nil)];
     distanceBox.strokeColor = distanceBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
-    [self addChild:distanceBox];
+    [self addChild:distanceBox];*/
     
-    self.distanceLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
-    self.distanceLabel.fontSize = 18.0;
-    self.distanceLabel.position = CGPointMake(self.size.width - 85, self.size.height - 60);
+    self.distanceLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
+    self.distanceLabel.fontSize = 13.0;
+    self.distanceLabel.position = CGPointMake(self.size.width - 56, self.size.height - 43);
     self.distanceLabel.fontColor = [UIColor whiteColor];
     [self addChild:self.distanceLabel];
     
-    SKShapeNode *speedBox = [SKShapeNode node];
+    /*SKShapeNode *speedBox = [SKShapeNode node];
     [speedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width / 2.0 - 65, 40, 130, 50), 8, 8, nil)];
     speedBox.strokeColor = speedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
-    [self addChild:speedBox];
+    [self addChild:speedBox];*/
     
-    self.speedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
-    self.speedLabel.fontSize = 18.0;
-    self.speedLabel.position = CGPointMake(self.size.width / 2.0, 60);
+    self.speedLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
+    self.speedLabel.fontSize = 13.0;
+    self.speedLabel.position = CGPointMake(self.size.width / 2.0, self.size.height - 56);
     self.speedLabel.fontColor = [UIColor whiteColor];
     self.speedLabel.text = @"0.0Km/h";
     [self addChild:self.speedLabel];
     
-    self.maxSpeedBox = [SKShapeNode node];
+    /*self.maxSpeedBox = [SKShapeNode node];
     [self.maxSpeedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(20, self.size.height - 80, 130, 50), 8, 8, nil)];
     self.maxSpeedBox.strokeColor = self.maxSpeedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
     self.maxSpeedBox.name = @"maxspeedbox";
-    [self addChild:self.maxSpeedBox];
+    [self addChild:self.maxSpeedBox];*/
     
-    self.maxSpeedLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
-    self.maxSpeedLabel.fontSize = 18.0;
-    self.maxSpeedLabel.position = CGPointMake(85, self.size.height - 60) ;
+    self.maxSpeedLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
+    self.maxSpeedLabel.fontSize = 13.0;
+    self.maxSpeedLabel.position = CGPointMake(56, self.size.height - 43) ;
     self.maxSpeedLabel.fontColor = [UIColor whiteColor];
     self.maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", self.maxSpeed];
     [self addChild:self.maxSpeedLabel];
@@ -400,12 +406,12 @@ static BOOL startWithTutorials = NO;
     helpLabel1.text = @"Here you can see your current speed and the total distance covered. Scroll on for more!";
     [self.helpNode addChild:helpLabel1];*/
     
-    self.compass = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"iranytu_alap"]]];
+    self.compass = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"iarnytu_alap120"]]];
     self.compass.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
     self.compass.name = @"compass";
     [self addChild:self.compass];
     
-    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"iranytu"]]];
+    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"iranytu120"]]];
     self.compass_arrow.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
     //self.compass_arrow.xScale = self.compass_arrow.yScale = 0.8;
     self.compass_arrow.name = @"compass";
@@ -875,7 +881,7 @@ static BOOL startWithTutorials = NO;
 
 -(void)addTextArray:(NSArray *)textArray completion:(void(^)())completion andInterval:(float)interval
 {
-    SKLabelNode *textLabel = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *textLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
     textLabel.fontColor = [UIColor whiteColor];
     textLabel.fontSize = 25;
     
@@ -1138,7 +1144,7 @@ static BOOL startWithTutorials = NO;
     helpNode.name = @"basic1";
     
     SKNode *captionBox = [SKNode node];
-    SKLabelNode *caption = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *caption = [SKLabelNode labelNodeWithFontNamed:fontName];
     caption.fontSize = 28;
     caption.fontColor = [SKColor whiteColor];
     NSString *cpt = @"Welcome to scrollalot!";
@@ -1147,10 +1153,10 @@ static BOOL startWithTutorials = NO;
     captionBox.position = CGPointMake(0, 130);
     
     SKNode *nerdText1 = [SKNode node];
-    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:fontName];
     a.fontSize = 16;
     a.fontColor = [SKColor whiteColor];
-    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:fontName];
     b.fontSize = 16;
     b.fontColor = [SKColor whiteColor];
     NSString *st1 = @"First of all, thanks for downloading";
@@ -1163,10 +1169,10 @@ static BOOL startWithTutorials = NO;
     nerdText1.position = CGPointMake(0, 80);
     
     SKNode *nerdText2 = [SKNode node];
-    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:fontName];
     c.fontSize = 16;
     c.fontColor = [SKColor whiteColor];
-    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:fontName];
     d.fontSize = 16;
     d.fontColor = [SKColor whiteColor];
     st1 = @"The goal is to scroll as much as you can.";
@@ -1175,7 +1181,7 @@ static BOOL startWithTutorials = NO;
     d.position = CGPointMake(c.position.x, c.position.y - 20);
     c.text = st1;
     d.text = st2;
-    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:fontName];
     e.fontSize = 16;
     e.fontColor = [SKColor whiteColor];
     e.text = st3;
@@ -1186,10 +1192,10 @@ static BOOL startWithTutorials = NO;
     nerdText2.position = CGPointMake(0, 30);
     
     SKNode *nerdText3 = [SKNode node];
-    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:fontName];
     f.fontSize = 16;
     f.fontColor = [SKColor whiteColor];
-    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:fontName];
     g.fontSize = 16;
     g.fontColor = [SKColor whiteColor];
     st1 = @"Tap on the screen and I will show you";
@@ -1217,10 +1223,10 @@ static BOOL startWithTutorials = NO;
     helpNode.name = @"basic2";
     
     SKNode *nerdText1 = [SKNode node];
-    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:fontName];
     a.fontSize = 16;
     a.fontColor = [SKColor whiteColor];
-    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:fontName];
     b.fontSize = 16;
     b.fontColor = [SKColor whiteColor];
     NSString *st1 = @"Here you can see speed record";
@@ -1233,10 +1239,10 @@ static BOOL startWithTutorials = NO;
     nerdText1.position = CGPointMake(0, 140);
     
     SKNode *nerdText2 = [SKNode node];
-    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:fontName];
     c.fontSize = 16;
     c.fontColor = [SKColor whiteColor];
-    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:fontName];
     d.fontSize = 16;
     d.fontColor = [SKColor whiteColor];
     st1 = @"Here is the compass showing";
@@ -1245,7 +1251,7 @@ static BOOL startWithTutorials = NO;
     d.position = CGPointMake(c.position.x, c.position.y - 20);
     c.text = st1;
     d.text = st2;
-    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:fontName];
     e.fontSize = 16;
     e.fontColor = [SKColor whiteColor];
     e.text = st3;
@@ -1256,10 +1262,10 @@ static BOOL startWithTutorials = NO;
     nerdText2.position = CGPointMake(0, 30);
     
     SKNode *nerdText3 = [SKNode node];
-    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:fontName];
     f.fontSize = 16;
     f.fontColor = [SKColor whiteColor];
-    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:fontName];
     g.fontSize = 16;
     g.fontColor = [SKColor whiteColor];
     st1 = @"Here you can see your current speed";
@@ -1286,10 +1292,10 @@ static BOOL startWithTutorials = NO;
     helpNode.name = @"basic3";
     
     SKNode *nerdText1 = [SKNode node];
-    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:fontName];
     a.fontSize = 16;
     a.fontColor = [SKColor whiteColor];
-    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:fontName];
     b.fontSize = 16;
     b.fontColor = [SKColor whiteColor];
     NSString *st1 = @"That' all you need to know for now.";
@@ -1302,10 +1308,10 @@ static BOOL startWithTutorials = NO;
     nerdText1.position = CGPointMake(0, 80);
     
     SKNode *nerdText2 = [SKNode node];
-    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:fontName];
     c.fontSize = 16;
     c.fontColor = [SKColor whiteColor];
-    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:fontName];
     d.fontSize = 16;
     d.fontColor = [SKColor whiteColor];
     st1 = @"I know, I know... Why should you do this?";
@@ -1314,7 +1320,7 @@ static BOOL startWithTutorials = NO;
     d.position = CGPointMake(c.position.x, c.position.y - 20);
     c.text = st1;
     d.text = st2;
-    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:fontName];
     e.fontSize = 16;
     e.fontColor = [SKColor whiteColor];
     e.text = st3;
@@ -1325,7 +1331,7 @@ static BOOL startWithTutorials = NO;
     nerdText2.position = CGPointMake(0, 30);
     
     SKNode *nerdText3 = [SKNode node];
-    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:fontName];
     f.fontSize = 16;
     f.fontColor = [SKColor whiteColor];
     //SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
@@ -1355,10 +1361,10 @@ static BOOL startWithTutorials = NO;
     helpNode.name = @"basic4";
     
     SKNode *nerdText2 = [SKNode node];
-    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:fontName];
     c.fontSize = 16;
     c.fontColor = [SKColor whiteColor];
-    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:fontName];
     d.fontSize = 16;
     d.fontColor = [SKColor whiteColor];
     NSString *st1 = @"Hint: try scrolling";
@@ -1367,7 +1373,7 @@ static BOOL startWithTutorials = NO;
     d.position = CGPointMake(c.position.x, c.position.y - 20);
     c.text = st1;
     d.text = st2;
-    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:fontName];
     e.fontSize = 16;
     e.fontColor = [SKColor whiteColor];
     e.text = st3;
@@ -1390,10 +1396,10 @@ static BOOL startWithTutorials = NO;
     helpNode.name = @"route1";
     
     SKNode *nerdText1 = [SKNode node];
-    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:fontName];
     a.fontSize = 16;
     a.fontColor = [SKColor whiteColor];
-    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:fontName];
     b.fontSize = 16;
     b.fontColor = [SKColor whiteColor];
     NSString *st1 = @"You have found a route!";
@@ -1406,10 +1412,10 @@ static BOOL startWithTutorials = NO;
     nerdText1.position = CGPointMake(0, 80);
     
     SKNode *nerdText2 = [SKNode node];
-    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:fontName];
     c.fontSize = 16;
     c.fontColor = [SKColor whiteColor];
-    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:fontName];
     d.fontSize = 16;
     d.fontColor = [SKColor whiteColor];
     st1 = @"When you find a route, the compass";
@@ -1418,7 +1424,7 @@ static BOOL startWithTutorials = NO;
     d.position = CGPointMake(c.position.x, c.position.y - 20);
     c.text = st1;
     d.text = st2;
-    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:fontName];
     e.fontSize = 16;
     e.fontColor = [SKColor whiteColor];
     e.text = st3;
@@ -1429,10 +1435,10 @@ static BOOL startWithTutorials = NO;
     nerdText2.position = CGPointMake(0, 30);
     
     SKNode *nerdText3 = [SKNode node];
-    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:fontName];
     f.fontSize = 16;
     f.fontColor = [SKColor whiteColor];
-    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:fontName];
     g.fontSize = 16;
     g.fontColor = [SKColor whiteColor];
     st1 = @"If you complete the route,";
@@ -1459,10 +1465,10 @@ static BOOL startWithTutorials = NO;
     helpNode.name = @"route2";
     
     SKNode *nerdText1 = [SKNode node];
-    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:fontName];
     a.fontSize = 16;
     a.fontColor = [SKColor whiteColor];
-    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:fontName];
     b.fontSize = 16;
     b.fontColor = [SKColor whiteColor];
     NSString *st1 = @"Congratulations!";
@@ -1475,10 +1481,10 @@ static BOOL startWithTutorials = NO;
     nerdText1.position = CGPointMake(0, 80);
     
     SKNode *nerdText2 = [SKNode node];
-    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:fontName];
     c.fontSize = 16;
     c.fontColor = [SKColor whiteColor];
-    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:fontName];
     d.fontSize = 16;
     d.fontColor = [SKColor whiteColor];
     st1 = @"You can find plenty of routes";
@@ -1487,7 +1493,7 @@ static BOOL startWithTutorials = NO;
     d.position = CGPointMake(c.position.x, c.position.y - 20);
     c.text = st1;
     d.text = st2;
-    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:fontName];
     e.fontSize = 16;
     e.fontColor = [SKColor whiteColor];
     e.text = st3;
@@ -1498,10 +1504,10 @@ static BOOL startWithTutorials = NO;
     nerdText2.position = CGPointMake(0, 30);
     
     SKNode *nerdText3 = [SKNode node];
-    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:fontName];
     f.fontSize = 16;
     f.fontColor = [SKColor whiteColor];
-    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:fontName];
     g.fontSize = 16;
     g.fontColor = [SKColor whiteColor];
     st1 = @"When the compass is fixed in a direction,";
@@ -1528,7 +1534,7 @@ static BOOL startWithTutorials = NO;
     helpNode.name = @"combo";
     
     SKNode *captionBox = [SKNode node];
-    SKLabelNode *caption = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *caption = [SKLabelNode labelNodeWithFontNamed:fontName];
     caption.fontSize = 28;
     caption.fontColor = [SKColor whiteColor];
     NSString *cpt = comboName;
@@ -1537,10 +1543,10 @@ static BOOL startWithTutorials = NO;
     captionBox.position = CGPointMake(0, 130);
     
     SKNode *nerdText1 = [SKNode node];
-    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:fontName];
     a.fontSize = 16;
     a.fontColor = [SKColor whiteColor];
-    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:fontName];
     b.fontSize = 16;
     b.fontColor = [SKColor whiteColor];
     NSString *st1 = @"Congratulations!";
@@ -1553,10 +1559,10 @@ static BOOL startWithTutorials = NO;
     nerdText1.position = CGPointMake(0, 80);
     
     SKNode *nerdText2 = [SKNode node];
-    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:fontName];
     c.fontSize = 16;
     c.fontColor = [SKColor whiteColor];
-    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:fontName];
     d.fontSize = 16;
     d.fontColor = [SKColor whiteColor];
     st1 = @"A combo is a special sequence of actions";
@@ -1565,7 +1571,7 @@ static BOOL startWithTutorials = NO;
     d.position = CGPointMake(c.position.x, c.position.y - 20);
     c.text = st1;
     d.text = st2;
-    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:fontName];
     e.fontSize = 16;
     e.fontColor = [SKColor whiteColor];
     e.text = st3;
@@ -1576,10 +1582,10 @@ static BOOL startWithTutorials = NO;
     nerdText2.position = CGPointMake(0, 30);
     
     SKNode *nerdText3 = [SKNode node];
-    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:fontName];
     f.fontSize = 16;
     f.fontColor = [SKColor whiteColor];
-    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
+    SKLabelNode *g = [SKLabelNode labelNodeWithFontNamed:fontName];
     g.fontSize = 16;
     g.fontColor = [SKColor whiteColor];
     st1 = @"You can only achieve each combo";
