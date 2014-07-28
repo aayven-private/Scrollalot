@@ -3,6 +3,8 @@
 <plist version="1.0">
 <array>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Maze5</string>
 		<key>routeDistance</key>
@@ -15,6 +17,8 @@
 		<string>drururdldrd</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Cross5</string>
 		<key>routeDistance</key>
@@ -27,6 +31,8 @@
 		<string>ururdrdldlul</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route10</string>
 		<key>routeName</key>
 		<string>Circle10</string>
 		<key>routeDistance</key>
@@ -39,6 +45,8 @@
 		<string>ullddrru</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route10</string>
 		<key>routeName</key>
 		<string>Eight10</string>
 		<key>routeDistance</key>
@@ -51,6 +59,8 @@
 		<string>urdldru</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route10</string>
 		<key>routeName</key>
 		<string>Pyramid10</string>
 		<key>routeDistance</key>
@@ -63,6 +73,8 @@
 		<string>rururdrdr</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Pyramid5</string>
 		<key>routeDistance</key>
@@ -75,6 +87,8 @@
 		<string>rururdrdr</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Eight5</string>
 		<key>routeDistance</key>
@@ -87,6 +101,8 @@
 		<string>urdldru</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Circle5</string>
 		<key>routeDistance</key>
@@ -99,6 +115,8 @@
 		<string>ullddrru</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Down55</string>
 		<key>routeDistance</key>
@@ -111,6 +129,8 @@
 		<string>ddddd</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Up55</string>
 		<key>routeDistance</key>
@@ -123,6 +143,8 @@
 		<string>uuuuu</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Right55</string>
 		<key>routeDistance</key>
@@ -135,6 +157,8 @@
 		<string>rrrrr</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Left55</string>
 		<key>routeDistance</key>
@@ -147,6 +171,8 @@
 		<string>lllll</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Race5</string>
 		<key>routeDistance</key>
@@ -159,6 +185,8 @@
 		<string>lldrru</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Sin5</string>
 		<key>routeDistance</key>
@@ -171,6 +199,8 @@
 		<string>rdrurdru</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Snake5</string>
 		<key>routeDistance</key>
@@ -183,6 +213,8 @@
 		<string>ululul</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Cycle5</string>
 		<key>routeDistance</key>
@@ -195,6 +227,8 @@
 		<string>uldrdrul</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>TaB5</string>
 		<key>routeDistance</key>
@@ -207,6 +241,8 @@
 		<string>udud</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route5</string>
 		<key>routeName</key>
 		<string>Route5</string>
 		<key>routeDistance</key>
@@ -219,6 +255,8 @@
 		<string>lurd</string>
 	</dict>
 	<dict>
+		<key>badgeName</key>
+		<string>route10</string>
 		<key>routeDistance</key>
 		<real>0.01</real>
 		<key>achieved</key>

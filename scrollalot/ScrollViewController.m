@@ -10,6 +10,7 @@
 #import "ScrollScene.h"
 #import "Constants.h"
 #import "GCManager.h"
+#import "AchievementsViewController.h"
 
 @interface ScrollViewController()
 
@@ -23,7 +24,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     UIPanGestureRecognizer* panSwipeRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanSwipe:)];
     //panSwipeRecognizer.cancelsTouchesInView = NO;
     // Here you can customize for example the minimum and maximum number of fingers required
@@ -59,7 +60,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [_scrollScene initEnvironment];
+    
 }
 
 - (void)viewWillLayoutSubviews
@@ -76,6 +77,7 @@
         // Create and configure the scene.
         _scrollScene = [ScrollScene sceneWithSize:skView.bounds.size];
         _scrollScene.scaleMode = SKSceneScaleModeAspectFill;
+        [_scrollScene initEnvironment];
         _scrollScene.delegate = self;
         
         // Present the scene.
@@ -130,11 +132,11 @@
     } else {
         if (result.wasSuccessul) {
             
-            GKLocalPlayer *lp = [GKLocalPlayer localPlayer];
-            NSLog(@"AUTH_SUCCESS for player: %@", lp.displayName);
+            //GKLocalPlayer *lp = [GKLocalPlayer localPlayer];
+            //NSLog(@"AUTH_SUCCESS for player: %@", lp.displayName);
             [_gcManager downloadLoadLeaderboardInfo];
         } else {
-            NSLog(@"AUTH_FAIL");
+            //NSLog(@"AUTH_FAIL");
         }
     }
 }
@@ -156,16 +158,20 @@
 }
 
 - (void)presentLeaderBoards {
-    GCManager *gcm = [[GCManager alloc] init];
+    /*GCManager *gcm = [[GCManager alloc] init];
     if (!gcm.isEnabled) {
         [gcm authenticateLocalPlayerForced:YES];
+        AchievementsViewController *vc = [[AchievementsViewController alloc] initWithNibName:@"AchievementsViewController" bundle:nil];
+        [self.navigationController pushViewController:vc animated:YES];
     } else {
-        
-    }
-    GKGameCenterViewController* gameCenterController = [[GKGameCenterViewController alloc] init];
-    gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
-    gameCenterController.gameCenterDelegate = self;
-    [self presentViewController:gameCenterController animated:YES completion:nil];
+        GKGameCenterViewController* gameCenterController = [[GKGameCenterViewController alloc] init];
+        gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
+        gameCenterController.gameCenterDelegate = self;
+        [self presentViewController:gameCenterController animated:YES completion:nil];
+    }*/
+    
+    AchievementsViewController *vc = [[AchievementsViewController alloc] initWithNibName:@"AchievementsViewController" bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController

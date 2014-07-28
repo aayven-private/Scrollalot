@@ -13,9 +13,10 @@
 
 static NSString *kRouteNameKey = @"routeName";
 static NSString *kRoutePatternKey = @"routePattern";
-static NSString *kRouteAchievedKey = @"routeAchieved";
+static NSString *kRouteAchievedKey = @"achieved";
 static NSString *kRouteAchievementIdKey = @"achievementId";
 static NSString *kRouteDistanceKey = @"routeDistance";
+static NSString *kBadgeNameKey = @"badgeName";
 
 static NSString *kLastReadRoutePackage = @"last_read_route_package";
 
@@ -101,6 +102,7 @@ static int currentPackageIndex = 1;
             NSString *routePattern = [routeDict objectForKey:kRoutePatternKey];
             NSString *achievementId = [routeDict objectForKey:kRouteAchievementIdKey];
             NSNumber *routeDistance = [routeDict objectForKey:kRouteDistanceKey];
+            NSString *badgeName = [routeDict objectForKey:kBadgeNameKey];
             
             RouteEntity *route = [NSEntityDescription insertNewObjectForEntityForName:@"RouteEntity" inManagedObjectContext:context];
             route.achieved = [NSNumber numberWithBool:NO];
@@ -108,6 +110,7 @@ static int currentPackageIndex = 1;
             route.routePattern = routePattern;
             route.achievementId = achievementId;
             route.routeDistance = routeDistance;
+            route.badgeName = badgeName;
         }
         if ([context hasChanges]) {
             [DBAccessLayer saveContext:context async:NO];
@@ -117,6 +120,7 @@ static int currentPackageIndex = 1;
 
 -(void)setCurrentRouteAchieved
 {
+    [self reportAchievementIdentifier:_currentAchievementId percentComplete:100.0];
     if (filterAchieved) {
         NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
         [context performBlockAndWait:^{
@@ -160,6 +164,28 @@ static int currentPackageIndex = 1;
             for (RouteEntity *route in routes) {
                 RouteEntityHelper *routeHelper = [[RouteEntityHelper alloc] initWithEntity:route];
                 [result addObject:routeHelper];
+            }
+        }
+    }];
+    
+    return result;
+}
+
+-(NSArray *)getAchievedRoutes_dictionary
+{
+    __block NSMutableArray *result = [NSMutableArray array];
+    NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RouteEntity"];
+    NSPredicate *notAchievedPredicate = [NSPredicate predicateWithFormat:@"achieved == YES"];
+    [request setPredicate:notAchievedPredicate];
+    [context performBlockAndWait:^{
+        NSError *error = nil;
+        NSArray *routes = [context executeFetchRequest:request error:&error];
+        
+        if (!error) {
+            for (RouteEntity *route in routes) {
+                [result addObject:[self entityToDictionary:route]];
             }
         }
     }];
@@ -252,6 +278,29 @@ static int currentPackageIndex = 1;
     
     return distance.floatValue;
 
+}
+
+-(NSDictionary *)entityToDictionary:(RouteEntity *)entity
+{
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    [result setObject:entity.badgeName forKey:@"badgeName"];
+    [result setObject:entity.routeName forKey:@"name"];
+    [result setObject:entity.routePattern forKey:@"pattern"];
+    [result setObject:entity.routeDistance forKey:@"distance"];
+    return result;
+}
+
+- (void)reportAchievementIdentifier:(NSString*) identifier percentComplete:(float) percent
+{
+    GKAchievement *achievement = [[GKAchievement alloc] initWithIdentifier: identifier];
+    if (achievement)
+    {
+        [GKAchievement reportAchievements:@[achievement] withCompletionHandler:^(NSError *error) {
+            if (error != nil) {
+                NSLog(@"Error in reporting achievements: %@", error);
+            }
+        }];
+    }
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <GameKit/GameKit.h>
 #import "RouteManagerDelegate.h"
 #import "RouteEntityHelper.h"
 
@@ -19,5 +20,6 @@
 -(void)actionTaken:(NSString *)action;
 -(void)loadNewRoute;
 -(void)loadRouteManually:(RouteEntityHelper *)route;
+-(NSArray *)getAchievedRoutes_dictionary;
 
 @end

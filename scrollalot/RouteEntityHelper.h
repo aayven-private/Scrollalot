@@ -16,6 +16,7 @@
 @property (nonatomic) NSString * achievementId;
 @property (nonatomic) NSNumber * routeDistance;
 @property (nonatomic) NSNumber *achieved;
+@property (nonatomic) NSString *badgeName;
 
 -(id)initWithEntity:(RouteEntity *)entity;
 

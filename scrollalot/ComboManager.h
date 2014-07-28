@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <GameKit/GameKit.h>
 #import "ComboManagerDelegate.h"
 #import "ComboEntityHelper.h"
 
@@ -16,5 +17,6 @@
 
 +(id)sharedManager;
 -(void)actionTaken:(NSString *)action;
+-(NSArray *)getAchievedCombos_dictionary;
 
 @end

@@ -17,5 +17,6 @@
 @property (nonatomic, retain) NSString * achievementId;
 @property (nonatomic, retain) NSNumber * routeDistance;
 @property (nonatomic, retain) NSNumber * achieved;
+@property (nonatomic, retain) NSString * badgeName;
 
 @end

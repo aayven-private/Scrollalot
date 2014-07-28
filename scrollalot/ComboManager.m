@@ -9,13 +9,12 @@
 #import "ComboManager.h"
 #import "Constants.h"
 #import "DBAccessLayer.h"
-#import "AchievedComboEntity.h"
 #import "ComboEntity.h"
 
 static NSString *kComboNameKey = @"comboName";
 static NSString *kComboPatternKey = @"comboPattern";
-static NSString *kComboAchievedKey = @"comboAchieved";
-static NSString *kComboAchievementIdKey = @"comboAchievementId";
+static NSString *kComboAchievedKey = @"achieved";
+static NSString *kComboAchievementIdKey = @"achievementId";
 
 static NSString *kLastReadComboPackage = @"last_read_combo_package";
 
@@ -25,6 +24,7 @@ static NSString *kLastReadComboPackage = @"last_read_combo_package";
 @property (nonatomic) NSDictionary *annulateDict;
 @property (nonatomic) NSMutableDictionary *comboNames;
 @property (nonatomic) NSMutableSet *achievedCombos;
+@property (nonatomic) NSMutableDictionary *comboIds;
 
 @end
 
@@ -41,6 +41,7 @@ static int currentPackageIndex = 1;
         sharedMyManager.combos = [NSMutableDictionary dictionary];
         sharedMyManager.comboNames = [NSMutableDictionary dictionary];
         sharedMyManager.achievedCombos = [NSMutableSet set];
+        sharedMyManager.comboIds = [NSMutableDictionary dictionary];
         
         [sharedMyManager readCombos];
     });
@@ -106,6 +107,7 @@ static int currentPackageIndex = 1;
     for (ComboEntityHelper *combo in availableCombos) {
         [_combos setObject:@0 forKey:combo.comboPattern];
         [_comboNames setObject:combo.comboName forKey:combo.comboPattern];
+        [_comboIds setObject:combo.achievementId forKey:combo.comboName];
     }
 }
 
@@ -134,6 +136,7 @@ static int currentPackageIndex = 1;
     if (filterAchieved) {
         for (NSString *comboName in achievedCombos) {
             [_achievedCombos addObject:comboName];
+            [self reportAchievementIdentifier:[_comboIds objectForKey:comboName] percentComplete:100.0];
         }
         NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
         [context performBlock:^{
@@ -184,6 +187,50 @@ static int currentPackageIndex = 1;
     }];
     
     return result;
+}
+
+-(NSArray *)getAchievedCombos_dictionary
+{
+    __block NSMutableArray *result = [NSMutableArray array];
+    NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"ComboEntity"];
+    NSPredicate *notAchievedPredicate = [NSPredicate predicateWithFormat:@"achieved == YES"];
+    [request setPredicate:notAchievedPredicate];
+    [context performBlockAndWait:^{
+        NSError *error = nil;
+        NSArray *combos = [context executeFetchRequest:request error:&error];
+        
+        if (!error) {
+            for (ComboEntity *combo in combos) {
+                [result addObject:[self entityToDictionary:combo]];
+            }
+        }
+    }];
+    
+    return result;
+}
+
+-(NSDictionary *)entityToDictionary:(ComboEntity *)entity
+{
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    [result setObject:entity.achievementId forKey:@"badgeName"];
+    [result setObject:entity.comboName forKey:@"name"];
+    [result setObject:entity.comboPattern forKey:@"pattern"];
+    return result;
+}
+
+- (void)reportAchievementIdentifier:(NSString*) identifier percentComplete:(float) percent
+{
+    GKAchievement *achievement = [[GKAchievement alloc] initWithIdentifier: identifier];
+    if (achievement)
+    {
+        [GKAchievement reportAchievements:@[achievement] withCompletionHandler:^(NSError *error) {
+            if (error != nil) {
+                NSLog(@"Error in reporting achievements: %@", error);
+            }
+        }];
+    }
 }
 
 @end

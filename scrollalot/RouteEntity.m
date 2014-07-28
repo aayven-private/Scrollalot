@@ -16,5 +16,6 @@
 @dynamic achievementId;
 @dynamic routeDistance;
 @dynamic achieved;
+@dynamic badgeName;
 
 @end

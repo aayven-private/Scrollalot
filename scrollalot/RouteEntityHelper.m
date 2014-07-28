@@ -18,6 +18,7 @@
         self.achievementId = entity.achievementId;
         self.routeDistance = entity.routeDistance;
         self.achieved = entity.achieved;
+        self.badgeName = entity.badgeName;
     }
     return self;
 }

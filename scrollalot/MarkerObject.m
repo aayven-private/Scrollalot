@@ -20,7 +20,7 @@
         self.physicsBody.affectedByGravity = NO;
         self.physicsBody.contactTestBitMask = meteorCategory;
         self.physicsBody.collisionBitMask = 0;
-        self.physicsBody.mass = 3;
+        self.physicsBody.mass = 2;
         self.physicsBody.linearDamping = 1.0;
     }
     return self;
@@ -36,7 +36,7 @@
         self.physicsBody.affectedByGravity = NO;
         self.physicsBody.contactTestBitMask = meteorCategory;
         self.physicsBody.collisionBitMask = 0;
-        self.physicsBody.mass = 3;
+        self.physicsBody.mass = 2;
         self.physicsBody.linearDamping = 1.0;
     }
     return self;
