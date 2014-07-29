@@ -53,6 +53,10 @@
 		B01EF6151987CE3F00B412C6 /* intro_also@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF6131987CE3F00B412C6 /* intro_also@2x.png */; };
 		B01EF6161987CE3F00B412C6 /* intro_felso@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF6141987CE3F00B412C6 /* intro_felso@2x.png */; };
 		B01EF6181987E17F00B412C6 /* scrollalot_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF6171987E17F00B412C6 /* scrollalot_title@2x.png */; };
+		B01EF61F1987FE0600B412C6 /* mongi_nagy1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF61B1987FE0600B412C6 /* mongi_nagy1@2x.png */; };
+		B01EF6201987FE0600B412C6 /* mongi_nagy2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF61C1987FE0600B412C6 /* mongi_nagy2@2x.png */; };
+		B01EF623198807E500B412C6 /* mongi_kicsi1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF621198807E500B412C6 /* mongi_kicsi1@2x.png */; };
+		B01EF624198807E500B412C6 /* mongi_kicsi2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B01EF622198807E500B412C6 /* mongi_kicsi2@2x.png */; };
 		B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C821976774A008D0528 /* SwipeEmitter.sks */; };
 		B04B2C851976774A008D0528 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C831976774A008D0528 /* spark.png */; };
 		B04B2C881976B091008D0528 /* ParallaxBG.m in Sources */ = {isa = PBXBuildFile; fileRef = B04B2C871976B091008D0528 /* ParallaxBG.m */; };
@@ -162,6 +166,10 @@
 		B01EF6131987CE3F00B412C6 /* intro_also@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "intro_also@2x.png"; sourceTree = "<group>"; };
 		B01EF6141987CE3F00B412C6 /* intro_felso@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "intro_felso@2x.png"; sourceTree = "<group>"; };
 		B01EF6171987E17F00B412C6 /* scrollalot_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_title@2x.png"; sourceTree = "<group>"; };
+		B01EF61B1987FE0600B412C6 /* mongi_nagy1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mongi_nagy1@2x.png"; sourceTree = "<group>"; };
+		B01EF61C1987FE0600B412C6 /* mongi_nagy2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mongi_nagy2@2x.png"; sourceTree = "<group>"; };
+		B01EF621198807E500B412C6 /* mongi_kicsi1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mongi_kicsi1@2x.png"; sourceTree = "<group>"; };
+		B01EF622198807E500B412C6 /* mongi_kicsi2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mongi_kicsi2@2x.png"; sourceTree = "<group>"; };
 		B04B2C821976774A008D0528 /* SwipeEmitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SwipeEmitter.sks; sourceTree = "<group>"; };
 		B04B2C831976774A008D0528 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		B04B2C861976B091008D0528 /* ParallaxBG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallaxBG.h; sourceTree = "<group>"; };
@@ -403,6 +411,10 @@
 		B09B804B196F02F400800BD4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B01EF621198807E500B412C6 /* mongi_kicsi1@2x.png */,
+				B01EF622198807E500B412C6 /* mongi_kicsi2@2x.png */,
+				B01EF61B1987FE0600B412C6 /* mongi_nagy1@2x.png */,
+				B01EF61C1987FE0600B412C6 /* mongi_nagy2@2x.png */,
 				B01EF6171987E17F00B412C6 /* scrollalot_title@2x.png */,
 				B01EF6131987CE3F00B412C6 /* intro_also@2x.png */,
 				B01EF6141987CE3F00B412C6 /* intro_felso@2x.png */,
@@ -617,9 +629,12 @@
 				B01E4286198261060008CF41 /* raindrop.png in Resources */,
 				B01EF5CC1983F88500B412C6 /* iranytu@2x.png in Resources */,
 				B0A0C590197ED2EB000528DA /* RoutePackage1.plist in Resources */,
+				B01EF61F1987FE0600B412C6 /* mongi_nagy1@2x.png in Resources */,
 				B0ECE17619702FBB00A6F3C5 /* achievements.plist in Resources */,
 				B01EF5DD1986540F00B412C6 /* AchievementCell.xib in Resources */,
 				B01EF6181987E17F00B412C6 /* scrollalot_title@2x.png in Resources */,
+				B01EF6201987FE0600B412C6 /* mongi_nagy2@2x.png in Resources */,
+				B01EF624198807E500B412C6 /* mongi_kicsi2@2x.png in Resources */,
 				B09B8018196F027000800BD4 /* InfoPlist.strings in Resources */,
 				B04B2C941978266D008D0528 /* compass@2x.png in Resources */,
 				B01E4280198165B30008CF41 /* RewardEffect.sks in Resources */,
@@ -637,6 +652,7 @@
 				B01E4284198257F20008CF41 /* RouteEffect.sks in Resources */,
 				B01EF60A1987826500B412C6 /* ComboCell.xib in Resources */,
 				B04B2C9819782721008D0528 /* compass_arrow@2x.png in Resources */,
+				B01EF623198807E500B412C6 /* mongi_kicsi1@2x.png in Resources */,
 				B01EF5F91986A40900B412C6 /* iranytu120@2x.png in Resources */,
 				B01E4279197FD5DD0008CF41 /* arrow_down@2x.png in Resources */,
 				B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */,

@@ -121,6 +121,9 @@ static CGFloat positionEpsilon = 0.2;
 
 //@property (nonatomic) BOOL isMinigameRunning;
 
+@property (nonatomic) NSTimeInterval mongiSpawnInterval;
+@property (nonatomic) NSTimeInterval currentMongiInterval;
+
 @end
 
 @implementation ScrollScene
@@ -172,6 +175,9 @@ static BOOL startWithTutorials = NO;
         
         self.globalPosition = CGPointMake(0, 0);
         self.bonusPosition = CGPointMake(5, 5);
+        
+        self.mongiSpawnInterval = [CommonTools getRandomFloatFromFloat:2.0 toFloat:4.0];
+        self.currentMongiInterval = 0;
         //self.isMinigameRunning = NO;
     }
     return self;
@@ -484,8 +490,27 @@ static BOOL startWithTutorials = NO;
             [_compass runAction:_pulseAction];
             [_compass_arrow runAction:_pulseAction];
             [_delegate presentLeaderBoards];
+        } else {
+            SKNode *node = [self nodeAtPoint:location];
+            if ([node.name isEqualToString:@"mongi1"] || [node.name isEqualToString:@"mongi2"]) {
+                [self addMongiImageForMongiName:node.name];
+            }
         }
     }
+}
+
+-(void)addMongiImageForMongiName:(NSString *)mongiName
+{
+    SKSpriteNode *mongiImage;
+    if ([mongiName isEqualToString:@"mongi1"]) {
+        mongiImage = [[SKSpriteNode alloc] initWithImageNamed:@"mongi_nagy1"];
+    } else if ([mongiName isEqualToString:@"mongi2"]) {
+        mongiImage = [[SKSpriteNode alloc] initWithImageNamed:@"mongi_nagy2"];
+    }
+    mongiImage.xScale = mongiImage.yScale = 0;
+    mongiImage.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    [mongiImage runAction:[SKAction sequence:@[[SKAction group:@[[SKAction scaleTo:2.0 duration:1.5], [SKAction fadeAlphaTo:0 duration:1.5]]], [SKAction removeFromParent]]]];
+    [self addChild:mongiImage];
 }
 
 -(void)update:(CFTimeInterval)currentTime {
@@ -756,6 +781,66 @@ static BOOL startWithTutorials = NO;
             [[NSUserDefaults standardUserDefaults] synchronize];
         });
     }
+    
+    _currentMongiInterval += timeSinceLast;
+    if (_currentMongiInterval > _mongiSpawnInterval) {
+        _mongiSpawnInterval = [CommonTools getRandomFloatFromFloat:2.0 toFloat:4.0];
+        _currentMongiInterval = 0;
+        [self addMongi];
+    }
+}
+
+-(void)addMongi
+{
+    
+    //self.rotateToLeft = [SKAction rotateToAngle:-M_PI_2 duration:.1 shortestUnitArc:YES];
+    //self.rotateToRight = [SKAction rotateToAngle:M_PI_2 duration:.1 shortestUnitArc:YES];
+    
+    int rndDir = [CommonTools getRandomNumberFromInt:0 toInt:1];
+    int rndAnim = [CommonTools getRandomNumberFromInt:0 toInt:1];
+    //int rndAnim = 1;
+    int rndMongiType = [CommonTools getRandomNumberFromInt:1 toInt:2];
+    
+    SKTexture *mongiTexture = [SKTexture textureWithImageNamed:[NSString stringWithFormat:@"mongi_kicsi%d", rndMongiType]];
+    
+    SKSpriteNode *mongi = [[SKSpriteNode alloc] initWithTexture:mongiTexture];
+    SKAction *mongiAction = nil;
+    if (rndAnim == 0) {
+        switch (rndDir) {
+            case 0: {
+                //Left slide
+                [mongi runAction:[SKAction rotateToAngle:-M_PI_2 duration:0]];
+                mongi.position = CGPointMake(-mongi.size.width / 2.0, self.size.height / 2.0);
+                mongiAction = [SKAction sequence:@[[SKAction moveToX:mongi.size.width / 2.0 duration:1.0], [SKAction moveToX:-mongi.size.width / 2.0 duration:1.0]]];
+            } break;
+            case 1: {
+                //Right slide
+                [mongi runAction:[SKAction rotateToAngle:M_PI_2 duration:0]];
+                mongi.position = CGPointMake(self.size.width + mongi.size.width / 2.0, self.size.height / 2.0);
+                mongiAction = [SKAction sequence:@[[SKAction moveToX:self.size.width - mongi.size.width / 2.0 duration:1.0], [SKAction moveToX:self.size.width + mongi.size.width / 2.0 duration:1.0]]];
+            } break;
+        }
+    } else {
+        switch (rndDir) {
+            case 0: {
+                //Left rotate
+                mongi.anchorPoint = CGPointMake(0.5, 0);
+                mongi.position = CGPointMake(-mongiTexture.size.width / 2.0, self.size.height / 2.0);
+                //mongi.position = CGPointMake(200, 200);
+                mongiAction = [SKAction sequence:@[[SKAction rotateToAngle:-M_PI_2 duration:1.0], [SKAction rotateToAngle:0 duration:1]]];
+            } break;
+            case 1: {
+                //Right rotate
+                mongi.anchorPoint = CGPointMake(0.5, 0);
+                mongi.position = CGPointMake(self.size.width + mongiTexture.size.width / 2.0, self.size.height / 2.0);
+                //mongi.position = CGPointMake(200, 200);
+                mongiAction = [SKAction sequence:@[[SKAction rotateToAngle:M_PI_2 duration:1.0], [SKAction rotateToAngle:0 duration:1]]];
+            } break;
+        }
+    }
+    mongi.name = [NSString stringWithFormat:@"mongi%d", rndMongiType];
+    [mongi runAction:[SKAction sequence:@[mongiAction, [SKAction removeFromParent]]]];
+    [self addChild:mongi];
 }
 
 -(void)cancelRoute
