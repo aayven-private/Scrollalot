@@ -158,7 +158,7 @@ static BOOL startWithTutorials = NO;
         //self.meteorTexture = [SKTexture textureWithImageNamed:@"meteor"];
         
         SKAction *fadeInGrow = [SKAction group:@[[SKAction fadeAlphaTo:1.0 duration:.5], [SKAction scaleTo:2.5 duration:.5]]];
-        SKAction *shrinkAndFlyToCorner = [SKAction group:@[[SKAction scaleTo:1.0 duration:.3], [SKAction moveTo:CGPointMake(self.size.width - 45, 65) duration:.3]]];
+        SKAction *shrinkAndFlyToCorner = [SKAction group:@[[SKAction scaleTo:1.0 duration:.3], [SKAction moveTo:CGPointMake(self.size.width - 45, 40) duration:.3]]];
         
         self.arrowAction = [SKAction sequence:@[fadeInGrow, shrinkAndFlyToCorner]];
         
@@ -397,8 +397,14 @@ static BOOL startWithTutorials = NO;
     [self addChild:topBox];
     [self addChild:bottomBox];
     
+    SKSpriteNode *title = [[SKSpriteNode alloc] initWithTexture:[SKTexture textureWithImageNamed:@"scrollalot_title"]];
+    title.xScale = title.yScale = 0;
+    title.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    [self addChild:title];
+    
     SKAction *moveBoxes = [SKAction group:@[[SKAction runBlock:^{
         [bottomBox runAction:[SKAction moveToY:-bottomBox.size.height / 2.0 duration:1.0]];
+        [title runAction:[SKAction scaleTo:1.0 duration:1.0]];
     }], [SKAction runBlock:^{
         [topBox runAction:[SKAction moveToY:self.size.height + topBox.size.height / 2.0 duration:1.0]];
     }]]];
@@ -412,6 +418,8 @@ static BOOL startWithTutorials = NO;
         [_distanceLabel runAction:[SKAction moveToY:self.size.height - 58 duration:.5]];
         [_speedLabel runAction:[SKAction moveToY:35 duration:.5]];
         
+        [title runAction:[SKAction fadeAlphaTo:0.0 duration:.5]];
+        
         if (!wasHelpShown) {
             self.helpNode = [self createBasicHelp1];
             self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
@@ -420,9 +428,9 @@ static BOOL startWithTutorials = NO;
             [self addChild:self.helpNode];
         } else {
             self.helpNode.hidden = YES;
-            [self addTextArray:@[@"Back", @"for", @"MORE", @"SCROLL?:)"] completion:^{
+            /*[self addTextArray:@[@"Back", @"for", @"MORE", @"SCROLL?:)"] completion:^{
                 
-            } andInterval:.7];
+            } andInterval:.7];*/
 
         }
     }]]];
