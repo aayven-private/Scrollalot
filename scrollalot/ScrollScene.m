@@ -29,8 +29,6 @@ static NSString *kHadComboKey = @"had_combo";
 
 static CGFloat positionEpsilon = 0.2;
 
-static NSString *fontName = @"TektonPro-Bold";
-
 @interface ScrollScene()
 
 @property (nonatomic) NSTimeInterval lastUpdateTimeInterval;
@@ -290,130 +288,45 @@ static BOOL startWithTutorials = NO;
         markerColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0];
     }
     
-    SKSpriteNode *header = [[SKSpriteNode alloc] initWithTexture:[SKTexture textureWithImageNamed:@"scrollalot_header"]];
-    header.position = CGPointMake(header.size.width / 2.0, self.size.height - header.size.height / 2.0);
+    SKSpriteNode *header = [[SKSpriteNode alloc] initWithTexture:[SKTexture textureWithImageNamed:@"screen_felso"]];
+    header.position = CGPointMake(header.size.width / 2.0, self.size.height + header.size.height / 2.0);
     [self addChild:header];
     
-    /*for (int i=0; i<2; i++) {
-        MarkerObject *horizontalLeft = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
-        horizontalLeft.position = CGPointMake(0, self.size.height * (1 + i) / 3.0);
-        [self.horizontalMarkers addObject:horizontalLeft];
-        [self addChild:horizontalLeft];
-        
-        MarkerObject *horizontalRight = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
-        horizontalRight.position = CGPointMake(self.size.width, self.size.height * (1 + i) / 3.0);
-        [self.horizontalMarkers addObject:horizontalRight];
-        [self addChild:horizontalRight];
-    }
-    
-    for (int i=0; i<2; i++) {
-        MarkerObject *verticalTop = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(5, 300)];
-        verticalTop.position = CGPointMake(self.size.width * (1 + i) / 3.0, self.size.height);
-        [self.verticalMarkers addObject:verticalTop];
-        [self addChild:verticalTop];
-        
-        MarkerObject *verticalBottom = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(5, 300)];
-        verticalBottom.position = CGPointMake(self.size.width * (1 + i) / 3.0, 0);
-        [self.verticalMarkers addObject:verticalBottom];
-        [self addChild:verticalBottom];
-    }*/
-    
-    /*MarkerObject *leftMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
-    leftMarker.position = CGPointMake(0, self.size.height / 2.0);
-    [self.horizontalMarkers addObject:leftMarker];
-    [self addChild:leftMarker];
-    
-    MarkerObject *rightMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(200, 5)];
-    rightMarker.position = CGPointMake(self.size.width, self.size.height / 2.0);
-    [self.horizontalMarkers addObject:rightMarker];
-    [self addChild:rightMarker];
-    
-    MarkerObject *topMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(5, 300)];
-    topMarker.position = CGPointMake(self.size.width / 2.0, self.size.height);
-    [self.verticalMarkers addObject:topMarker];
-    [self addChild:topMarker];
-    
-    MarkerObject *bottomMarker = [[MarkerObject alloc] initWithColor:markerColor size:CGSizeMake(5, 300)];
-    bottomMarker.position = CGPointMake(self.size.width / 2.0, 0);
-    [self.verticalMarkers addObject:bottomMarker];
-    [self addChild:bottomMarker];*/
-    
-    /*SKShapeNode *distanceBox = [SKShapeNode node];
-    [distanceBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width - 150, self.size.height - 80, 130, 50), 8, 8, nil)];
-    distanceBox.strokeColor = distanceBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
-    [self addChild:distanceBox];*/
+    SKSpriteNode *footer = [[SKSpriteNode alloc] initWithTexture:[SKTexture textureWithImageNamed:@"screen_also"]];
+    footer.position = CGPointMake(footer.size.width / 2.0, - footer.size.height / 2.0);
+    [self addChild:footer];
     
     self.distanceLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
-    self.distanceLabel.fontSize = 13.0;
-    self.distanceLabel.position = CGPointMake(self.size.width - 56, self.size.height - 43);
+    self.distanceLabel.fontSize = 15.0;
+    self.distanceLabel.position = CGPointMake(self.size.width - 56, self.size.height - 58 + header.size.height);
     self.distanceLabel.fontColor = [UIColor whiteColor];
     [self addChild:self.distanceLabel];
     
-    /*SKShapeNode *speedBox = [SKShapeNode node];
-    [speedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(self.size.width / 2.0 - 65, 40, 130, 50), 8, 8, nil)];
-    speedBox.strokeColor = speedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
-    [self addChild:speedBox];*/
-    
-    self.speedLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
-    self.speedLabel.fontSize = 13.0;
-    self.speedLabel.position = CGPointMake(self.size.width / 2.0, self.size.height - 56);
-    self.speedLabel.fontColor = [UIColor whiteColor];
-    self.speedLabel.text = @"0.0Km/h";
-    [self addChild:self.speedLabel];
-    
-    /*self.maxSpeedBox = [SKShapeNode node];
-    [self.maxSpeedBox setPath:CGPathCreateWithRoundedRect(CGRectMake(20, self.size.height - 80, 130, 50), 8, 8, nil)];
-    self.maxSpeedBox.strokeColor = self.maxSpeedBox.fillColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7];
-    self.maxSpeedBox.name = @"maxspeedbox";
-    [self addChild:self.maxSpeedBox];*/
-    
     self.maxSpeedLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
-    self.maxSpeedLabel.fontSize = 13.0;
-    self.maxSpeedLabel.position = CGPointMake(56, self.size.height - 43) ;
+    self.maxSpeedLabel.fontSize = 15.0;
+    self.maxSpeedLabel.position = CGPointMake(56, self.size.height - 58  + header.size.height) ;
     self.maxSpeedLabel.fontColor = [UIColor whiteColor];
     self.maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", self.maxSpeed];
     [self addChild:self.maxSpeedLabel];
     
-    /*self.helpNode = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7] size:self.size];
-    self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    
-    SKNode *nerdText = [SKNode node];
-    SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
-    a.fontSize = 16;
-    a.fontColor = [SKColor whiteColor];
-    SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
-    b.fontSize = 16;
-    b.fontColor = [SKColor whiteColor];
-    NSString *st1 = @"Here you can see your current speed";
-    NSString *st2 = @"and the total distance covered.";
-    b.position = CGPointMake(b.position.x, b.position.y - 20);
-    a.text = st1;
-    b.text = st2;
-    [nerdText addChild:a];
-    [nerdText addChild:b];
-    nerdText.position = CGPointMake(5, 140);
-    [self.helpNode addChild:nerdText];*/
+    self.speedLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
+    self.speedLabel.fontSize = 15.0;
+    self.speedLabel.position = CGPointMake(self.size.width / 2.0, 35 - footer.size.height);
+    self.speedLabel.fontColor = [UIColor whiteColor];
+    self.speedLabel.text = @"0.0Km/h";
+    [self addChild:self.speedLabel];
     
     self.currentRouteDirection = 'n';
     self.lastRouteDirection = 'n';
     self.currentRouteDistance = 0;
     
-    /*SKLabelNode *helpLabel1 = [SKLabelNode labelNodeWithFontNamed:@"ArialMT"];
-    helpLabel1.fontSize = 18.0;
-    helpLabel1.position = CGPointMake(100, 100);
-    
-    helpLabel1.fontColor = [UIColor whiteColor];
-    helpLabel1.text = @"Here you can see your current speed and the total distance covered. Scroll on for more!";
-    [self.helpNode addChild:helpLabel1];*/
-    
-    self.compass = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"iarnytu_alap120"]]];
+    self.compass = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImageNamed:@"iranytu_alap200"]];
     self.compass.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
     self.compass.name = @"compass";
     [self addChild:self.compass];
     
-    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"iranytu120"]]];
+    self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImageNamed:@"iranytu200"]];
     self.compass_arrow.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    //self.compass_arrow.xScale = self.compass_arrow.yScale = 0.8;
     self.compass_arrow.name = @"compass";
     [self addChild:self.compass_arrow];
     
@@ -425,16 +338,6 @@ static BOOL startWithTutorials = NO;
     
     if (startWithTutorials) {
         wasHelpShown = hadRoute = hadCombo = nil;
-    }
-    
-    if (!wasHelpShown) {
-        self.helpNode = [self createBasicHelp1];
-        self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-        self.helpNodeIsVisible = YES;
-        self.helpNode.hidden = NO;
-        [self addChild:self.helpNode];
-    } else {
-        self.helpNode.hidden = YES;
     }
     
     self.startedRouteTutorial = NO;
@@ -480,24 +383,54 @@ static BOOL startWithTutorials = NO;
         self.isComboTutorial = NO;
     }
     
-    if (!wasHelpShown) {
+    /*if (!wasHelpShown) {
         
     } else {
-        [self addTextArray:@[@"Back", @"for", @"MORE", @"SCROLL?:)"] completion:^{
-            
-        } andInterval:.7];
-    }
+    }*/
     
-    //[self.compass_arrow runAction:self.rotateToTop];
+    SKSpriteNode *topBox = [[SKSpriteNode alloc] initWithTexture:[SKTexture textureWithImageNamed:@"intro_felso"]];
+    SKSpriteNode *bottomBox = [[SKSpriteNode alloc] initWithTexture:[SKTexture textureWithImageNamed:@"intro_also"]];
+    
+    topBox.position = CGPointMake(topBox.size.width / 2.0, self.size.height - topBox.size.height / 2.0 + (topBox.size.height - self.size.height / 2.0) - 11);
+    bottomBox.position = CGPointMake(bottomBox.size.width / 2.0, topBox.size.height / 2.0 - (topBox.size.height - self.size.height / 2.0) + 11);
+    
+    [self addChild:topBox];
+    [self addChild:bottomBox];
+    
+    SKAction *moveBoxes = [SKAction group:@[[SKAction runBlock:^{
+        [bottomBox runAction:[SKAction moveToY:-bottomBox.size.height / 2.0 duration:1.0]];
+    }], [SKAction runBlock:^{
+        [topBox runAction:[SKAction moveToY:self.size.height + topBox.size.height / 2.0 duration:1.0]];
+    }]]];
+    
+    SKAction *moveAndRemove = [SKAction sequence:@[moveBoxes, [SKAction waitForDuration:1.0], [SKAction runBlock:^{
+        [topBox runAction:[SKAction removeFromParent]];
+        [bottomBox runAction:[SKAction removeFromParent]];
+        [header runAction:[SKAction moveToY:self.size.height - header.size.height / 2.0 duration:.5]];
+        [footer runAction:[SKAction moveToY:footer.size.height / 2.0 duration:.5]];
+        [_maxSpeedLabel runAction:[SKAction moveToY:self.size.height - 58 duration:.5]];
+        [_distanceLabel runAction:[SKAction moveToY:self.size.height - 58 duration:.5]];
+        [_speedLabel runAction:[SKAction moveToY:35 duration:.5]];
+        
+        if (!wasHelpShown) {
+            self.helpNode = [self createBasicHelp1];
+            self.helpNode.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+            self.helpNodeIsVisible = YES;
+            self.helpNode.hidden = NO;
+            [self addChild:self.helpNode];
+        } else {
+            self.helpNode.hidden = YES;
+            [self addTextArray:@[@"Back", @"for", @"MORE", @"SCROLL?:)"] completion:^{
+                
+            } andInterval:.7];
+
+        }
+    }]]];
+    
+    
+    
+    [self runAction:[SKAction sequence:@[[SKAction waitForDuration:1.0], moveAndRemove]]];
 }
-
-/*-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
- 
-    
-    for (UITouch *touch in touches) {
-
-    }
-}*/
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {

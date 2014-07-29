@@ -8,6 +8,7 @@
         <scene sceneID="9bg-gd-egU">
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="cld-sf-YE7" sceneMemberID="viewController">
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="stl-rO-ElU">
                         <autoresizingMask key="autoresizingMask"/>

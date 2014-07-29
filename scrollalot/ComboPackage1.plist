@@ -4,6 +4,26 @@
 <array>
 	<dict>
 		<key>achievementId</key>
+		<string>scrollalot_achievement_tornado</string>
+		<key>comboName</key>
+		<string>Tornado</string>
+		<key>comboPattern</key>
+		<string>llddrruu</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>achievementId</key>
+		<string>scrollalot_achievement_shaky</string>
+		<key>comboName</key>
+		<string>Shaky</string>
+		<key>comboPattern</key>
+		<string>lrlrlrlrlr</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>achievementId</key>
 		<string>scrollalot_achievement_manyright</string>
 		<key>comboName</key>
 		<string>ManyRight</string>

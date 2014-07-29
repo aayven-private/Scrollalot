@@ -1,15 +1,14 @@
 //
-//  AchievementHeader.m
+//  ComboCell.m
 //  scrollalot
 //
-//  Created by Ivan Borsa on 28/07/14.
+//  Created by Ivan Borsa on 29/07/14.
 //  Copyright (c) 2014 ivanborsa. All rights reserved.
 //
 
-#import "AchievementHeader.h"
-#import "Constants.h"
+#import "ComboCell.h"
 
-@implementation AchievementHeader
+@implementation ComboCell
 
 - (id)initWithFrame:(CGRect)frame
 {

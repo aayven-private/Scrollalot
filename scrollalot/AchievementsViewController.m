@@ -11,10 +11,13 @@
 #import "AchievementHeader.h"
 #import "ComboManager.h"
 #import "RouteManager.h"
+#import "ComboCell.h"
+#import "Constants.h"
 
 @interface AchievementsViewController ()
 
 @property (nonatomic, weak) IBOutlet UICollectionView *achievementsCollectionView;
+@property (nonatomic, weak) IBOutlet UIButton *okButton;
 
 @end
 
@@ -34,10 +37,22 @@
     return self;
 }
 
+-(UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _achievementsCollectionView.layer.borderWidth = 2.0f;
+    _achievementsCollectionView.layer.borderColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1].CGColor;
+    _achievementsCollectionView.layer.cornerRadius = 8.0;
+    
     // Do any additional setup after loading the view from its nib.
+    [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
+    _okButton.titleLabel.font = [UIFont fontWithName:fontName size:25];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         ComboManager *cm = [ComboManager sharedManager];
@@ -54,6 +69,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [self.achievementsCollectionView registerNib:[UINib nibWithNibName:@"AchievementCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AchievementCell"];
+    [self.achievementsCollectionView registerNib:[UINib nibWithNibName:@"ComboCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"ComboCell"];
     //[self.achievementsCollectionView registerNib:[UINib nibWithNibName:@"AchievementHeader" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AchievementHeader"];
     [self.achievementsCollectionView registerNib:[UINib nibWithNibName:@"AchievementHeader" bundle:[NSBundle mainBundle]] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"AchievementHeader"];
 }
@@ -75,8 +91,17 @@
     return 0;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    AchievementCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AchievementCell" forIndexPath:indexPath];
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UICollectionViewCell *cell;
+    
+    if (indexPath.section == 0) {
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ComboCell" forIndexPath:indexPath];
+    } else if (indexPath.section == 1) {
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AchievementCell" forIndexPath:indexPath];
+    }
+    
+    //AchievementCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AchievementCell" forIndexPath:indexPath];
     
     NSArray *dataSource = nil;
     
@@ -93,13 +118,26 @@
     NSString *badgeName = [cellData objectForKey:@"badgeName"];
     UIImage *badge = [UIImage imageNamed:badgeName];
     
-    cell.badgeView.image = badge;
-    
-    cell.nameLabel.text = achievementName;
+    if (indexPath.section == 0) {
+        ((ComboCell *)cell).badgeView.image = badge;
+    } else if (indexPath.section == 1) {
+        ((AchievementCell *)cell).badgeView.image = badge;
+        ((AchievementCell *)cell).nameLabel.text = achievementName;
+    }
     
     cell.layer.borderWidth=1.0f;
-    cell.layer.borderColor=[UIColor blackColor].CGColor;
+    cell.layer.borderColor=[UIColor darkGrayColor].CGColor;
     cell.layer.cornerRadius = 8.0;
+    
+    CALayer *layer = [cell layer];
+    [layer setMasksToBounds:NO];
+    [layer setRasterizationScale:[[UIScreen mainScreen] scale]];
+    [layer setShouldRasterize:YES];
+    [layer setShadowColor:[[UIColor whiteColor] CGColor]];
+    //[layer setShadowOffset:CGSizeMake(1.0f,1.5f)];
+    [layer setShadowRadius:8.0f];
+    [layer setShadowOpacity:0.2f];
+    [layer setShadowPath:[[UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:layer.cornerRadius] CGPath]];
     
     return cell;
 }
@@ -114,17 +152,24 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(120, 160);
+    if (indexPath.section == 0) {
+        return CGSizeMake(80, 80);
+    }
+    return CGSizeMake(80, 120);
 }
 
 - (UICollectionReusableView *)collectionView: (UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    AchievementHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"AchievementHeader" forIndexPath:indexPath];
-    if (indexPath.section == 0) {
-        headerView.titleLabel.text = @"Combos";
-    } else if (indexPath.section == 1) {
-        headerView.titleLabel.text = @"Routes";
+    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+        AchievementHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"AchievementHeader" forIndexPath:indexPath];
+        headerView.titleLabel.font = [UIFont fontWithName:fontName size:22];
+        if (indexPath.section == 0) {
+            headerView.titleLabel.text = @"Combos";
+        } else if (indexPath.section == 1) {
+            headerView.titleLabel.text = @"Routes";
+        }
+        return headerView;
     }
-    return headerView;
+    return nil;
  }
 
 - (void)didReceiveMemoryWarning
