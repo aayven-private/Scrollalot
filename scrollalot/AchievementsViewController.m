@@ -18,6 +18,9 @@
 
 @property (nonatomic, weak) IBOutlet UICollectionView *achievementsCollectionView;
 @property (nonatomic, weak) IBOutlet UIButton *okButton;
+@property (nonatomic, weak) IBOutlet UIImageView *bgView;
+
+@property (nonatomic) NSString *badgesState;
 
 @end
 
@@ -33,6 +36,8 @@
         //self.view.backgroundColor = [UIColor lightGrayColor];
         //self.achievementsCollectionView.delegate = self;
         //self.achievementsCollectionView.dataSource = self;
+        
+        self.badgesState = @"combos";
     }
     return self;
 }
@@ -46,13 +51,28 @@
 {
     [super viewDidLoad];
     
-    _achievementsCollectionView.layer.borderWidth = 2.0f;
+    UIPanGestureRecognizer* panSwipeRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanSwipe:)];
+    //panSwipeRecognizer.cancelsTouchesInView = NO;
+    // Here you can customize for example the minimum and maximum number of fingers required
+    panSwipeRecognizer.minimumNumberOfTouches = 1;
+    [self.view addGestureRecognizer:panSwipeRecognizer];
+    
+    if (IS_PHONEPOD5()) {
+        [_bgView setImage:[UIImage imageNamed:@"combo_scr_5"]];
+    } else {
+        [_bgView setImage:[UIImage imageNamed:@"combo_scr_4"]];
+    }
+    
+    /*_achievementsCollectionView.layer.borderWidth = 2.0f;
     _achievementsCollectionView.layer.borderColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1].CGColor;
-    _achievementsCollectionView.layer.cornerRadius = 8.0;
+    _achievementsCollectionView.layer.cornerRadius = 8.0;*/
+    
+    [_okButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    [_okButton setImage:[UIImage imageNamed:@"ok_button_on"] forState:UIControlStateHighlighted];
     
     // Do any additional setup after loading the view from its nib.
     [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
-    _okButton.titleLabel.font = [UIFont fontWithName:fontName size:25];
+    //_okButton.titleLabel.font = [UIFont fontWithName:fontName size:25];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         ComboManager *cm = [ComboManager sharedManager];
@@ -71,17 +91,17 @@
     [self.achievementsCollectionView registerNib:[UINib nibWithNibName:@"AchievementCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AchievementCell"];
     [self.achievementsCollectionView registerNib:[UINib nibWithNibName:@"ComboCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"ComboCell"];
     //[self.achievementsCollectionView registerNib:[UINib nibWithNibName:@"AchievementHeader" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AchievementHeader"];
-    [self.achievementsCollectionView registerNib:[UINib nibWithNibName:@"AchievementHeader" bundle:[NSBundle mainBundle]] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"AchievementHeader"];
+    //[self.achievementsCollectionView registerNib:[UINib nibWithNibName:@"AchievementHeader" bundle:[NSBundle mainBundle]] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"AchievementHeader"];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (section == 0) {
+    if ([_badgesState isEqualToString:@"combos"]) {
         //Combos
         NSArray *combos = [_achievementsDict objectForKey:@"combos"];
         if (combos) {
             return combos.count;
         }
-    } else if (section == 1) {
+    } else if ([_badgesState isEqualToString:@"routes"]) {
         //Routes
         NSArray *routes = [_achievementsDict objectForKey:@"routes"];
         if (routes) {
@@ -95,21 +115,15 @@
     
     UICollectionViewCell *cell;
     
-    if (indexPath.section == 0) {
+    if ([_badgesState isEqualToString:@"combos"]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ComboCell" forIndexPath:indexPath];
-    } else if (indexPath.section == 1) {
+    } else if ([_badgesState isEqualToString:@"routes"]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AchievementCell" forIndexPath:indexPath];
     }
     
     //AchievementCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AchievementCell" forIndexPath:indexPath];
     
-    NSArray *dataSource = nil;
-    
-    if (indexPath.section == 0) {
-        dataSource = [_achievementsDict objectForKey:@"combos"];
-    } else if (indexPath.section == 1) {
-        dataSource = [_achievementsDict objectForKey:@"routes"];
-    }
+    NSArray *dataSource = [_achievementsDict objectForKey:_badgesState];
     
     NSDictionary *cellData = [dataSource objectAtIndex:indexPath.row];
     
@@ -118,26 +132,12 @@
     NSString *badgeName = [cellData objectForKey:@"badgeName"];
     UIImage *badge = [UIImage imageNamed:badgeName];
     
-    if (indexPath.section == 0) {
+    if ([_badgesState isEqualToString:@"combos"]) {
         ((ComboCell *)cell).badgeView.image = badge;
-    } else if (indexPath.section == 1) {
+    } else if ([_badgesState isEqualToString:@"routes"]) {
         ((AchievementCell *)cell).badgeView.image = badge;
         ((AchievementCell *)cell).nameLabel.text = achievementName;
     }
-    
-    cell.layer.borderWidth=1.0f;
-    cell.layer.borderColor=[UIColor darkGrayColor].CGColor;
-    cell.layer.cornerRadius = 8.0;
-    
-    CALayer *layer = [cell layer];
-    [layer setMasksToBounds:NO];
-    [layer setRasterizationScale:[[UIScreen mainScreen] scale]];
-    [layer setShouldRasterize:YES];
-    [layer setShadowColor:[[UIColor whiteColor] CGColor]];
-    //[layer setShadowOffset:CGSizeMake(1.0f,1.5f)];
-    [layer setShadowRadius:8.0f];
-    [layer setShadowOpacity:0.2f];
-    [layer setShadowPath:[[UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:layer.cornerRadius] CGPath]];
     
     return cell;
 }
@@ -148,18 +148,18 @@
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 2;
+    return 1;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == 0) {
+    if ([_badgesState isEqualToString:@"combos"]) {
         return CGSizeMake(80, 80);
     }
     return CGSizeMake(80, 120);
 }
 
 - (UICollectionReusableView *)collectionView: (UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+    /*if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         AchievementHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"AchievementHeader" forIndexPath:indexPath];
         headerView.titleLabel.font = [UIFont fontWithName:fontName size:22];
         if (indexPath.section == 0) {
@@ -168,7 +168,7 @@
             headerView.titleLabel.text = @"Routes";
         }
         return headerView;
-    }
+    }*/
     return nil;
  }
 
@@ -181,6 +181,54 @@
 -(IBAction)okClicked:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(IBAction)tableAltered:(id)sender
+{
+    if ([_badgesState isEqualToString:@"combos"]) {
+        _badgesState = @"routes";
+        if (IS_PHONEPOD5()) {
+            [_bgView setImage:[UIImage imageNamed:@"routes_scr_5"]];
+        } else {
+            [_bgView setImage:[UIImage imageNamed:@"routes_scr_4"]];
+        }
+    } else if ([_badgesState isEqualToString:@"routes"]) {
+        _badgesState = @"combos";
+        if (IS_PHONEPOD5()) {
+            [_bgView setImage:[UIImage imageNamed:@"combo_scr_5"]];
+        } else {
+            [_bgView setImage:[UIImage imageNamed:@"combo_scr_4"]];
+        }
+    }
+    [_achievementsCollectionView reloadData];
+}
+
+- (void)handlePanSwipe:(UIPanGestureRecognizer*)recognizer
+{
+    [recognizer setTranslation:CGPointZero inView:recognizer.view];
+    if (recognizer.state == UIGestureRecognizerStateEnded)
+    {
+        CGPoint vel = [recognizer velocityInView:recognizer.view];
+
+        if (fabs(vel.x) >= fabs(vel.y)) {
+            if ([_badgesState isEqualToString:@"combos"]) {
+                _badgesState = @"routes";
+                if (IS_PHONEPOD5()) {
+                    [_bgView setImage:[UIImage imageNamed:@"routes_scr_5"]];
+                } else {
+                    [_bgView setImage:[UIImage imageNamed:@"routes_scr_4"]];
+                }
+            } else if ([_badgesState isEqualToString:@"routes"]) {
+                _badgesState = @"combos";
+                if (IS_PHONEPOD5()) {
+                    [_bgView setImage:[UIImage imageNamed:@"combo_scr_5"]];
+                } else {
+                    [_bgView setImage:[UIImage imageNamed:@"combo_scr_4"]];
+                }
+            }
+            [_achievementsCollectionView reloadData];
+        }
+    }
 }
 
 @end

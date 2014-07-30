@@ -17,7 +17,7 @@
                         <rect key="frame" x="5" y="12" width="70" height="70"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     </imageView>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" adjustsLetterSpacingToFitWidth="YES" id="7mD-ah-OSw">
+                    <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" adjustsLetterSpacingToFitWidth="YES" id="7mD-ah-OSw">
                         <rect key="frame" x="5" y="82" width="70" height="38"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -31,7 +31,6 @@
             <size key="customSize" width="83" height="119"/>
             <connections>
                 <outlet property="badgeView" destination="CXP-Fl-JkW" id="gff-Az-KOy"/>
-                <outlet property="nameLabel" destination="7mD-ah-OSw" id="nZz-8T-NLk"/>
             </connections>
         </collectionViewCell>
     </objects>

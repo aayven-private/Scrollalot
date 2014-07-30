@@ -11,6 +11,6 @@
 @interface AchievementCell : UICollectionViewCell
 
 @property (nonatomic, weak) IBOutlet UIImageView *badgeView;
-@property (nonatomic, weak) IBOutlet UILabel *nameLabel;
+@property (nonatomic) IBOutlet UILabel *nameLabel;
 
 @end

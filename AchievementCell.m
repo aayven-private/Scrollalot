@@ -14,4 +14,29 @@
 
 @implementation AchievementCell
 
+-(id)initWithCoder:(NSCoder *)aDecoder
+{
+    if (self = [super initWithCoder:aDecoder]) {
+        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 82, 70, 38)];
+        self.nameLabel.textAlignment = NSTextAlignmentCenter;
+        self.nameLabel.font = [UIFont fontWithName:@"Pacifico-Regular" size:17.0];
+        self.nameLabel.textColor = [UIColor whiteColor];
+        [self addSubview:self.nameLabel];
+        
+        self.layer.borderWidth=1.0f;
+        self.layer.borderColor=[UIColor darkGrayColor].CGColor;
+        self.layer.cornerRadius = 8.0;
+        
+        [self.layer setMasksToBounds:NO];
+        [self.layer setRasterizationScale:[[UIScreen mainScreen] scale]];
+        [self.layer setShouldRasterize:YES];
+        [self.layer setShadowColor:[[UIColor whiteColor] CGColor]];
+        //[layer setShadowOffset:CGSizeMake(1.0f,1.5f)];
+        [self.layer setShadowRadius:8.0f];
+        [self.layer setShadowOpacity:0.2f];
+        [self.layer setShadowPath:[[UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:self.layer.cornerRadius] CGPath]];
+    }
+    return self;
+}
+
 @end
