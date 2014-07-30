@@ -11,8 +11,8 @@
 
 @protocol GCManagerDelegate <NSObject>
 
+@optional
 -(void)authenticationFinishedWithResult:(GCAuthResult *)result;
--(void)leaderBoardsDownloaded:(NSArray *)leaderBoards;
 -(void)playerSpeedDownloaded:(float)speed;
 -(void)playerDistanceDownloaded:(double)distance;
 

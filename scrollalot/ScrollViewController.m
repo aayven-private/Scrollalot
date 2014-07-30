@@ -11,6 +11,8 @@
 #import "Constants.h"
 #import "GCManager.h"
 #import "AchievementsViewController.h"
+#import "RouteManager.h"
+#import "ComboManager.h"
 
 @interface ScrollViewController()
 
@@ -33,7 +35,7 @@
     self.gcManager = [[GCManager alloc] init];
     self.gcManager.delegate = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [self.gcManager authenticateLocalPlayerForced:YES];
+        [self.gcManager authenticateLocalPlayerShowLoginView:NO];
     });
 }
 
@@ -120,27 +122,6 @@
     }
 }
 
--(void)authenticationFinishedWithResult:(GCAuthResult *)result
-{
-    if (result.authViewController) {
-        //Present the authentication view to the user
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self presentViewController:result.authViewController animated:YES completion:^{
-                
-            }];
-        });
-    } else {
-        if (result.wasSuccessul) {
-            
-            //GKLocalPlayer *lp = [GKLocalPlayer localPlayer];
-            //NSLog(@"AUTH_SUCCESS for player: %@", lp.displayName);
-            [_gcManager downloadLoadLeaderboardInfo];
-        } else {
-            //NSLog(@"AUTH_FAIL");
-        }
-    }
-}
-
 -(void)reportMaxSpeed:(float)speed
 {
     [_gcManager reportSpeed:speed];
@@ -151,24 +132,9 @@
     [_gcManager reportDistance:distance];
 }
 
--(void)leaderBoardsDownloaded:(NSArray *)leaderBoards
-{
-    
-    
-}
-
 - (void)presentLeaderBoards {
-    /*GCManager *gcm = [[GCManager alloc] init];
-    if (!gcm.isEnabled) {
-        [gcm authenticateLocalPlayerForced:YES];
-        AchievementsViewController *vc = [[AchievementsViewController alloc] initWithNibName:@"AchievementsViewController" bundle:nil];
-        [self.navigationController pushViewController:vc animated:YES];
-    } else {
-        GKGameCenterViewController* gameCenterController = [[GKGameCenterViewController alloc] init];
-        gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
-        gameCenterController.gameCenterDelegate = self;
-        [self presentViewController:gameCenterController animated:YES completion:nil];
-    }*/
+    self.gcManager = [[GCManager alloc] init];
+    self.gcManager.delegate = self;
     
     AchievementsViewController *vc = [[AchievementsViewController alloc] initWithNibName:@"AchievementsViewController" bundle:nil];
     [self.navigationController pushViewController:vc animated:YES];

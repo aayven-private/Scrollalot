@@ -148,6 +148,35 @@ static int currentPackageIndex = 1;
     }
 }
 
+-(void)setRouteAchievedWithId:(NSString *)identifier
+{
+    //if (filterAchieved) {
+        NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
+        [context performBlockAndWait:^{
+            NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RouteEntity"];
+            NSPredicate *namePredicate = [NSPredicate predicateWithFormat:@"achievementId == %@", identifier];
+            [request setPredicate:namePredicate];
+            
+            NSError *error = nil;
+            NSArray *routes = [context executeFetchRequest:request error:&error];
+            if (!error) {
+                if (routes.count == 1) {
+                    RouteEntity *entity = [routes objectAtIndex:0];
+                    entity.achieved = [NSNumber numberWithBool:YES];
+                } else if (routes.count > 1) {
+                    for (int i=1; i<routes.count; i++) {
+                        RouteEntity *entityToDelete = [routes objectAtIndex:i];
+                        [context deleteObject:entityToDelete];
+                    }
+                }
+                if ([context hasChanges]) {
+                    [DBAccessLayer saveContext:context async:NO];
+                }
+            }
+        }];
+    //}
+}
+
 -(NSMutableSet *)getAvailableRoutes
 {
     __block NSMutableSet *result = [NSMutableSet set];
@@ -293,6 +322,7 @@ static int currentPackageIndex = 1;
 - (void)reportAchievementIdentifier:(NSString*) identifier percentComplete:(float) percent
 {
     GKAchievement *achievement = [[GKAchievement alloc] initWithIdentifier: identifier];
+    achievement.percentComplete = percent;
     if (achievement)
     {
         [GKAchievement reportAchievements:@[achievement] withCompletionHandler:^(NSError *error) {
@@ -301,6 +331,25 @@ static int currentPackageIndex = 1;
             }
         }];
     }
+}
+
+- (void)loadAchievements
+{
+    [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error) {
+        if (error != nil)
+        {
+            // Handle the error.
+        }
+        if (achievements != nil)
+        {
+            for (GKAchievement *achievement in achievements) {
+                NSLog(@"Achievement: %@, progress: %f", achievement.identifier, achievement.percentComplete);
+                if ([achievement.identifier hasPrefix:@"scrollalot_route"] && achievement.percentComplete == 100.0) {
+                    [self setRouteAchievedWithId:achievement.identifier];
+                }
+            }
+        }
+    }];
 }
 
 @end

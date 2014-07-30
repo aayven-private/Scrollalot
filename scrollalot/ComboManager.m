@@ -166,6 +166,35 @@ static int currentPackageIndex = 1;
     }
 }
 
+-(void)setComboAchievedWithId:(NSString *)identifier
+{
+    //if (filterAchieved) {
+    NSManagedObjectContext *context = [DBAccessLayer createManagedObjectContext];
+    [context performBlockAndWait:^{
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"ComboEntity"];
+        NSPredicate *namePredicate = [NSPredicate predicateWithFormat:@"achievementId == %@", identifier];
+        [request setPredicate:namePredicate];
+        
+        NSError *error = nil;
+        NSArray *combos = [context executeFetchRequest:request error:&error];
+        if (!error) {
+            if (combos.count == 1) {
+                ComboEntity *entity = [combos objectAtIndex:0];
+                entity.achieved = [NSNumber numberWithBool:YES];
+            } else if (combos.count > 1) {
+                for (int i=1; i<combos.count; i++) {
+                    ComboEntity *entityToDelete = [combos objectAtIndex:i];
+                    [context deleteObject:entityToDelete];
+                }
+            }
+            if ([context hasChanges]) {
+                [DBAccessLayer saveContext:context async:NO];
+            }
+        }
+    }];
+    //}
+}
+
 -(NSMutableSet *)getAvailableCombos
 {
     __block NSMutableSet *result = [NSMutableSet set];
@@ -231,6 +260,24 @@ static int currentPackageIndex = 1;
             }
         }];
     }
+}
+
+- (void)loadAchievements
+{
+    [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error) {
+        if (error != nil)
+        {
+            // Handle the error.
+        }
+        if (achievements != nil)
+        {
+            for (GKAchievement *achievement in achievements) {
+                if ([achievement.identifier hasPrefix:@"scrollalot_combo"] && achievement.percentComplete == 100.0) {
+                    [self setComboAchievedWithId:achievement.identifier];
+                }
+            }
+        }
+    }];
 }
 
 @end

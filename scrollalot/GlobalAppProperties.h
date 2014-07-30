@@ -14,5 +14,6 @@
 
 @property (nonatomic) NSNumber *globalDistance;
 @property (nonatomic) NSNumber *maxSpeed;
+@property (nonatomic) UIViewController *storedGCAuthView;
 
 @end

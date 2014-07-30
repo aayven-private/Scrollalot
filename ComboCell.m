@@ -22,7 +22,7 @@
         [self.layer setShouldRasterize:YES];
         [self.layer setShadowColor:[[UIColor whiteColor] CGColor]];
         //[layer setShadowOffset:CGSizeMake(1.0f,1.5f)];
-        [self.layer setShadowRadius:8.0f];
+        [self.layer setShadowRadius:5.0f];
         [self.layer setShadowOpacity:0.2f];
         [self.layer setShadowPath:[[UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:self.layer.cornerRadius] CGPath]];
     }

@@ -183,6 +183,11 @@ static BOOL startWithTutorials = NO;
     return self;
 }
 
+-(void)onPlayerAuthenticated
+{
+    
+}
+
 -(void)initEnvironment
 {
     self.comboManager = [ComboManager sharedManager];

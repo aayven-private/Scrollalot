@@ -13,6 +13,7 @@
 #import "RouteManager.h"
 #import "ComboCell.h"
 #import "Constants.h"
+#import "GlobalAppProperties.h"
 
 @interface AchievementsViewController ()
 
@@ -50,6 +51,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    __block GlobalAppProperties *props = [GlobalAppProperties sharedInstance];
+    UIViewController *authView = props.storedGCAuthView;
+    if (authView) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:authView animated:YES completion:^{
+                props.storedGCAuthView = nil;
+            }];
+        });
+    }
     
     UIPanGestureRecognizer* panSwipeRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanSwipe:)];
     //panSwipeRecognizer.cancelsTouchesInView = NO;
@@ -229,6 +240,26 @@
             [_achievementsCollectionView reloadData];
         }
     }
+}
+
+-(IBAction)gcClicked:(id)sender
+{
+    //GCManager *gcm = [[GCManager alloc] init];
+    //if (!gcm.isEnabled) {
+        //[gcm authenticateLocalPlayerShowLoginView:YES];
+    //} else {
+        GKGameCenterViewController* gameCenterController = [[GKGameCenterViewController alloc] init];
+        gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
+        gameCenterController.gameCenterDelegate = self;
+        [self presentViewController:gameCenterController animated:YES completion:nil];
+    //}
+}
+
+- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
+{
+    [gameCenterViewController dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
 
 @end

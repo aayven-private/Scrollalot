@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <GameKit/GameKit.h>
+#import "GCManager.h"
 
-@interface AchievementsViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate>
+@interface AchievementsViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate, GKGameCenterControllerDelegate>
 
 @property (nonatomic) NSMutableDictionary *achievementsDict;
 

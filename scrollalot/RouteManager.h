@@ -21,5 +21,6 @@
 -(void)loadNewRoute;
 -(void)loadRouteManually:(RouteEntityHelper *)route;
 -(NSArray *)getAchievedRoutes_dictionary;
+-(void)loadAchievements;
 
 @end

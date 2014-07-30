@@ -18,5 +18,6 @@
 +(id)sharedManager;
 -(void)actionTaken:(NSString *)action;
 -(NSArray *)getAchievedCombos_dictionary;
+-(void)loadAchievements;
 
 @end

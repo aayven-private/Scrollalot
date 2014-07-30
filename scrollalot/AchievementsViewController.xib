@@ -32,7 +32,7 @@
                         <action selector="tableAltered:" destination="-1" eventType="touchUpInside" id="b9E-Me-ajV"/>
                     </connections>
                 </button>
-                <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="white" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" id="B7G-bJ-oOF">
+                <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="white" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" id="B7G-bJ-oOF">
                     <rect key="frame" x="48" y="117" width="225" height="377"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -67,6 +67,16 @@
                     </state>
                     <connections>
                         <action selector="tableAltered:" destination="-1" eventType="touchUpInside" id="Odi-gX-7YZ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="TWZ-y5-QkN">
+                    <rect key="frame" x="48" y="71" width="225" height="38"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="gcClicked:" destination="-1" eventType="touchUpInside" id="n2O-rx-ehG"/>
                     </connections>
                 </button>
             </subviews>
