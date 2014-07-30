@@ -26,6 +26,7 @@ static NSString *kLastReadRoutePackage = @"last_read_route_package";
 @property (nonatomic) NSString *currentRoutePattern;
 @property (nonatomic) NSString *currentAchievementId;
 @property (nonatomic) NSNumber *currentRouteDistance;
+@property (nonatomic) NSString *currentBadgeName;
 
 @property (nonatomic) NSNumber *routeIndex;
 
@@ -60,7 +61,7 @@ static int currentPackageIndex = 1;
     if (_routeIndex.intValue == _currentRoutePattern.length) {
         //Route complete
         _routeIndex = @0;
-        [_delegate routeCompleted:_currentRouteName];
+        [_delegate routeCompleted:_currentRouteName andBadgeName:_currentBadgeName];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             if (_currentAchievementId && ![_currentAchievementId isEqualToString:@""]) {
                 [self setCurrentRouteAchieved];
@@ -262,6 +263,7 @@ static int currentPackageIndex = 1;
         _currentRouteName = nextRoute.routeName;
         _currentRouteDistance = nextRoute.routeDistance;
         _currentAchievementId = nextRoute.achievementId;
+        _currentBadgeName = nextRoute.badgeName;
         [_delegate nextRouteLoadedInDirection:[_currentRoutePattern characterAtIndex:0] andDistance:_currentRouteDistance];
     } else {
         [_delegate noAvailableRoutes];

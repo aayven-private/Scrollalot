@@ -989,21 +989,8 @@ static BOOL startWithTutorials = NO;
     }
 }
 
--(void)routeCompleted:(NSString *)routeName
+-(void)routeCompleted:(NSString *)routeName andBadgeName:(NSString *)badgeName
 {
-    /*CGPoint currentMarkerDirection = rwNormalize(CGPointMake(_mainMarker.physicsBody.velocity.dx, _mainMarker.physicsBody.velocity.dy));
-    CGVector bonusImpulse = CGVectorMake(currentMarkerDirection.x * _currentRouteDistance * 10000000, -currentMarkerDirection.y * _currentRouteDistance * 10000000);
-    [_mainMarker.physicsBody applyImpulse:bonusImpulse];
-    
-    for (SKSpriteNode *marker in _horizontalMarkers) {
-        [marker.physicsBody applyImpulse:CGVectorMake(0, bonusImpulse.dy)];
-    }
-    for (MarkerObject *marker in _verticalMarkers) {
-        [marker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
-    }*/
-    
-    //_currentRouteDistance = 0.1;
-    //_checkpointCount = 10;
     
     CGVector bonusImpulse;
     switch (_currentRouteDirection) {
@@ -1023,28 +1010,17 @@ static BOOL startWithTutorials = NO;
         break;
     }
     
-    //NSLog(@"Impulse: (%f, %f)", bonusImpulse.dx, bonusImpulse.dy);
-    
     [self runAction:[SKAction sequence:@[[SKAction runBlock:^{
         [_mainMarker.physicsBody applyImpulse:bonusImpulse];
     }], [SKAction waitForDuration:3], [SKAction runBlock:^{
         [_routeManager loadNewRoute];
     }]]]];
     
-    /*for (SKSpriteNode *marker in _horizontalMarkers) {
-        [marker.physicsBody applyImpulse:CGVectorMake(0, bonusImpulse.dy)];
-    }
-    for (MarkerObject *marker in _verticalMarkers) {
-        [marker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
-    }*/
-    
     _rightRouteEmitter.particleBirthRate = _leftRouteEmitter.particleBirthRate = _topRouteEmitter.particleBirthRate = _bottomRouteEmitter.particleBirthRate = 0;
     
     _compassRotationFixed = NO;
     [_compass_arrow removeAllActions];
     
-    //_distance += _currentRouteDistance * (_checkpointCount + 1);
-    //_lastSpeedCheckDistance = _distance;
     [_distanceLabel runAction:_pulseAction_long];
     _currentRouteDirection = 'n';
     _currentRouteDistance = 0;
@@ -1062,28 +1038,25 @@ static BOOL startWithTutorials = NO;
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         [self runAction:[SKAction sequence:@[[SKAction fadeAlphaTo:0.1 duration:.2], [SKAction fadeAlphaTo:1.0 duration:.2]]]];
-        [self addTextArray:@[routeName, @"Completed!"] completion:^{
+        /*[self addTextArray:@[routeName, @"Completed!"] completion:^{
             
-        } andInterval:.7];
+        } andInterval:.7];*/
+        [self addBadgeWithName:badgeName];
     }
-    
-    /*NSString *boomPath =[[NSBundle mainBundle] pathForResource:@"RewardEffect" ofType:@"sks"];
-    SKEmitterNode *boom = [NSKeyedUnarchiver unarchiveObjectWithFile:boomPath];
-    boom.targetNode = self;
-    boom.particlePositionRange = CGVectorMake(10, 10);
-    boom.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    
-    SKAction *boomAction = [SKAction sequence:@[[SKAction runBlock:^{
-        [self addChild:boom];
-    }], [SKAction waitForDuration:3], [SKAction runBlock:^{
-        [boom removeFromParent];
-    }]]];
-    [self runAction:boomAction];*/
     
     [_compass_arrow runAction:[SKAction scaleTo:1.0 duration:0]];
     
     _routeDistanceX = 0;
     _routeDistanceY = 0;
+}
+
+-(void)addBadgeWithName:(NSString *)badgeName
+{
+    SKSpriteNode *badge = [[SKSpriteNode alloc] initWithImageNamed:badgeName];
+    badge.xScale = badge.yScale = 0;
+    badge.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    [badge runAction:[SKAction sequence:@[[SKAction group:@[[SKAction fadeAlphaTo:0.0 duration:2.0], [SKAction scaleTo:2.5 duration:2.0]]], [SKAction removeFromParent]]]];
+    [self addChild:badge];
 }
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance

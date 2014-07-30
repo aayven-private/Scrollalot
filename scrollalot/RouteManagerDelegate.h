@@ -12,7 +12,7 @@
 
 -(void)nextRouteLoadedInDirection:(char)initialDirection andDistance:(NSNumber *)distance;
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance;
--(void)routeCompleted:(NSString *)routeName;
+-(void)routeCompleted:(NSString *)routeName andBadgeName:(NSString *)badgeName;
 -(void)noAvailableRoutes;
 
 @end
