@@ -183,11 +183,6 @@ static BOOL startWithTutorials = NO;
     return self;
 }
 
--(void)onPlayerAuthenticated
-{
-    
-}
-
 -(void)initEnvironment
 {
     self.comboManager = [ComboManager sharedManager];
@@ -204,7 +199,7 @@ static BOOL startWithTutorials = NO;
     self.physicsBody.usesPreciseCollisionDetection = YES;
     self.physicsBody.linearDamping = 1.0;
     self.scaleMode = SKSceneScaleModeAspectFill;
-    self.physicsWorld.contactDelegate = self;
+    //self.physicsWorld.contactDelegate = self;
     
     self.mainMarker = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"square"]]];
     self.mainMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);

@@ -73,6 +73,7 @@
 		B04B2C8E1976E326008D0528 /* spiral@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C8D1976E326008D0528 /* spiral@2x.png */; };
 		B04B2C941978266D008D0528 /* compass@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C931978266D008D0528 /* compass@2x.png */; };
 		B04B2C9819782721008D0528 /* compass_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B04B2C9719782721008D0528 /* compass_arrow@2x.png */; };
+		B0649EAE19894C0F00287639 /* route10@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649EAD19894C0F00287639 /* route10@2x.png */; };
 		B09B800C196F027000800BD4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800B196F027000800BD4 /* Foundation.framework */; };
 		B09B800E196F027000800BD4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800D196F027000800BD4 /* CoreGraphics.framework */; };
 		B09B8010196F027000800BD4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800F196F027000800BD4 /* UIKit.framework */; };
@@ -197,6 +198,7 @@
 		B04B2C8D1976E326008D0528 /* spiral@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spiral@2x.png"; sourceTree = "<group>"; };
 		B04B2C931978266D008D0528 /* compass@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compass@2x.png"; sourceTree = "<group>"; };
 		B04B2C9719782721008D0528 /* compass_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compass_arrow@2x.png"; sourceTree = "<group>"; };
+		B0649EAD19894C0F00287639 /* route10@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "route10@2x.png"; sourceTree = "<group>"; };
 		B09B8008196F027000800BD4 /* scrollalot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = scrollalot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B09B800B196F027000800BD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B09B800D196F027000800BD4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -321,6 +323,7 @@
 		B01EF5EA1986809500B412C6 /* Badges */ = {
 			isa = PBXGroup;
 			children = (
+				B0649EAD19894C0F00287639 /* route10@2x.png */,
 				B01EF63619890F3300B412C6 /* route5@2x.png */,
 				B01EF5EB1986809F00B412C6 /* scrollalot_achievement_jumpy@2x.png */,
 				B01EF5EC1986809F00B412C6 /* scrollalot_achievement_manyup@2x.png */,
@@ -683,6 +686,7 @@
 				B01EF5E71986736200B412C6 /* AchievementsViewController.xib in Resources */,
 				B01EF5E9198678EC00B412C6 /* AchievementHeader.xib in Resources */,
 				B01EF5FB1986A8EE00B412C6 /* Tekton Pro Bold.ttf in Resources */,
+				B0649EAE19894C0F00287639 /* route10@2x.png in Resources */,
 				B01E4284198257F20008CF41 /* RouteEffect.sks in Resources */,
 				B01EF60A1987826500B412C6 /* ComboCell.xib in Resources */,
 				B01EF6281988EAAD00B412C6 /* routes_scr_5@2x.png in Resources */,
