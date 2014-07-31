@@ -18,20 +18,6 @@
 	</dict>
 	<dict>
 		<key>badgeName</key>
-		<string>route10</string>
-		<key>routeName</key>
-		<string>Jump10</string>
-		<key>routeDistance</key>
-		<real>0.01</real>
-		<key>achieved</key>
-		<false/>
-		<key>achievementId</key>
-		<string>scrollalot_route_jump10</string>
-		<key>routePattern</key>
-		<string>uldddd</string>
-	</dict>
-	<dict>
-		<key>badgeName</key>
 		<string>route5</string>
 		<key>routeName</key>
 		<string>Jump5</string>

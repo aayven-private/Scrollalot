@@ -28,6 +28,7 @@ static NSString *kHadRouteKey = @"had_route";
 static NSString *kHadComboKey = @"had_combo";
 
 static CGFloat positionEpsilon = 0.2;
+static CGFloat mPSinKmPH = 3.6;
 
 @interface ScrollScene()
 
@@ -139,7 +140,7 @@ static BOOL startWithTutorials = NO;
     if (self = [super initWithSize:size]) {
         /* Setup your scene here */
         self.backgroundColor = [UIColor whiteColor];
-        self.speedCheckInterval = 2;
+        self.speedCheckInterval = 1;
         self.globalProps = [GlobalAppProperties sharedInstance];
         //self.verticalMarkers = [NSMutableArray array];
         //self.horizontalMarkers = [NSMutableArray array];
@@ -327,7 +328,7 @@ static BOOL startWithTutorials = NO;
     self.maxSpeedLabel.fontSize = 15.0;
     self.maxSpeedLabel.position = CGPointMake(56, self.size.height - 58  + header.size.height) ;
     self.maxSpeedLabel.fontColor = [UIColor whiteColor];
-    self.maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", self.maxSpeed];
+    self.maxSpeedLabel.text = [[NSString stringWithFormat:@"%.1fkm/h", self.maxSpeed] stringByReplacingOccurrencesOfString:@"." withString:@","];
     [self addChild:self.maxSpeedLabel];
     
     self.speedLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
@@ -516,7 +517,7 @@ static BOOL startWithTutorials = NO;
             }
         }
     }
-    
+
     //[self addBadgeWithName:@"route5" andAchievementName:@"Pyramid5"];
 }
 
@@ -540,6 +541,7 @@ static BOOL startWithTutorials = NO;
     if (timeSinceLast > 1) { // more than a second since last update
         timeSinceLast = 1.0 / 60.0;
     }
+    
     _lastUpdateTimeInterval = currentTime;
     
     if (self.mainMarker.physicsBody.velocity.dy < 0) {
@@ -704,11 +706,11 @@ static BOOL startWithTutorials = NO;
     _lastMarkerPosition = _mainMarker.position;
     
     if (_distance < 0.001) {
-        _distanceLabel.text = [NSString stringWithFormat:@"%.1fcm", _distance * 100000];
+        _distanceLabel.text = [[NSString stringWithFormat:@"%.1fcm", _distance * 100000] stringByReplacingOccurrencesOfString:@"." withString:@","];
     } else if (_distance < 1) {
-        _distanceLabel.text = [NSString stringWithFormat:@"%.2fm", _distance * 1000];
+        _distanceLabel.text = [[NSString stringWithFormat:@"%.2fm", _distance * 1000] stringByReplacingOccurrencesOfString:@"." withString:@","];
     } else {
-        _distanceLabel.text = [NSString stringWithFormat:@"%.3fkm", _distance];
+        _distanceLabel.text = [[NSString stringWithFormat:@"%.3fkm", _distance] stringByReplacingOccurrencesOfString:@"." withString:@","];
     }
     
     _globalProps.globalDistance = [NSNumber numberWithDouble:_distance];
@@ -716,11 +718,20 @@ static BOOL startWithTutorials = NO;
     _lastSpeedCheckInterval += timeSinceLast;
     
     if (_lastSpeedCheckInterval > _speedCheckInterval) {
+        //NSLog(@"SpeedX: %f, SpeedY: %f", _mainMarker.physicsBody.velocity.dx * mPSinKmPH / 150.0, _mainMarker.physicsBody.velocity.dy * mPSinKmPH / 150.0);
         
-        CGFloat measureDistance = fabs(_distance - _lastSpeedCheckDistance);
-        CGFloat speed = (measureDistance / _lastSpeedCheckInterval) * kmPSecInKmPH;
+        CGFloat speedX = fabsf( _mainMarker.physicsBody.velocity.dx * mPSinKmPH / 150.0);
+        CGFloat speedY = fabsf( _mainMarker.physicsBody.velocity.dy * mPSinKmPH / 150.0);
+        
+        CGFloat speedBySK = sqrtf(powf(speedX, 2) + pow(speedY, 2));
+        //NSLog(@"Speed: %f", speedBySK);
+        
+        //CGFloat measureDistance = fabs(_distance - _lastSpeedCheckDistance);
+        //CGFloat speed = (measureDistance / _lastSpeedCheckInterval) * kmPSecInKmPH;
+        
+        CGFloat speed = speedBySK / 20.0;
 
-        self.speedLabel.text = [NSString stringWithFormat:@"%.1fKm/h", speed];
+        self.speedLabel.text = [[NSString stringWithFormat:@"%.1fKm/h", speed] stringByReplacingOccurrencesOfString:@"." withString:@","];
         
         if (speed > _maxSpeed) {
             _maxSpeed = speed;
@@ -728,7 +739,7 @@ static BOOL startWithTutorials = NO;
                 [_delegate reportMaxSpeed:_maxSpeed];
             });
             _globalProps.maxSpeed = [NSNumber numberWithFloat:_maxSpeed];
-            _maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", _maxSpeed];
+            _maxSpeedLabel.text = [[NSString stringWithFormat:@"%.1fkm/h", _maxSpeed] stringByReplacingOccurrencesOfString:@"." withString:@","];
         }
         
         if (speed < _lastSpeed && _lastSpeed == _maxSpeed) {
@@ -934,7 +945,7 @@ static BOOL startWithTutorials = NO;
 {
     _maxSpeed = maxSpeed;
     _globalProps.maxSpeed = [NSNumber numberWithFloat:_maxSpeed];
-    _maxSpeedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", _maxSpeed];
+    _maxSpeedLabel.text = [[NSString stringWithFormat:@"%.1fkm/h", _maxSpeed] stringByReplacingOccurrencesOfString:@"." withString:@","];
 }
 
 -(void)setDistance:(double)distance
@@ -942,11 +953,11 @@ static BOOL startWithTutorials = NO;
     _distance = distance;
     _globalProps.globalDistance = [NSNumber numberWithDouble:_distance];
     if (_distance < 0.001) {
-        _distanceLabel.text = [NSString stringWithFormat:@"%.1fcm", _distance * 100000];
+        _distanceLabel.text = [[NSString stringWithFormat:@"%.1fcm", _distance * 100000] stringByReplacingOccurrencesOfString:@"." withString:@","];
     } else if (_distance < 1) {
-        _distanceLabel.text = [NSString stringWithFormat:@"%.2fm", _distance * 1000];
+        _distanceLabel.text = [[NSString stringWithFormat:@"%.2fm", _distance * 1000] stringByReplacingOccurrencesOfString:@"." withString:@","];
     } else {
-        _distanceLabel.text = [NSString stringWithFormat:@"%.3fkm", _distance];
+        _distanceLabel.text = [[NSString stringWithFormat:@"%.3fkm", _distance] stringByReplacingOccurrencesOfString:@"." withString:@","];
     }
 }
 

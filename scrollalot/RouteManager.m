@@ -346,7 +346,7 @@ static int currentPackageIndex = 2;
         if (achievements != nil)
         {
             for (GKAchievement *achievement in achievements) {
-                NSLog(@"Achievement: %@, progress: %f", achievement.identifier, achievement.percentComplete);
+                //NSLog(@"Achievement: %@, progress: %f", achievement.identifier, achievement.percentComplete);
                 if ([achievement.identifier hasPrefix:@"scrollalot_route"] && achievement.percentComplete == 100.0) {
                     [self setRouteAchievedWithId:achievement.identifier];
                 }
