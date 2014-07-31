@@ -247,12 +247,14 @@ static int currentPackageIndex = 1;
     [result setObject:entity.achievementId forKey:@"badgeName"];
     [result setObject:entity.comboName forKey:@"name"];
     [result setObject:entity.comboPattern forKey:@"pattern"];
+    [result setObject:entity.achievementId forKey:@"achievementId"];
     return result;
 }
 
 - (void)reportAchievementIdentifier:(NSString*) identifier percentComplete:(float) percent
 {
     GKAchievement *achievement = [[GKAchievement alloc] initWithIdentifier: identifier];
+    achievement.percentComplete = 100.0;
     if (achievement)
     {
         [GKAchievement reportAchievements:@[achievement] withCompletionHandler:^(NSError *error) {
@@ -279,6 +281,11 @@ static int currentPackageIndex = 1;
             }
         }
     }];
+    
+    NSArray *achievedCombos = [self getAchievedCombos_dictionary];
+    for (NSDictionary *dict in achievedCombos) {
+        [self reportAchievementIdentifier:[dict objectForKey:@"achievementId"] percentComplete:100.0];
+    }
 }
 
 @end

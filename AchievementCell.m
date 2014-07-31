@@ -17,12 +17,12 @@
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
     if (self = [super initWithCoder:aDecoder]) {
-        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 82, 70, 38)];
+        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 82, 80, 38)];
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.font = [UIFont fontWithName:@"Pacifico-Regular" size:17.0];
         self.nameLabel.textColor = [UIColor whiteColor];
         self.nameLabel.adjustsFontSizeToFitWidth = YES;
-        self.nameLabel.minimumScaleFactor = 0.8;
+        self.nameLabel.minimumScaleFactor = 0.7;
         [self addSubview:self.nameLabel];
         
         self.layer.borderWidth=1.0f;

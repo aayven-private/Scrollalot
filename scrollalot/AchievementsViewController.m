@@ -172,7 +172,7 @@
     if ([_badgesState isEqualToString:@"combos"]) {
         //return CGSizeMake(80, 80);
     }
-    return CGSizeMake(80, 120);
+    return CGSizeMake(90, 120);
 }
 
 - (UICollectionReusableView *)collectionView: (UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {

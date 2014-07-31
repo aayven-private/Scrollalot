@@ -83,7 +83,7 @@
 		B0649EDC198A9A5700287639 /* scrollalot_achievement_rush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649ED0198A9A5700287639 /* scrollalot_achievement_rush@2x.png */; };
 		B0649EDD198A9A5700287639 /* scrollalot_achievement_shaky@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649ED1198A9A5700287639 /* scrollalot_achievement_shaky@2x.png */; };
 		B0649EDE198A9A5700287639 /* scrollalot_achievement_tornado@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649ED2198A9A5700287639 /* scrollalot_achievement_tornado@2x.png */; };
-		B0649EDF198A9A5700287639 /* scrollalot_achievement_twister@2dx.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649ED3198A9A5700287639 /* scrollalot_achievement_twister@2dx.png */; };
+		B0649EDF198A9A5700287639 /* scrollalot_achievement_twister@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649ED3198A9A5700287639 /* scrollalot_achievement_twister@2x.png */; };
 		B0649EE0198A9A5700287639 /* scrollalot_achievement_whirlpool@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649ED4198A9A5700287639 /* scrollalot_achievement_whirlpool@2x.png */; };
 		B09B800C196F027000800BD4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800B196F027000800BD4 /* Foundation.framework */; };
 		B09B800E196F027000800BD4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800D196F027000800BD4 /* CoreGraphics.framework */; };
@@ -220,7 +220,7 @@
 		B0649ED0198A9A5700287639 /* scrollalot_achievement_rush@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_achievement_rush@2x.png"; sourceTree = "<group>"; };
 		B0649ED1198A9A5700287639 /* scrollalot_achievement_shaky@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_achievement_shaky@2x.png"; sourceTree = "<group>"; };
 		B0649ED2198A9A5700287639 /* scrollalot_achievement_tornado@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_achievement_tornado@2x.png"; sourceTree = "<group>"; };
-		B0649ED3198A9A5700287639 /* scrollalot_achievement_twister@2dx.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_achievement_twister@2dx.png"; sourceTree = "<group>"; };
+		B0649ED3198A9A5700287639 /* scrollalot_achievement_twister@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_achievement_twister@2x.png"; sourceTree = "<group>"; };
 		B0649ED4198A9A5700287639 /* scrollalot_achievement_whirlpool@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scrollalot_achievement_whirlpool@2x.png"; sourceTree = "<group>"; };
 		B09B8008196F027000800BD4 /* scrollalot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = scrollalot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B09B800B196F027000800BD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -357,7 +357,7 @@
 				B0649ED0198A9A5700287639 /* scrollalot_achievement_rush@2x.png */,
 				B0649ED1198A9A5700287639 /* scrollalot_achievement_shaky@2x.png */,
 				B0649ED2198A9A5700287639 /* scrollalot_achievement_tornado@2x.png */,
-				B0649ED3198A9A5700287639 /* scrollalot_achievement_twister@2dx.png */,
+				B0649ED3198A9A5700287639 /* scrollalot_achievement_twister@2x.png */,
 				B0649ED4198A9A5700287639 /* scrollalot_achievement_whirlpool@2x.png */,
 				B0649EAD19894C0F00287639 /* route10@2x.png */,
 				B01EF63619890F3300B412C6 /* route5@2x.png */,
@@ -725,7 +725,7 @@
 				B01EF624198807E500B412C6 /* mongi_kicsi2@2x.png in Resources */,
 				B09B8018196F027000800BD4 /* InfoPlist.strings in Resources */,
 				B04B2C941978266D008D0528 /* compass@2x.png in Resources */,
-				B0649EDF198A9A5700287639 /* scrollalot_achievement_twister@2dx.png in Resources */,
+				B0649EDF198A9A5700287639 /* scrollalot_achievement_twister@2x.png in Resources */,
 				B01EF6301988F2F100B412C6 /* routes_scr_4@2x.png in Resources */,
 				B01E4280198165B30008CF41 /* RewardEffect.sks in Resources */,
 				B01E427B197FD5DD0008CF41 /* arrow_right@2x.png in Resources */,

@@ -35,7 +35,7 @@ static NSString *kLastReadRoutePackage = @"last_read_route_package";
 @implementation RouteManager
 
 static BOOL filterAchieved = YES;
-static int currentPackageIndex = 1;
+static int currentPackageIndex = 2;
 
 -(id)initWithDelegate:(id<RouteManagerDelegate>)delegate
 {
@@ -318,6 +318,7 @@ static int currentPackageIndex = 1;
     [result setObject:entity.routeName forKey:@"name"];
     [result setObject:entity.routePattern forKey:@"pattern"];
     [result setObject:entity.routeDistance forKey:@"distance"];
+    [result setObject:entity.achievementId forKey:@"achievementId"];
     return result;
 }
 
@@ -352,6 +353,11 @@ static int currentPackageIndex = 1;
             }
         }
     }];
+    
+    NSArray *achievedRoutes = [self getAchievedRoutes_dictionary];
+    for (NSDictionary *dict in achievedRoutes) {
+        [self reportAchievementIdentifier:[dict objectForKey:@"achievementId"] percentComplete:100.0];
+    }
 }
 
 @end
