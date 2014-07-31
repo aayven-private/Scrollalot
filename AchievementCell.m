@@ -21,6 +21,8 @@
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.font = [UIFont fontWithName:@"Pacifico-Regular" size:17.0];
         self.nameLabel.textColor = [UIColor whiteColor];
+        self.nameLabel.adjustsFontSizeToFitWidth = YES;
+        self.nameLabel.minimumScaleFactor = 0.8;
         [self addSubview:self.nameLabel];
         
         self.layer.borderWidth=1.0f;

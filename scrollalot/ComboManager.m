@@ -73,7 +73,8 @@ static int currentPackageIndex = 1;
     }
 
     if (achievedCombos.count > 0) {
-        [_delegate combosCompleted:[achievedCombos copy]];
+        NSString *cmb = [achievedCombos anyObject];
+        [_delegate comboCompleted:cmb withBadgeName:[_comboIds objectForKey:cmb]];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             [self setCombosAchieved:achievedCombos];
         });

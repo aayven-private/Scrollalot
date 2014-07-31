@@ -124,13 +124,15 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    UICollectionViewCell *cell;
+    AchievementCell *cell;
     
-    if ([_badgesState isEqualToString:@"combos"]) {
+    /*if ([_badgesState isEqualToString:@"combos"]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ComboCell" forIndexPath:indexPath];
     } else if ([_badgesState isEqualToString:@"routes"]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AchievementCell" forIndexPath:indexPath];
-    }
+    }*/
+    
+    cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AchievementCell" forIndexPath:indexPath];
     
     //AchievementCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AchievementCell" forIndexPath:indexPath];
     
@@ -143,12 +145,16 @@
     NSString *badgeName = [cellData objectForKey:@"badgeName"];
     UIImage *badge = [UIImage imageNamed:badgeName];
     
-    if ([_badgesState isEqualToString:@"combos"]) {
+    /*if ([_badgesState isEqualToString:@"combos"]) {
         ((ComboCell *)cell).badgeView.image = badge;
     } else if ([_badgesState isEqualToString:@"routes"]) {
         ((AchievementCell *)cell).badgeView.image = badge;
         ((AchievementCell *)cell).nameLabel.text = achievementName;
-    }
+    }*/
+    
+    cell.badgeView.image = badge;
+    //cell.badgeView.image = badge;
+    cell.nameLabel.text = achievementName;
     
     return cell;
 }
@@ -164,7 +170,7 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if ([_badgesState isEqualToString:@"combos"]) {
-        return CGSizeMake(80, 80);
+        //return CGSizeMake(80, 80);
     }
     return CGSizeMake(80, 120);
 }

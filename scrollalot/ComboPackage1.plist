@@ -4,6 +4,46 @@
 <array>
 	<dict>
 		<key>achievementId</key>
+		<string>scrollalot_achievement_dance</string>
+		<key>comboName</key>
+		<string>Dance</string>
+		<key>comboPattern</key>
+		<string>ruruldld</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>achievementId</key>
+		<string>scrollalot_achievement_central</string>
+		<key>comboName</key>
+		<string>Central</string>
+		<key>comboPattern</key>
+		<string>rulurdlu</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>achievementId</key>
+		<string>scrollalot_achievement_rush</string>
+		<key>comboName</key>
+		<string>Rush</string>
+		<key>comboPattern</key>
+		<string>duuddduud</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>achievementId</key>
+		<string>scrollalot_achievement_whirlpool</string>
+		<key>comboName</key>
+		<string>Whirlpool</string>
+		<key>comboPattern</key>
+		<string>rrlluudd</string>
+		<key>achieved</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>achievementId</key>
 		<string>scrollalot_achievement_tornado</string>
 		<key>comboName</key>
 		<string>Tornado</string>

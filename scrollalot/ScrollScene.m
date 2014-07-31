@@ -40,6 +40,9 @@ static CGFloat positionEpsilon = 0.2;
 //@property (nonatomic) NSMutableArray *verticalMarkers;
 //@property (nonatomic) NSMutableArray *horizontalMarkers;
 @property (nonatomic) MarkerObject *mainMarker;
+@property (nonatomic) MarkerObject *horizontalMarker;
+@property (nonatomic) MarkerObject *verticalMarker;
+
 @property (nonatomic) CGPoint lastMarkerPosition;
 @property (nonatomic) CGFloat lastSpeedCheckDistance;
 
@@ -136,7 +139,7 @@ static BOOL startWithTutorials = NO;
     if (self = [super initWithSize:size]) {
         /* Setup your scene here */
         self.backgroundColor = [UIColor whiteColor];
-        self.speedCheckInterval = 1.0;
+        self.speedCheckInterval = 2;
         self.globalProps = [GlobalAppProperties sharedInstance];
         //self.verticalMarkers = [NSMutableArray array];
         //self.horizontalMarkers = [NSMutableArray array];
@@ -181,6 +184,8 @@ static BOOL startWithTutorials = NO;
         self.mongiSpawnInterval = [CommonTools getRandomFloatFromFloat:5.0 * 60 toFloat:30.0 * 60];
         self.currentMongiInterval = 0;
         //self.isMinigameRunning = NO;
+        
+        //self.measuredSpeeds = [NSMutableArray arrayWithCapacity:10];
     }
     return self;
 }
@@ -202,6 +207,14 @@ static BOOL startWithTutorials = NO;
     self.physicsBody.linearDamping = 1.0;
     self.scaleMode = SKSceneScaleModeAspectFill;
     //self.physicsWorld.contactDelegate = self;
+    
+    self.horizontalMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.15] size:CGSizeMake(self.size.width, 2)];
+    self.horizontalMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    [self addChild:self.horizontalMarker];
+    
+    self.verticalMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.15] size:CGSizeMake(2, self.size.height)];
+    self.verticalMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    [self addChild:self.verticalMarker];
     
     self.mainMarker = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"square"]]];
     self.mainMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
@@ -503,6 +516,8 @@ static BOOL startWithTutorials = NO;
             }
         }
     }
+    
+    //[self addBadgeWithName:@"route5" andAchievementName:@"Pyramid5"];
 }
 
 -(void)addMongiImageForMongiName:(NSString *)mongiName
@@ -666,6 +681,18 @@ static BOOL startWithTutorials = NO;
         positionY = self.size.height;
     } else if (_mainMarker.position.y > self.size.height) {
         positionY = 0;
+    }
+    
+    if (_horizontalMarker.position.y < 0) {
+        _horizontalMarker.position = CGPointMake(_horizontalMarker.position.x, self.size.height);
+    } else if (_horizontalMarker.position.y > self.size.height) {
+        _horizontalMarker.position = CGPointMake(_horizontalMarker.position.x, 0);
+    }
+    
+    if (_verticalMarker.position.x < 0) {
+        _verticalMarker.position = CGPointMake(self.size.width, _verticalMarker.position.y);
+    } else if (_verticalMarker.position.x > self.size.width) {
+        _verticalMarker.position = CGPointMake(0, _verticalMarker.position.y);
     }
     
     _mainMarker.position = CGPointMake(positionX, positionY);
@@ -832,6 +859,8 @@ static BOOL startWithTutorials = NO;
         }
         
         [self.mainMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, -velocity.y)];
+        [self.horizontalMarker.physicsBody applyImpulse:CGVectorMake(0, -velocity.y)];
+        [self.verticalMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, 0)];
         /*for (SKSpriteNode *marker in _horizontalMarkers) {
             [marker.physicsBody applyImpulse:CGVectorMake(0, -velocity.y)];
         }
@@ -883,19 +912,21 @@ static BOOL startWithTutorials = NO;
     [self addChild:textLabel];
 }
 
--(void)combosCompleted:(NSSet *)combos
+-(void)comboCompleted:(NSString *)comboName withBadgeName:(NSString *)badgeName
 {
     //NSLog(@"Combos: %@", combos);
     if (_isComboTutorial) {
         _isComboTutorial = NO;
         
-        _helpNode = [self createComboHelpWithComboName:[combos anyObject]];
+        _helpNode = [self createComboHelpWithComboName:comboName];
         _helpNodeIsVisible = YES;
         [self addChild:_helpNode];
     } else {
-        [self addTextArray:[combos sortedArrayUsingDescriptors:nil] completion:^{
+        /*[self addTextArray:[combos sortedArrayUsingDescriptors:nil] completion:^{
             
-        } andInterval:.5];
+        } andInterval:.5];*/
+        
+        [self addBadgeWithName:badgeName andAchievementName:comboName];
     }
 }
 
@@ -954,6 +985,8 @@ static BOOL startWithTutorials = NO;
     
     [self runAction:[SKAction sequence:@[[SKAction runBlock:^{
         [_mainMarker.physicsBody applyImpulse:bonusImpulse];
+        [_horizontalMarker.physicsBody applyImpulse:CGVectorMake(0, bonusImpulse.dy)];
+        [_verticalMarker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
     }], [SKAction waitForDuration:3], [SKAction runBlock:^{
         [_routeManager loadNewRoute];
     }]]]];
@@ -983,7 +1016,7 @@ static BOOL startWithTutorials = NO;
         /*[self addTextArray:@[routeName, @"Completed!"] completion:^{
             
         } andInterval:.7];*/
-        [self addBadgeWithName:badgeName];
+        [self addBadgeWithName:badgeName andAchievementName:routeName];
     }
     
     [_compass_arrow runAction:[SKAction scaleTo:1.0 duration:0]];
@@ -992,13 +1025,23 @@ static BOOL startWithTutorials = NO;
     _routeDistanceY = 0;
 }
 
--(void)addBadgeWithName:(NSString *)badgeName
+-(void)addBadgeWithName:(NSString *)badgeName andAchievementName:(NSString *)achievementName
 {
     SKSpriteNode *badge = [[SKSpriteNode alloc] initWithImageNamed:badgeName];
-    badge.xScale = badge.yScale = 0;
     badge.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    [badge runAction:[SKAction sequence:@[[SKAction group:@[[SKAction fadeAlphaTo:0.0 duration:2.0], [SKAction scaleTo:2.5 duration:2.0]]], [SKAction removeFromParent]]]];
+    SKAction *badgeAction = [SKAction sequence:@[[SKAction scaleTo:2.5 duration:2.0], [SKAction fadeAlphaTo:0.0 duration:2.0], [SKAction removeFromParent]]];
+    [badge runAction:badgeAction];
+    
+    SKLabelNode *achievementNameLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
+    achievementNameLabel.text = achievementName;
+    achievementNameLabel.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0 - badge.size.height / 2.0 - 30);
+    achievementNameLabel.xScale = achievementNameLabel.yScale = 0;
+    achievementNameLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
+    badge.xScale = badge.yScale = 0;
+    [achievementNameLabel runAction:badgeAction];
+    
     [self addChild:badge];
+    [self addChild:achievementNameLabel];
 }
 
 -(void)checkpointCompletedWithNextDirection:(char)nextDirection andDistance:(NSNumber *)distance

@@ -10,6 +10,6 @@
 
 @protocol ComboManagerDelegate <NSObject>
 
--(void)combosCompleted:(NSSet *)comboes;
+-(void)comboCompleted:(NSString *)comboName withBadgeName:(NSString *)badgeName;
 
 @end
