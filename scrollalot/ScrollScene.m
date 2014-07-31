@@ -124,6 +124,8 @@ static CGFloat positionEpsilon = 0.2;
 @property (nonatomic) NSTimeInterval mongiSpawnInterval;
 @property (nonatomic) NSTimeInterval currentMongiInterval;
 
+@property (nonatomic) NSMutableArray *measuredSpeeds;
+
 @end
 
 @implementation ScrollScene
@@ -134,7 +136,7 @@ static BOOL startWithTutorials = NO;
     if (self = [super initWithSize:size]) {
         /* Setup your scene here */
         self.backgroundColor = [UIColor whiteColor];
-        self.speedCheckInterval = 2.0;
+        self.speedCheckInterval = 1.0;
         self.globalProps = [GlobalAppProperties sharedInstance];
         //self.verticalMarkers = [NSMutableArray array];
         //self.horizontalMarkers = [NSMutableArray array];
@@ -527,12 +529,10 @@ static BOOL startWithTutorials = NO;
     
     if (self.mainMarker.physicsBody.velocity.dy < 0) {
         _topEmitter.particleBirthRate = 0.15 * fabs(_mainMarker.physicsBody.velocity.dy);
-        //self.topEmitter.yAcceleration = self.mainMarker.physicsBody.velocity.dy;
         self.bottomEmitter.particleBirthRate = 0;
     } else if (self.mainMarker.physicsBody.velocity.dy > 0) {
         self.topEmitter.particleBirthRate = 0;
         _bottomEmitter.particleBirthRate = 0.15 * fabs(_mainMarker.physicsBody.velocity.dy);
-        //self.bottomEmitter.yAcceleration = self.mainMarker.physicsBody.velocity.dy;
     } else {
         self.topEmitter.particleBirthRate = 0;
         self.bottomEmitter.particleBirthRate = 0;
@@ -541,11 +541,9 @@ static BOOL startWithTutorials = NO;
     if (self.mainMarker.physicsBody.velocity.dx < 0) {
         self.leftEmitter.particleBirthRate = 0;
         self.rightEmitter.particleBirthRate = 0.15 * fabs(_mainMarker.physicsBody.velocity.dx);
-        //self.rightEmitter.xAcceleration = self.mainMarker.physicsBody.velocity.dx;
     } else if (self.mainMarker.physicsBody.velocity.dx > 0) {
         self.leftEmitter.particleBirthRate = 0.15 * fabs(_mainMarker.physicsBody.velocity.dx);
         self.rightEmitter.particleBirthRate = 0;
-        //self.leftEmitter.xAcceleration = self.mainMarker.physicsBody.velocity.dx;
     } else {
         self.leftEmitter.particleBirthRate = 0;
         self.rightEmitter.particleBirthRate = 0;
@@ -560,18 +558,9 @@ static BOOL startWithTutorials = NO;
     } else if (_currentRouteDirection == 'r') {
         _rightRouteEmitter.xAcceleration = self.mainMarker.physicsBody.velocity.dx;
     }
-    
-    //_leftRouteEmitter.xAcceleration = _rightRouteEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx;
-    //_topRouteEmitter.xAcceleration = _bottomRouteEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx / 10;
-    //_topRouteEmitter.yAcceleration = _bottomRouteEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy;
-    //_leftRouteEmitter.yAcceleration = _rightRouteEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy / 10;
-    
-    
-    
+
     self.topEmitter.xAcceleration = self.bottomEmitter.xAcceleration = self.leftEmitter.xAcceleration = self.rightEmitter.xAcceleration = _bgEmitter.xAcceleration = _mainMarker.physicsBody.velocity.dx;
     self.topEmitter.yAcceleration = self.bottomEmitter.yAcceleration = self.leftEmitter.yAcceleration = self.rightEmitter.yAcceleration = _bgEmitter.yAcceleration = _mainMarker.physicsBody.velocity.dy;
-    
-    //NSLog(@"%f", _mainMarker.physicsBody.velocity.dy);
     
     self.topEmitter.particleRotation = self.bottomEmitter.particleRotation = self.leftEmitter.particleRotation = self.rightEmitter.particleRotation = atan2(_mainMarker.physicsBody.velocity.dx, -_mainMarker.physicsBody.velocity.dy);
     self.topRouteEmitter.particleRotation = self.bottomRouteEmitter.particleRotation = self.leftRouteEmitter.particleRotation = self.rightRouteEmitter.particleRotation = atan2(_mainMarker.physicsBody.velocity.dx, -_mainMarker.physicsBody.velocity.dy);
@@ -581,24 +570,6 @@ static BOOL startWithTutorials = NO;
 
 -(void)updateWithTimeSinceLastUpdate:(CFTimeInterval)timeSinceLast
 {
-    /*for (SKSpriteNode *marker in _horizontalMarkers) {
-        if (marker.position.y < -marker.size.height / 2.0) {
-            marker.position = CGPointMake(marker.position.x, self.size.height + marker.size.height / 2.0);
-        } else if (marker.position.y > self.size.height + marker.size.height / 2.0) {
-            marker.position = CGPointMake(marker.position.x, -marker.size.height / 2.0);
-        }
-    }
-    
-    for (SKSpriteNode *marker in _verticalMarkers) {
-        if (marker.position.x < -marker.size.width / 2.0) {
-            marker.position = CGPointMake(self.size.width + marker.size.width / 2.0, marker.position.y);
-        } else if (marker.position.x > self.size.width + marker.size.width / 2.0) {
-            marker.position = CGPointMake(-marker.size.width / 2.0, marker.position.y);
-        }
-    }*/
-    
-    
-    
     CGFloat globalPositionDiffX = (_lastMarkerPosition.x - _mainMarker.position.x) * mPerPixel * 2.0;
     CGFloat globalPositionDiffY = (_lastMarkerPosition.y - _mainMarker.position.y) * mPerPixel * 2.0;
     
@@ -666,29 +637,35 @@ static BOOL startWithTutorials = NO;
         _routeDistanceY = 0;
     }
     
-    //NSLog(@"Route distance in X: %f, Route distance in Y: %f", _routeDistanceX, _routeDistanceY);
-    
-    //CGFloat distanceDiff = fabsf(_lastMarkerPosition - _mainMarker.position.y);
-    
-    //NSLog(@"%f", _mainMarker.position.y);
-    
     CGFloat positionX = _mainMarker.position.x;
     CGFloat positionY = _mainMarker.position.y;
     
-    if (_mainMarker.position.x < -_mainMarker.size.width / 2.0) {
-        distanceDiffX = 0;
+    /*if (_mainMarker.position.x < -_mainMarker.size.width / 2.0) {
+        //distanceDiffX = 0;
         positionX = self.size.width + _mainMarker.size.width / 2.0;
     } else if (_mainMarker.position.x > self.size.width + _mainMarker.size.width / 2.0) {
-        distanceDiffX = 0;
+        //distanceDiffX = 0;
         positionX = -_mainMarker.size.width / 2.0;
     }
     
     if (_mainMarker.position.y < -_mainMarker.size.height / 2.0) {
-        distanceDiffY = 0;
+        //distanceDiffY = 0;
         positionY = self.size.height + _mainMarker.size.height / 2.0;
     } else if (_mainMarker.position.y > self.size.height + _mainMarker.size.height / 2.0) {
-        distanceDiffY = 0;
+        //distanceDiffY = 0;
         positionY = -_mainMarker.size.height / 2.0;
+    }*/
+    
+    if (_mainMarker.position.x < 0) {
+        positionX = self.size.width;
+    } else if (_mainMarker.position.x > self.size.width) {
+        positionX = 0;
+    }
+    
+    if (_mainMarker.position.y < 0) {
+        positionY = self.size.height;
+    } else if (_mainMarker.position.y > self.size.height) {
+        positionY = 0;
     }
     
     _mainMarker.position = CGPointMake(positionX, positionY);
@@ -714,7 +691,7 @@ static BOOL startWithTutorials = NO;
     if (_lastSpeedCheckInterval > _speedCheckInterval) {
         
         CGFloat measureDistance = fabs(_distance - _lastSpeedCheckDistance);
-        CGFloat speed = measureDistance * _lastSpeedCheckInterval * kmPSecInKmPH;
+        CGFloat speed = (measureDistance / _lastSpeedCheckInterval) * kmPSecInKmPH;
 
         self.speedLabel.text = [NSString stringWithFormat:@"%.1fKm/h", speed];
         
@@ -731,11 +708,7 @@ static BOOL startWithTutorials = NO;
             [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:_maxSpeed] forKey:kMaxSpeedKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            //[_maxSpeedBox runAction:_pulseAction];
             [_maxSpeedLabel runAction:_pulseAction_long];
-            //[self addTextArray:@[@"Speed", @"Record!"] completion:^{
-                
-            //} andInterval:.5];
         }
         
         _lastSpeed = speed;
@@ -744,38 +717,7 @@ static BOOL startWithTutorials = NO;
         _lastSpeedCheckInterval = 0.0;
     }
     
-    /*_lastMeteorSpawnInterval += timeSinceLast;
-    if (_lastMeteorSpawnInterval > _meteorSpawnInterval) {
-        _lastMeteorSpawnInterval = 0;
-        _meteorSpawnInterval = [CommonTools getRandomFloatFromFloat:1.5 toFloat:2.5];
-        int rndDirection = [CommonTools getRandomNumberFromInt:0 toInt:3];
-        
-    }*/
-    
-    //if (!_compassRotationFixed) {
-        //_compass_arrow.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
-    //}
-    
-    //CGFloat distY = (fabs(self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0));
-    //CGFloat distX = (fabs(self.size.width / 2.0 - _mainMarker.position.x) / ((self.size.width + _mainMarker.size.width) / 2.0));
-    
     _compass.zRotation = ((self.size.height / 2.0 - _mainMarker.position.y) / ((self.size.height + _mainMarker.size.height) / 2.0)) * M_PI;
-    
-    //_compass.zRotation = distY * M_PI;
-    
-    /*for (MarkerObject *marker in _horizontalMarkers) {
-        CGFloat distanceFromMiddle = fabs(self.size.height / 2.0 - marker.position.y) / ((self.size.height + marker.size.height) / 2.0) + 0.6;
-        marker.xScale = distanceFromMiddle;
-        distanceFromMiddle -= 0.4;
-        marker.alpha = distanceFromMiddle * distanceFromMiddle;
-    }
-    
-    for (MarkerObject *marker in _verticalMarkers) {
-        CGFloat distanceFromMiddle = fabs(self.size.width / 2.0 - marker.position.x) / ((self.size.width + marker.size.width) / 2.0) + 0.65;
-        marker.yScale = distanceFromMiddle;
-        distanceFromMiddle -= 0.45;
-        marker.alpha = distanceFromMiddle * distanceFromMiddle;
-    }*/
     
     if (_distance * 1000 > _initialDistance * 1000 + 10) {
         _initialDistance = _distance;
