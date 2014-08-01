@@ -88,6 +88,11 @@
 		B0649EE2198B9DAF00287639 /* scrollalot_icon_120.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649EE1198B9DAF00287639 /* scrollalot_icon_120.png */; };
 		B0649EE5198B9DFD00287639 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649EE3198B9DFD00287639 /* Default@2x.png */; };
 		B0649EE8198BEC8F00287639 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649EE7198BEC8F00287639 /* Default-568h@2x.png */; };
+		B0649EEA198BEFD100287639 /* tutorial_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649EE9198BEFD100287639 /* tutorial_arrow@2x.png */; };
+		B0649EED198BF2AD00287639 /* tutorial_arrow_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649EEC198BF2AD00287639 /* tutorial_arrow_up@2x.png */; };
+		B0649EF1198BF31700287639 /* tutorial_arrow_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649EEE198BF31700287639 /* tutorial_arrow_down@2x.png */; };
+		B0649EF2198BF31700287639 /* tutorial_arrow_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649EEF198BF31700287639 /* tutorial_arrow_left@2x.png */; };
+		B0649EF3198BF31700287639 /* tutorial_arrow_right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0649EF0198BF31700287639 /* tutorial_arrow_right@2x.png */; };
 		B09B800C196F027000800BD4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800B196F027000800BD4 /* Foundation.framework */; };
 		B09B800E196F027000800BD4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800D196F027000800BD4 /* CoreGraphics.framework */; };
 		B09B8010196F027000800BD4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09B800F196F027000800BD4 /* UIKit.framework */; };
@@ -228,6 +233,11 @@
 		B0649EE1198B9DAF00287639 /* scrollalot_icon_120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrollalot_icon_120.png; sourceTree = "<group>"; };
 		B0649EE3198B9DFD00287639 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		B0649EE7198BEC8F00287639 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		B0649EE9198BEFD100287639 /* tutorial_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial_arrow@2x.png"; sourceTree = "<group>"; };
+		B0649EEC198BF2AD00287639 /* tutorial_arrow_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial_arrow_up@2x.png"; sourceTree = "<group>"; };
+		B0649EEE198BF31700287639 /* tutorial_arrow_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial_arrow_down@2x.png"; sourceTree = "<group>"; };
+		B0649EEF198BF31700287639 /* tutorial_arrow_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial_arrow_left@2x.png"; sourceTree = "<group>"; };
+		B0649EF0198BF31700287639 /* tutorial_arrow_right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial_arrow_right@2x.png"; sourceTree = "<group>"; };
 		B09B8008196F027000800BD4 /* scrollalot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = scrollalot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B09B800B196F027000800BD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B09B800D196F027000800BD4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -391,6 +401,17 @@
 			name = AchievementPackages;
 			sourceTree = "<group>";
 		};
+		B0649EEB198BF2A400287639 /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				B0649EEE198BF31700287639 /* tutorial_arrow_down@2x.png */,
+				B0649EEF198BF31700287639 /* tutorial_arrow_left@2x.png */,
+				B0649EF0198BF31700287639 /* tutorial_arrow_right@2x.png */,
+				B0649EEC198BF2AD00287639 /* tutorial_arrow_up@2x.png */,
+			);
+			name = Tutorial;
+			sourceTree = "<group>";
+		};
 		B09B7FFF196F027000800BD4 = {
 			isa = PBXGroup;
 			children = (
@@ -494,6 +515,8 @@
 		B09B804B196F02F400800BD4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B0649EEB198BF2A400287639 /* Tutorial */,
+				B0649EE9198BEFD100287639 /* tutorial_arrow@2x.png */,
 				B0649EE7198BEC8F00287639 /* Default-568h@2x.png */,
 				B0649EE3198B9DFD00287639 /* Default@2x.png */,
 				B0649EE1198B9DAF00287639 /* scrollalot_icon_120.png */,
@@ -728,6 +751,7 @@
 				B0A0C590197ED2EB000528DA /* RoutePackage1.plist in Resources */,
 				B01EF61F1987FE0600B412C6 /* mongi_nagy1@2x.png in Resources */,
 				B0649EE5198B9DFD00287639 /* Default@2x.png in Resources */,
+				B0649EF2198BF31700287639 /* tutorial_arrow_left@2x.png in Resources */,
 				B0ECE17619702FBB00A6F3C5 /* achievements.plist in Resources */,
 				B01EF5DD1986540F00B412C6 /* AchievementCell.xib in Resources */,
 				B01EF6181987E17F00B412C6 /* scrollalot_title@2x.png in Resources */,
@@ -739,6 +763,7 @@
 				B0649EDF198A9A5700287639 /* scrollalot_combo_twister@2x.png in Resources */,
 				B01EF6301988F2F100B412C6 /* routes_scr_4@2x.png in Resources */,
 				B01E4280198165B30008CF41 /* RewardEffect.sks in Resources */,
+				B0649EF3198BF31700287639 /* tutorial_arrow_right@2x.png in Resources */,
 				B0649EE2198B9DAF00287639 /* scrollalot_icon_120.png in Resources */,
 				B01E427B197FD5DD0008CF41 /* arrow_right@2x.png in Resources */,
 				B01EF63719890F3300B412C6 /* route5@2x.png in Resources */,
@@ -757,6 +782,7 @@
 				B01EF5E71986736200B412C6 /* AchievementsViewController.xib in Resources */,
 				B0649EDD198A9A5700287639 /* scrollalot_combo_shaky@2x.png in Resources */,
 				B0649EDC198A9A5700287639 /* scrollalot_combo_rush@2x.png in Resources */,
+				B0649EED198BF2AD00287639 /* tutorial_arrow_up@2x.png in Resources */,
 				B01EF5E9198678EC00B412C6 /* AchievementHeader.xib in Resources */,
 				B01EF5FB1986A8EE00B412C6 /* Tekton Pro Bold.ttf in Resources */,
 				B0649EAE19894C0F00287639 /* route10@2x.png in Resources */,
@@ -772,7 +798,9 @@
 				B04B2C841976774A008D0528 /* SwipeEmitter.sks in Resources */,
 				B01E427C197FD5DD0008CF41 /* arrow_up@2x.png in Resources */,
 				B01EF6161987CE3F00B412C6 /* intro_felso@2x.png in Resources */,
+				B0649EEA198BEFD100287639 /* tutorial_arrow@2x.png in Resources */,
 				B0ECE167196FEC5500A6F3C5 /* square.png in Resources */,
+				B0649EF1198BF31700287639 /* tutorial_arrow_down@2x.png in Resources */,
 				B01EF62F1988F2F100B412C6 /* combo_scr_4@2x.png in Resources */,
 				B01EF6271988EAAD00B412C6 /* combo_scr_5@2x.png in Resources */,
 				B01EF62B1988EBC900B412C6 /* ok_button_on@2x.png in Resources */,

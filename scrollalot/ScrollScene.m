@@ -141,7 +141,7 @@ static CGFloat mPSinKmPH = 3.6;
 
 @implementation ScrollScene
 
-static BOOL startWithTutorials = NO;
+static BOOL startWithTutorials = YES;
 
 -(id)initWithSize:(CGSize)size {    
     if (self = [super initWithSize:size]) {
@@ -1255,7 +1255,7 @@ static BOOL startWithTutorials = NO;
     SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:fontName];
     b.fontSize = 16;
     b.fontColor = [SKColor whiteColor];
-    NSString *st1 = @"Here you can see speed record";
+    NSString *st1 = @"Here you can see your speed record";
     NSString *st2 = @"and the total distance covered.";
     b.position = CGPointMake(a.position.x, a.position.y - 20);
     a.text = st1;
@@ -1273,7 +1273,7 @@ static BOOL startWithTutorials = NO;
     d.fontColor = [SKColor whiteColor];
     st1 = @"Here is the compass showing";
     st2 = @"your current direction.";
-    NSString *st3 = @"Tap it to see your results in Game Center!";
+    NSString *st3 = @"Tap it to see your badges and more!";
     d.position = CGPointMake(c.position.x, c.position.y - 20);
     c.text = st1;
     d.text = st2;
@@ -1301,11 +1301,36 @@ static BOOL startWithTutorials = NO;
     g.text = st2;
     [nerdText3 addChild:f];
     [nerdText3 addChild:g];
-    nerdText3.position = CGPointMake(0, -120);
+    nerdText3.position = CGPointMake(0, -140);
     
     [helpNode addChild:nerdText1];
     [helpNode addChild:nerdText2];
     [helpNode addChild:nerdText3];
+    
+    SKSpriteNode *arrow_left = [[SKSpriteNode alloc] initWithImageNamed:@"tutorial_arrow_up"];
+    arrow_left.position = CGPointMake(-helpNode.size.width / 2.0 + 30, helpNode.size.height / 2.0 - 110);
+    [helpNode addChild:arrow_left];
+    
+    SKSpriteNode *arrow_right = [[SKSpriteNode alloc] initWithImageNamed:@"tutorial_arrow_up"];
+    arrow_right.position = CGPointMake(helpNode.size.width / 2.0 - 30, helpNode.size.height / 2.0 - 110);
+    [helpNode addChild:arrow_right];
+    
+    SKSpriteNode *arrow_middle = [[SKSpriteNode alloc] initWithImageNamed:@"tutorial_arrow_right"];
+    arrow_middle.position = CGPointMake(-75, -30);
+    [helpNode addChild:arrow_middle];
+    
+    SKSpriteNode *arrow_bottom = [[SKSpriteNode alloc] initWithImageNamed:@"tutorial_arrow_left"];
+    arrow_bottom.position = CGPointMake(helpNode.size.width / 2.0 - arrow_bottom.size.width / 2.0 - 55, -helpNode.size.height / 2.0 + 40);
+    [helpNode addChild:arrow_bottom];
+    
+    SKAction *vertical_bounce1 = [SKAction repeatActionForever:[SKAction sequence:@[[SKAction moveByX:10 y:0 duration:.3], [SKAction moveByX:-10 y:0 duration:.3]]]];
+    SKAction *vertical_bounce2 = [SKAction repeatActionForever:[SKAction sequence:@[[SKAction moveByX:-10 y:0 duration:.3], [SKAction moveByX:10 y:0 duration:.3]]]];
+    [arrow_bottom runAction:vertical_bounce1];
+    [arrow_middle runAction:vertical_bounce2];
+    
+    SKAction *horizontal_bounce = [SKAction repeatActionForever:[SKAction sequence:@[[SKAction moveByX:0 y:10 duration:.3], [SKAction moveByX:0 y:-10 duration:.3]]]];
+    [arrow_left runAction:horizontal_bounce];
+    [arrow_right runAction:horizontal_bounce];
     
     return helpNode;
 }
