@@ -4,7 +4,7 @@
 <array>
 	<dict>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_dance</string>
+		<string>scrollalot_combo_dance</string>
 		<key>comboName</key>
 		<string>Dance</string>
 		<key>comboPattern</key>
@@ -14,7 +14,7 @@
 	</dict>
 	<dict>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_central</string>
+		<string>scrollalot_combo_central</string>
 		<key>comboName</key>
 		<string>Central</string>
 		<key>comboPattern</key>
@@ -24,7 +24,7 @@
 	</dict>
 	<dict>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_rush</string>
+		<string>scrollalot_combo_rush</string>
 		<key>comboName</key>
 		<string>Rush</string>
 		<key>comboPattern</key>
@@ -34,7 +34,7 @@
 	</dict>
 	<dict>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_whirlpool</string>
+		<string>scrollalot_combo_whirlpool</string>
 		<key>comboName</key>
 		<string>Whirlpool</string>
 		<key>comboPattern</key>
@@ -44,7 +44,7 @@
 	</dict>
 	<dict>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_tornado</string>
+		<string>scrollalot_combo_tornado</string>
 		<key>comboName</key>
 		<string>Tornado</string>
 		<key>comboPattern</key>
@@ -54,7 +54,7 @@
 	</dict>
 	<dict>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_shaky</string>
+		<string>scrollalot_combo_shaky</string>
 		<key>comboName</key>
 		<string>Shaky</string>
 		<key>comboPattern</key>
@@ -64,7 +64,7 @@
 	</dict>
 	<dict>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_manyright</string>
+		<string>scrollalot_combo_manyright</string>
 		<key>comboName</key>
 		<string>ManyRight</string>
 		<key>comboPattern</key>
@@ -74,7 +74,7 @@
 	</dict>
 	<dict>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_manyleft</string>
+		<string>scrollalot_combo_manyleft</string>
 		<key>comboName</key>
 		<string>ManyLeft</string>
 		<key>comboPattern</key>
@@ -84,7 +84,7 @@
 	</dict>
 	<dict>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_manydown</string>
+		<string>scrollalot_combo_manydown</string>
 		<key>comboName</key>
 		<string>ManyDown</string>
 		<key>comboPattern</key>
@@ -94,7 +94,7 @@
 	</dict>
 	<dict>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_manyup</string>
+		<string>scrollalot_combo_manyup</string>
 		<key>comboName</key>
 		<string>ManyUp</string>
 		<key>comboPattern</key>
@@ -108,7 +108,7 @@
 		<key>achieved</key>
 		<false/>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_jumpy</string>
+		<string>scrollalot_combo_jumpy</string>
 		<key>comboName</key>
 		<string>Jumpy</string>
 	</dict>
@@ -118,7 +118,7 @@
 		<key>comboPattern</key>
 		<string>lurd</string>
 		<key>achievementId</key>
-		<string>scrollalot_achievement_twister</string>
+		<string>scrollalot_combo_twister</string>
 		<key>achieved</key>
 		<false/>
 	</dict>
