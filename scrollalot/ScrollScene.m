@@ -41,8 +41,8 @@ static CGFloat mPSinKmPH = 3.6;
 //@property (nonatomic) NSMutableArray *verticalMarkers;
 //@property (nonatomic) NSMutableArray *horizontalMarkers;
 @property (nonatomic) MarkerObject *mainMarker;
-@property (nonatomic) MarkerObject *horizontalMarker;
-@property (nonatomic) MarkerObject *verticalMarker;
+//@property (nonatomic) MarkerObject *horizontalMarker;
+//@property (nonatomic) MarkerObject *verticalMarker;
 
 @property (nonatomic) CGPoint lastMarkerPosition;
 @property (nonatomic) CGFloat lastSpeedCheckDistance;
@@ -130,6 +130,9 @@ static CGFloat mPSinKmPH = 3.6;
 
 @property (nonatomic) NSMutableArray *measuredSpeeds;
 
+@property (nonatomic) NSTimeInterval speedSamplingInterval;
+@property (nonatomic) NSTimeInterval currentSpeedSamplingInterval;
+
 @end
 
 @implementation ScrollScene
@@ -141,6 +144,8 @@ static BOOL startWithTutorials = NO;
         /* Setup your scene here */
         self.backgroundColor = [UIColor whiteColor];
         self.speedCheckInterval = 1;
+        self.speedSamplingInterval = 0.2;
+        self.currentSpeedSamplingInterval = 0;
         self.globalProps = [GlobalAppProperties sharedInstance];
         //self.verticalMarkers = [NSMutableArray array];
         //self.horizontalMarkers = [NSMutableArray array];
@@ -186,7 +191,7 @@ static BOOL startWithTutorials = NO;
         self.currentMongiInterval = 0;
         //self.isMinigameRunning = NO;
         
-        //self.measuredSpeeds = [NSMutableArray arrayWithCapacity:10];
+        self.measuredSpeeds = [NSMutableArray arrayWithCapacity:10];
     }
     return self;
 }
@@ -209,13 +214,13 @@ static BOOL startWithTutorials = NO;
     self.scaleMode = SKSceneScaleModeAspectFill;
     //self.physicsWorld.contactDelegate = self;
     
-    self.horizontalMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.15] size:CGSizeMake(self.size.width, 2)];
+    /*self.horizontalMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.15] size:CGSizeMake(self.size.width, 2)];
     self.horizontalMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
     [self addChild:self.horizontalMarker];
     
     self.verticalMarker = [[MarkerObject alloc] initWithColor:[UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.15] size:CGSizeMake(2, self.size.height)];
     self.verticalMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    [self addChild:self.verticalMarker];
+    [self addChild:self.verticalMarker];*/
     
     self.mainMarker = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImage:[UIImage imageNamed:@"square"]]];
     self.mainMarker.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
@@ -685,7 +690,7 @@ static BOOL startWithTutorials = NO;
         positionY = 0;
     }
     
-    if (_horizontalMarker.position.y < 0) {
+   /* if (_horizontalMarker.position.y < 0) {
         _horizontalMarker.position = CGPointMake(_horizontalMarker.position.x, self.size.height);
     } else if (_horizontalMarker.position.y > self.size.height) {
         _horizontalMarker.position = CGPointMake(_horizontalMarker.position.x, 0);
@@ -695,7 +700,7 @@ static BOOL startWithTutorials = NO;
         _verticalMarker.position = CGPointMake(self.size.width, _verticalMarker.position.y);
     } else if (_verticalMarker.position.x > self.size.width) {
         _verticalMarker.position = CGPointMake(0, _verticalMarker.position.y);
-    }
+    }*/
     
     _mainMarker.position = CGPointMake(positionX, positionY);
     
@@ -715,11 +720,10 @@ static BOOL startWithTutorials = NO;
     
     _globalProps.globalDistance = [NSNumber numberWithDouble:_distance];
     
-    _lastSpeedCheckInterval += timeSinceLast;
+    _currentSpeedSamplingInterval += timeSinceLast;
+    if (_currentSpeedSamplingInterval > _speedSamplingInterval) {
+        _currentSpeedSamplingInterval = 0;
     
-    if (_lastSpeedCheckInterval > _speedCheckInterval) {
-        //NSLog(@"SpeedX: %f, SpeedY: %f", _mainMarker.physicsBody.velocity.dx * mPSinKmPH / 150.0, _mainMarker.physicsBody.velocity.dy * mPSinKmPH / 150.0);
-        
         CGFloat speedX = fabsf( _mainMarker.physicsBody.velocity.dx * mPSinKmPH / 150.0);
         CGFloat speedY = fabsf( _mainMarker.physicsBody.velocity.dy * mPSinKmPH / 150.0);
         
@@ -730,11 +734,27 @@ static BOOL startWithTutorials = NO;
         //CGFloat speed = (measureDistance / _lastSpeedCheckInterval) * kmPSecInKmPH;
         
         CGFloat speed = speedBySK / 20.0;
-
-        self.speedLabel.text = [[NSString stringWithFormat:@"%.1fKm/h", speed] stringByReplacingOccurrencesOfString:@"." withString:@","];
         
-        if (speed > _maxSpeed) {
-            _maxSpeed = speed;
+        [_measuredSpeeds addObject:[NSNumber numberWithFloat:speed]];
+        if (_measuredSpeeds.count > 10) {
+            [_measuredSpeeds removeObjectAtIndex:0];
+        }
+    }
+    
+    _lastSpeedCheckInterval += timeSinceLast;
+    if (_lastSpeedCheckInterval > _speedCheckInterval) {
+        //NSLog(@"SpeedX: %f, SpeedY: %f", _mainMarker.physicsBody.velocity.dx * mPSinKmPH / 150.0, _mainMarker.physicsBody.velocity.dy * mPSinKmPH / 150.0);
+        
+        CGFloat averageSpeed = 0.0;
+        for (NSNumber *spd in _measuredSpeeds) {
+            averageSpeed += spd.floatValue;
+        }
+        averageSpeed /= _measuredSpeeds.count;
+
+        self.speedLabel.text = [[NSString stringWithFormat:@"%.1fKm/h", averageSpeed] stringByReplacingOccurrencesOfString:@"." withString:@","];
+        
+        if (averageSpeed > _maxSpeed) {
+            _maxSpeed = averageSpeed;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                 [_delegate reportMaxSpeed:_maxSpeed];
             });
@@ -742,14 +762,14 @@ static BOOL startWithTutorials = NO;
             _maxSpeedLabel.text = [[NSString stringWithFormat:@"%.1fkm/h", _maxSpeed] stringByReplacingOccurrencesOfString:@"." withString:@","];
         }
         
-        if (speed < _lastSpeed && _lastSpeed == _maxSpeed) {
+        if (averageSpeed < _lastSpeed && _lastSpeed == _maxSpeed) {
             [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:_maxSpeed] forKey:kMaxSpeedKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             [_maxSpeedLabel runAction:_pulseAction_long];
         }
         
-        _lastSpeed = speed;
+        _lastSpeed = averageSpeed;
         
         _lastSpeedCheckDistance = _distance;
         _lastSpeedCheckInterval = 0.0;
@@ -870,8 +890,8 @@ static BOOL startWithTutorials = NO;
         }
         
         [self.mainMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, -velocity.y)];
-        [self.horizontalMarker.physicsBody applyImpulse:CGVectorMake(0, -velocity.y)];
-        [self.verticalMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, 0)];
+        //[self.horizontalMarker.physicsBody applyImpulse:CGVectorMake(0, -velocity.y)];
+        //[self.verticalMarker.physicsBody applyImpulse:CGVectorMake(velocity.x, 0)];
         /*for (SKSpriteNode *marker in _horizontalMarkers) {
             [marker.physicsBody applyImpulse:CGVectorMake(0, -velocity.y)];
         }
@@ -996,8 +1016,8 @@ static BOOL startWithTutorials = NO;
     
     [self runAction:[SKAction sequence:@[[SKAction runBlock:^{
         [_mainMarker.physicsBody applyImpulse:bonusImpulse];
-        [_horizontalMarker.physicsBody applyImpulse:CGVectorMake(0, bonusImpulse.dy)];
-        [_verticalMarker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
+        //[_horizontalMarker.physicsBody applyImpulse:CGVectorMake(0, bonusImpulse.dy)];
+        //[_verticalMarker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
     }], [SKAction waitForDuration:3], [SKAction runBlock:^{
         [_routeManager loadNewRoute];
     }]]]];
