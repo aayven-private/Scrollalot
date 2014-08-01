@@ -10,6 +10,7 @@
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="cld-sf-YE7" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="stl-rO-ElU">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

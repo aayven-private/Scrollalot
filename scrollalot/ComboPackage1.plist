@@ -68,7 +68,7 @@
 		<key>comboName</key>
 		<string>ManyRight</string>
 		<key>comboPattern</key>
-		<string>rrrrrrrrrr</string>
+		<string>rrrrrrrrrrrrrrr</string>
 		<key>achieved</key>
 		<false/>
 	</dict>
@@ -78,7 +78,7 @@
 		<key>comboName</key>
 		<string>ManyLeft</string>
 		<key>comboPattern</key>
-		<string>llllllllll</string>
+		<string>lllllllllllllll</string>
 		<key>achieved</key>
 		<false/>
 	</dict>
@@ -88,7 +88,7 @@
 		<key>comboName</key>
 		<string>ManyDown</string>
 		<key>comboPattern</key>
-		<string>dddddddddd</string>
+		<string>ddddddddddddddd</string>
 		<key>achieved</key>
 		<false/>
 	</dict>
@@ -98,7 +98,7 @@
 		<key>comboName</key>
 		<string>ManyUp</string>
 		<key>comboPattern</key>
-		<string>uuuuuuuuuu</string>
+		<string>uuuuuuuuuuuuuuu</string>
 		<key>achieved</key>
 		<false/>
 	</dict>
