@@ -133,6 +133,8 @@ static CGFloat mPSinKmPH = 3.6;
 @property (nonatomic) NSTimeInterval speedSamplingInterval;
 @property (nonatomic) NSTimeInterval currentSpeedSamplingInterval;
 
+@property (nonatomic) BOOL isCompassOnScreen;
+
 @end
 
 @implementation ScrollScene
@@ -147,6 +149,7 @@ static BOOL startWithTutorials = NO;
         self.speedSamplingInterval = 0.2;
         self.currentSpeedSamplingInterval = 0;
         self.globalProps = [GlobalAppProperties sharedInstance];
+        self.isCompassOnScreen = NO;
         //self.verticalMarkers = [NSMutableArray array];
         //self.horizontalMarkers = [NSMutableArray array];
         self.isDarkStyle = YES;
@@ -443,13 +446,15 @@ static BOOL startWithTutorials = NO;
         [bottomBox runAction:[SKAction removeFromParent]];
         [header runAction:[SKAction moveToY:self.size.height - header.size.height / 2.0 duration:.5]];
         [footer runAction:[SKAction moveToY:footer.size.height / 2.0 duration:.5]];
-        [self.compass runAction:[SKAction fadeAlphaTo:1.0 duration:.5]];
-        [self.compass_arrow runAction:[SKAction fadeAlphaTo:1.0 duration:.5]];
-        [_maxSpeedLabel runAction:[SKAction moveToY:self.size.height - 58 duration:.5]];
+        [self.compass runAction:[SKAction fadeAlphaTo:1.0 duration:1.0]];
+        [self.compass_arrow runAction:[SKAction fadeAlphaTo:1.0 duration:1.0]];
+        [_maxSpeedLabel runAction:[SKAction sequence:@[[SKAction moveToY:self.size.height - 58 duration:.5], [SKAction runBlock:^{
+            _isCompassOnScreen = YES;
+        }]]]];
         [_distanceLabel runAction:[SKAction moveToY:self.size.height - 58 duration:.5]];
         [_speedLabel runAction:[SKAction moveToY:35 duration:.5]];
         
-        [title runAction:[SKAction fadeAlphaTo:0.0 duration:.5]];
+        [title runAction:[SKAction fadeAlphaTo:0.0 duration:2.0]];
         
         if (!wasHelpShown) {
             self.helpNode = [self createBasicHelp1];
@@ -473,56 +478,57 @@ static BOOL startWithTutorials = NO;
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UITouch *touch = [touches anyObject];
-    CGPoint location = [touch locationInNode:self];
-    NSArray *nodes = [self nodesAtPoint:location];
-    if ([nodes containsObject:_helpNode]) {
-        NSString *helpName = _helpNode.name;
-        _helpNodeIsVisible = NO;
-        [_helpNode removeFromParent];
-        _helpNode = nil;
-        if ([helpName isEqualToString:@"basic1"]) {
-            _helpNode = [self createBasicHelp2];
-        } else if ([helpName isEqualToString:@"basic2"]) {
-            _helpNode = [self createBasicHelp3];
-        } else if ([helpName isEqualToString:@"basic3"]) {
-            _helpNode = [self createBasicHelp4];
-        } else if ([helpName isEqual:@"basic4"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kWasHelpShownKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            
-            [self addTextArray:@[@"LET", @"THE", @"SCROLL", @"BEGIN!"] completion:^{
+    if (_isCompassOnScreen) {
+        UITouch *touch = [touches anyObject];
+        CGPoint location = [touch locationInNode:self];
+        NSArray *nodes = [self nodesAtPoint:location];
+        if ([nodes containsObject:_helpNode]) {
+            NSString *helpName = _helpNode.name;
+            _helpNodeIsVisible = NO;
+            [_helpNode removeFromParent];
+            _helpNode = nil;
+            if ([helpName isEqualToString:@"basic1"]) {
+                _helpNode = [self createBasicHelp2];
+            } else if ([helpName isEqualToString:@"basic2"]) {
+                _helpNode = [self createBasicHelp3];
+            } else if ([helpName isEqualToString:@"basic3"]) {
+                _helpNode = [self createBasicHelp4];
+            } else if ([helpName isEqual:@"basic4"]) {
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kWasHelpShownKey];
+                [[NSUserDefaults standardUserDefaults] synchronize];
                 
-            } andInterval:.7];
-        } else if ([helpName isEqualToString:@"combo"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kHadComboKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        } else if ([helpName isEqualToString:@"route2"]) {
-            _isRouteTutorial = NO;
-        }
-        if (_helpNode) {
-            _helpNodeIsVisible = YES;
-            _helpNode.hidden = NO;
-            [self addChild:_helpNode];
-        }
-    } else {
-        //UITouch *touch = [touches anyObject];
-        //CGPoint location = [touch locationInNode:self];
-        //SKNode *node = [self nodeAtPoint:location];
-        
-        //NSArray *nodes = [self nodesAtPoint:location];
-        if ([nodes containsObject:_compass] || [nodes containsObject:_compass_arrow]) {
-            [_compass runAction:_pulseAction];
-            [_compass_arrow runAction:_pulseAction];
-            [_delegate presentLeaderBoards];
+                [self addTextArray:@[@"LET", @"THE", @"SCROLL", @"BEGIN!"] completion:^{
+                    
+                } andInterval:.7];
+            } else if ([helpName isEqualToString:@"combo"]) {
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kHadComboKey];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            } else if ([helpName isEqualToString:@"route2"]) {
+                _isRouteTutorial = NO;
+            }
+            if (_helpNode) {
+                _helpNodeIsVisible = YES;
+                _helpNode.hidden = NO;
+                [self addChild:_helpNode];
+            }
         } else {
-            SKNode *node = [self nodeAtPoint:location];
-            if ([node.name isEqualToString:@"mongi1"] || [node.name isEqualToString:@"mongi2"]) {
-                [self addMongiImageForMongiName:node.name];
+            //UITouch *touch = [touches anyObject];
+            //CGPoint location = [touch locationInNode:self];
+            //SKNode *node = [self nodeAtPoint:location];
+            
+            //NSArray *nodes = [self nodesAtPoint:location];
+            if ([nodes containsObject:_compass] || [nodes containsObject:_compass_arrow]) {
+                [_compass runAction:_pulseAction];
+                [_compass_arrow runAction:_pulseAction];
+                [_delegate presentLeaderBoards];
+            } else {
+                SKNode *node = [self nodeAtPoint:location];
+                if ([node.name isEqualToString:@"mongi1"] || [node.name isEqualToString:@"mongi2"]) {
+                    [self addMongiImageForMongiName:node.name];
+                }
             }
         }
     }
-
     //[self addBadgeWithName:@"route5" andAchievementName:@"Pyramid5"];
 }
 
@@ -733,7 +739,7 @@ static BOOL startWithTutorials = NO;
         //CGFloat measureDistance = fabs(_distance - _lastSpeedCheckDistance);
         //CGFloat speed = (measureDistance / _lastSpeedCheckInterval) * kmPSecInKmPH;
         
-        CGFloat speed = speedBySK / 20.0;
+        CGFloat speed = speedBySK / 30.0;
         
         [_measuredSpeeds addObject:[NSNumber numberWithFloat:speed]];
         if (_measuredSpeeds.count > 10) {
