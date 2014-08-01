@@ -18,16 +18,18 @@
 static CGFloat mPerPixel = 0.000078125;
 static CGFloat kmPerPixel = 0.000000078125;
 
+//static CGFloat pixelPerMeter = 150.0;
+
 //static CGFloat mmPSecInKmPH = 0.0036;
 //static CGFloat mPSecInKmPH = 3.6;
-static CGFloat kmPSecInKmPH = 3600.;
+//static CGFloat kmPSecInKmPH = 3600.;
 
 static CGFloat degreeInRadians = 0.0174532925;
 
 static NSString *kHadRouteKey = @"had_route";
 static NSString *kHadComboKey = @"had_combo";
 
-static CGFloat positionEpsilon = 0.2;
+//static CGFloat positionEpsilon = 0.2;
 static CGFloat mPSinKmPH = 3.6;
 
 @interface ScrollScene()
@@ -145,8 +147,8 @@ static BOOL startWithTutorials = NO;
     if (self = [super initWithSize:size]) {
         /* Setup your scene here */
         self.backgroundColor = [UIColor whiteColor];
-        self.speedCheckInterval = 1;
-        self.speedSamplingInterval = 0.2;
+        self.speedCheckInterval = 0.5;
+        self.speedSamplingInterval = 0.1;
         self.currentSpeedSamplingInterval = 0;
         self.globalProps = [GlobalAppProperties sharedInstance];
         self.isCompassOnScreen = NO;
@@ -733,7 +735,7 @@ static BOOL startWithTutorials = NO;
         CGFloat speedX = fabsf( _mainMarker.physicsBody.velocity.dx * mPSinKmPH / 150.0);
         CGFloat speedY = fabsf( _mainMarker.physicsBody.velocity.dy * mPSinKmPH / 150.0);
         
-        CGFloat speedBySK = sqrtf(powf(speedX, 2) + pow(speedY, 2));
+        CGFloat speedBySK = sqrtf(pow(speedX, 2) + pow(speedY, 2));
         //NSLog(@"Speed: %f", speedBySK);
         
         //CGFloat measureDistance = fabs(_distance - _lastSpeedCheckDistance);

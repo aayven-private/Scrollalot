@@ -68,7 +68,7 @@
         if (!connectionError) {
             NSDictionary *resultDict = [NSDictionary dictionaryWithObjectsAndKeys:data, @"data", [NSNumber numberWithInteger:[(NSHTTPURLResponse *)response statusCode]], @"code", nil];
             result.responseDict = resultDict;
-            NSString *messageString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            //NSString *messageString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             //NSLog(@"Message: %@", messageString);
             NSString *errorMessage = [resultDict objectForKey:@"error"];
             if (errorMessage && ![errorMessage isEqualToString:@""]) {
