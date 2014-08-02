@@ -113,6 +113,8 @@
 		B0A0C5A8198CF58C000528DA /* RoutePackage3.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C5A7198CF58C000528DA /* RoutePackage3.plist */; };
 		B0A0C5AA198D04C4000528DA /* HOMINIS.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C5A9198D04C4000528DA /* HOMINIS.ttf */; };
 		B0A0C5B1198D12E6000528DA /* controller@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C5B0198D12E6000528DA /* controller@2x.png */; };
+		B0A0C5B4198D15AD000528DA /* left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C5B2198D15AD000528DA /* left@2x.png */; };
+		B0A0C5B5198D15AD000528DA /* right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C5B3198D15AD000528DA /* right@2x.png */; };
 		B0ECE167196FEC5500A6F3C5 /* square.png in Resources */ = {isa = PBXBuildFile; fileRef = B0ECE166196FEC5500A6F3C5 /* square.png */; };
 		B0ECE16B1970133D00A6F3C5 /* DBAccessLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16A1970133D00A6F3C5 /* DBAccessLayer.m */; };
 		B0ECE16E1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16C1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld */; };
@@ -268,6 +270,8 @@
 		B0A0C5A7198CF58C000528DA /* RoutePackage3.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RoutePackage3.plist; sourceTree = "<group>"; };
 		B0A0C5A9198D04C4000528DA /* HOMINIS.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HOMINIS.ttf; sourceTree = "<group>"; };
 		B0A0C5B0198D12E6000528DA /* controller@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "controller@2x.png"; sourceTree = "<group>"; };
+		B0A0C5B2198D15AD000528DA /* left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "left@2x.png"; sourceTree = "<group>"; };
+		B0A0C5B3198D15AD000528DA /* right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "right@2x.png"; sourceTree = "<group>"; };
 		B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrollSceneHandlerDelegate.h; sourceTree = "<group>"; };
 		B0ECE166196FEC5500A6F3C5 /* square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square.png; sourceTree = "<group>"; };
 		B0ECE1691970133D00A6F3C5 /* DBAccessLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBAccessLayer.h; sourceTree = "<group>"; };
@@ -515,6 +519,8 @@
 		B09B804B196F02F400800BD4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B0A0C5B2198D15AD000528DA /* left@2x.png */,
+				B0A0C5B3198D15AD000528DA /* right@2x.png */,
 				B0A0C5B0198D12E6000528DA /* controller@2x.png */,
 				B0A0C59E198CF37D000528DA /* Fonts */,
 				B0A0C59A198CEED7000528DA /* ok_button_on@2x.png */,
@@ -766,6 +772,7 @@
 				B09B8018196F027000800BD4 /* InfoPlist.strings in Resources */,
 				B0649EE8198BEC8F00287639 /* Default-568h@2x.png in Resources */,
 				B0A0C5B1198D12E6000528DA /* controller@2x.png in Resources */,
+				B0A0C5B5198D15AD000528DA /* right@2x.png in Resources */,
 				B0A0C5A3198CF53D000528DA /* route5@2x.png in Resources */,
 				B0649EDF198A9A5700287639 /* scrollalot_combo_twister@2x.png in Resources */,
 				B01EF6301988F2F100B412C6 /* routes_scr_4@2x.png in Resources */,
@@ -779,6 +786,7 @@
 				B09B802B196F027000800BD4 /* Images.xcassets in Resources */,
 				B0649EE0198A9A5700287639 /* scrollalot_combo_whirlpool@2x.png in Resources */,
 				B0649ED6198A9A5700287639 /* scrollalot_combo_dance@2x.png in Resources */,
+				B0A0C5B4198D15AD000528DA /* left@2x.png in Resources */,
 				B01EF60D19878D8700B412C6 /* iranytu_alap200@2x.png in Resources */,
 				B0649EDA198A9A5700287639 /* scrollalot_combo_manyright@2x.png in Resources */,
 				B01EF5CB1983F88500B412C6 /* iranytu_alap@2x.png in Resources */,

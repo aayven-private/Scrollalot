@@ -26,7 +26,7 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1JX-dR-Alc">
                     <rect key="frame" x="0.0" y="206" width="30" height="200"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="arrow_white_left.png">
+                    <state key="normal" image="left.png">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
@@ -66,7 +66,7 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="AeB-YJ-MN5">
                     <rect key="frame" x="291" y="206" width="30" height="200"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="arrow_white_right.png">
+                    <state key="normal" image="right.png">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
@@ -90,9 +90,9 @@
         </view>
     </objects>
     <resources>
-        <image name="arrow_white_left.png" width="30" height="30"/>
-        <image name="arrow_white_right.png" width="30" height="30"/>
         <image name="combo_scr_5.png" width="320" height="568"/>
         <image name="controller.png" width="64" height="45"/>
+        <image name="left.png" width="64" height="96"/>
+        <image name="right.png" width="64" height="96"/>
     </resources>
 </document>
