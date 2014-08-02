@@ -35,7 +35,7 @@ static NSString *kLastReadRoutePackage = @"last_read_route_package";
 @implementation RouteManager
 
 static BOOL filterAchieved = YES;
-static int currentPackageIndex = 2;
+static int currentPackageIndex = 3;
 
 -(id)initWithDelegate:(id<RouteManagerDelegate>)delegate
 {
