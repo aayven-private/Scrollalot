@@ -141,7 +141,7 @@ static CGFloat mPSinKmPH = 3.6;
 
 @implementation ScrollScene
 
-static BOOL startWithTutorials = YES;
+static BOOL startWithTutorials = NO;
 
 -(id)initWithSize:(CGSize)size {    
     if (self = [super initWithSize:size]) {
@@ -920,7 +920,7 @@ static BOOL startWithTutorials = YES;
 
 -(void)addTextArray:(NSArray *)textArray completion:(void(^)())completion andInterval:(float)interval
 {
-    SKLabelNode *textLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
+    SKLabelNode *textLabel = [SKLabelNode labelNodeWithFontNamed:@"Hominis"];
     textLabel.fontColor = [UIColor whiteColor];
     textLabel.fontSize = 25;
     
@@ -1027,7 +1027,9 @@ static BOOL startWithTutorials = YES;
         //[_horizontalMarker.physicsBody applyImpulse:CGVectorMake(0, bonusImpulse.dy)];
         //[_verticalMarker.physicsBody applyImpulse:CGVectorMake(bonusImpulse.dx, 0)];
     }], [SKAction waitForDuration:3], [SKAction runBlock:^{
-        [_routeManager loadNewRoute];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [_routeManager loadNewRoute];
+        });
     }]]]];
     
     _rightRouteEmitter.particleBirthRate = _leftRouteEmitter.particleBirthRate = _topRouteEmitter.particleBirthRate = _bottomRouteEmitter.particleBirthRate = 0;
@@ -1185,8 +1187,8 @@ static BOOL startWithTutorials = YES;
     SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:fontName];
     b.fontSize = 16;
     b.fontColor = [SKColor whiteColor];
-    NSString *st1 = @"First of all, thanks for downloading";
-    NSString *st2 = @"the game. Let me explain you the basics:)";
+    NSString *st1 = @"Thanks for downloading the game!";
+    NSString *st2 = @"Let me explain you the basics:)";
     b.position = CGPointMake(a.position.x, a.position.y - 20);
     a.text = st1;
     b.text = st2;
@@ -1262,7 +1264,7 @@ static BOOL startWithTutorials = YES;
     b.text = st2;
     [nerdText1 addChild:a];
     [nerdText1 addChild:b];
-    nerdText1.position = CGPointMake(0, 140);
+    nerdText1.position = CGPointMake(0, helpNode.size.height / 2.0 - 120);
     
     SKNode *nerdText2 = [SKNode node];
     SKLabelNode *c = [SKLabelNode labelNodeWithFontNamed:fontName];
@@ -1271,21 +1273,21 @@ static BOOL startWithTutorials = YES;
     SKLabelNode *d = [SKLabelNode labelNodeWithFontNamed:fontName];
     d.fontSize = 16;
     d.fontColor = [SKColor whiteColor];
-    st1 = @"Here is the compass showing";
-    st2 = @"your current direction.";
-    NSString *st3 = @"Tap it to see your badges and more!";
+    st1 = @"That's the compass showing your current";
+    st2 = @"direction. Tap it to see your badges and more!";
+    //NSString *st3 = @"Tap it to see your badges and more!";
     d.position = CGPointMake(c.position.x, c.position.y - 20);
     c.text = st1;
     d.text = st2;
-    SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:fontName];
-    e.fontSize = 16;
-    e.fontColor = [SKColor whiteColor];
-    e.text = st3;
-    e.position = CGPointMake(d.position.x, d.position.y - 20);
+    //SKLabelNode *e = [SKLabelNode labelNodeWithFontNamed:fontName];
+    //e.fontSize = 16;
+    //e.fontColor = [SKColor whiteColor];
+    //e.text = st3;
+    //e.position = CGPointMake(d.position.x, d.position.y - 20);
     [nerdText2 addChild:c];
     [nerdText2 addChild:d];
-    [nerdText2 addChild:e];
-    nerdText2.position = CGPointMake(0, 30);
+    //[nerdText2 addChild:e];
+    nerdText2.position = CGPointMake(0, 50);
     
     SKNode *nerdText3 = [SKNode node];
     SKLabelNode *f = [SKLabelNode labelNodeWithFontNamed:fontName];
@@ -1301,7 +1303,7 @@ static BOOL startWithTutorials = YES;
     g.text = st2;
     [nerdText3 addChild:f];
     [nerdText3 addChild:g];
-    nerdText3.position = CGPointMake(0, -140);
+    nerdText3.position = CGPointMake(0, -helpNode.size.height / 2.0 + 120);
     
     [helpNode addChild:nerdText1];
     [helpNode addChild:nerdText2];
@@ -1316,7 +1318,7 @@ static BOOL startWithTutorials = YES;
     [helpNode addChild:arrow_right];
     
     SKSpriteNode *arrow_middle = [[SKSpriteNode alloc] initWithImageNamed:@"tutorial_arrow_right"];
-    arrow_middle.position = CGPointMake(-75, -30);
+    arrow_middle.position = CGPointMake(-75, 0);
     [helpNode addChild:arrow_middle];
     
     SKSpriteNode *arrow_bottom = [[SKSpriteNode alloc] initWithImageNamed:@"tutorial_arrow_left"];

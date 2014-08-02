@@ -20,6 +20,7 @@
 @property (nonatomic, weak) IBOutlet UICollectionView *achievementsCollectionView;
 @property (nonatomic, weak) IBOutlet UIButton *okButton;
 @property (nonatomic, weak) IBOutlet UIImageView *bgView;
+@property (nonatomic, weak) IBOutlet UIButton *gcButton;
 
 @property (nonatomic) NSString *badgesState;
 
@@ -43,9 +44,13 @@
     return self;
 }
 
--(UIStatusBarStyle)preferredStatusBarStyle
+/*-(UIStatusBarStyle)preferredStatusBarStyle
 {
     return UIStatusBarStyleLightContent;
+}*/
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
 }
 
 - (void)viewDidLoad
@@ -61,6 +66,14 @@
             }];
         });
     }
+    
+    CABasicAnimation *pulseAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    pulseAnimation.duration = .5;
+    pulseAnimation.toValue = [NSNumber numberWithFloat:1.1];
+    pulseAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    pulseAnimation.autoreverses = YES;
+    pulseAnimation.repeatCount = FLT_MAX;
+    [_gcButton.layer addAnimation:pulseAnimation forKey:nil];
     
     UIPanGestureRecognizer* panSwipeRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanSwipe:)];
     //panSwipeRecognizer.cancelsTouchesInView = NO;

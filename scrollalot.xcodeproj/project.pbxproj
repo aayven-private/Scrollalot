@@ -111,6 +111,8 @@
 		B0A0C5A5198CF53D000528DA /* route12@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C5A1198CF53D000528DA /* route12@2x.png */; };
 		B0A0C5A6198CF53D000528DA /* route20@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C5A2198CF53D000528DA /* route20@2x.png */; };
 		B0A0C5A8198CF58C000528DA /* RoutePackage3.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C5A7198CF58C000528DA /* RoutePackage3.plist */; };
+		B0A0C5AA198D04C4000528DA /* HOMINIS.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C5A9198D04C4000528DA /* HOMINIS.ttf */; };
+		B0A0C5B1198D12E6000528DA /* controller@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0A0C5B0198D12E6000528DA /* controller@2x.png */; };
 		B0ECE167196FEC5500A6F3C5 /* square.png in Resources */ = {isa = PBXBuildFile; fileRef = B0ECE166196FEC5500A6F3C5 /* square.png */; };
 		B0ECE16B1970133D00A6F3C5 /* DBAccessLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16A1970133D00A6F3C5 /* DBAccessLayer.m */; };
 		B0ECE16E1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0ECE16C1970135200A6F3C5 /* ScrollalotDataModel.xcdatamodeld */; };
@@ -264,6 +266,8 @@
 		B0A0C5A1198CF53D000528DA /* route12@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "route12@2x.png"; sourceTree = "<group>"; };
 		B0A0C5A2198CF53D000528DA /* route20@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "route20@2x.png"; sourceTree = "<group>"; };
 		B0A0C5A7198CF58C000528DA /* RoutePackage3.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RoutePackage3.plist; sourceTree = "<group>"; };
+		B0A0C5A9198D04C4000528DA /* HOMINIS.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HOMINIS.ttf; sourceTree = "<group>"; };
+		B0A0C5B0198D12E6000528DA /* controller@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "controller@2x.png"; sourceTree = "<group>"; };
 		B0ECE165196FEB5D00A6F3C5 /* ScrollSceneHandlerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrollSceneHandlerDelegate.h; sourceTree = "<group>"; };
 		B0ECE166196FEC5500A6F3C5 /* square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square.png; sourceTree = "<group>"; };
 		B0ECE1691970133D00A6F3C5 /* DBAccessLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBAccessLayer.h; sourceTree = "<group>"; };
@@ -511,6 +515,7 @@
 		B09B804B196F02F400800BD4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B0A0C5B0198D12E6000528DA /* controller@2x.png */,
 				B0A0C59E198CF37D000528DA /* Fonts */,
 				B0A0C59A198CEED7000528DA /* ok_button_on@2x.png */,
 				B0A0C59B198CEED7000528DA /* ok_button@2x.png */,
@@ -583,6 +588,7 @@
 		B0A0C59E198CF37D000528DA /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				B0A0C5A9198D04C4000528DA /* HOMINIS.ttf */,
 				B01EF6321989070000B412C6 /* Pacifico.ttf */,
 				B01EF5FA1986A8EE00B412C6 /* Tekton Pro Bold.ttf */,
 			);
@@ -747,6 +753,7 @@
 				B01EF5CC1983F88500B412C6 /* iranytu@2x.png in Resources */,
 				B01EF63A198910E000B412C6 /* arrow_white_left@2x.png in Resources */,
 				B0649ED7198A9A5700287639 /* scrollalot_combo_jumpy@2x.png in Resources */,
+				B0A0C5AA198D04C4000528DA /* HOMINIS.ttf in Resources */,
 				B0A0C590197ED2EB000528DA /* RoutePackage1.plist in Resources */,
 				B01EF61F1987FE0600B412C6 /* mongi_nagy1@2x.png in Resources */,
 				B0649EE5198B9DFD00287639 /* Default@2x.png in Resources */,
@@ -758,6 +765,7 @@
 				B01EF624198807E500B412C6 /* mongi_kicsi2@2x.png in Resources */,
 				B09B8018196F027000800BD4 /* InfoPlist.strings in Resources */,
 				B0649EE8198BEC8F00287639 /* Default-568h@2x.png in Resources */,
+				B0A0C5B1198D12E6000528DA /* controller@2x.png in Resources */,
 				B0A0C5A3198CF53D000528DA /* route5@2x.png in Resources */,
 				B0649EDF198A9A5700287639 /* scrollalot_combo_twister@2x.png in Resources */,
 				B01EF6301988F2F100B412C6 /* routes_scr_4@2x.png in Resources */,

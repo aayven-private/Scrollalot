@@ -26,6 +26,7 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>HOMINIS.ttf</string>
 		<string>Pacifico.ttf</string>
 		<string>Tekton Pro Bold.ttf</string>
 	</array>
