@@ -78,8 +78,11 @@
     _achievementsCollectionView.layer.borderColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1].CGColor;
     _achievementsCollectionView.layer.cornerRadius = 8.0;*/
     
-    [_okButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
-    [_okButton setImage:[UIImage imageNamed:@"ok_button_on"] forState:UIControlStateHighlighted];
+    [_okButton setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"ok_button"]]];
+    _okButton.titleLabel.font = [UIFont fontWithName:fontName size:22];
+    
+    //[_okButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    //[_okButton setImage:[UIImage imageNamed:@"ok_button_on"] forState:UIControlStateHighlighted];
     
     // Do any additional setup after loading the view from its nib.
     [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
@@ -266,6 +269,18 @@
     [gameCenterViewController dismissViewControllerAnimated:YES completion:^{
         
     }];
+}
+
+-(IBAction)buttonTouched:(id)sender
+{
+    [_okButton setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"ok_button_on"]]];
+    [_okButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+}
+
+-(IBAction)buttonReleased:(id)sender
+{
+    [_okButton setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"ok_button"]]];
+    [_okButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 }
 
 @end

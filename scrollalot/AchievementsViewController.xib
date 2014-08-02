@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -49,13 +49,16 @@
                     </connections>
                 </collectionView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eHM-Xx-ArX">
-                    <rect key="frame" x="120" y="520" width="81" height="39"/>
+                    <rect key="frame" x="110" y="515" width="101" height="47"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="ok_button">
+                    <inset key="titleEdgeInsets" minX="0.0" minY="5" maxX="0.0" maxY="0.0"/>
+                    <state key="normal" title="OK">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
+                        <action selector="buttonReleased:" destination="-1" eventType="touchCancel" id="Hlw-sq-ETy"/>
+                        <action selector="buttonTouched:" destination="-1" eventType="touchDown" id="3y2-mk-uEk"/>
                         <action selector="okClicked:" destination="-1" eventType="touchUpInside" id="MWr-G5-qFs"/>
                     </connections>
                 </button>
@@ -89,6 +92,5 @@
         <image name="arrow_white_left.png" width="30" height="30"/>
         <image name="arrow_white_right.png" width="30" height="30"/>
         <image name="combo_scr_5.png" width="320" height="568"/>
-        <image name="ok_button" width="30" height="41"/>
     </resources>
 </document>
