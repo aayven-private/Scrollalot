@@ -1073,7 +1073,7 @@ static BOOL startWithTutorials = NO;
     SKAction *badgeAction = [SKAction sequence:@[[SKAction scaleTo:2.5 duration:2.0], [SKAction fadeAlphaTo:0.0 duration:2.0], [SKAction removeFromParent]]];
     [badge runAction:badgeAction];
     
-    SKLabelNode *achievementNameLabel = [SKLabelNode labelNodeWithFontNamed:fontName];
+    SKLabelNode *achievementNameLabel = [SKLabelNode labelNodeWithFontNamed:@"Pacifico-Regular"];
     achievementNameLabel.text = achievementName;
     achievementNameLabel.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0 - badge.size.height / 2.0 - 30);
     achievementNameLabel.xScale = achievementNameLabel.yScale = 0;

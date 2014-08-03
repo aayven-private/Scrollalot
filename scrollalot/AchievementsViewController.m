@@ -22,6 +22,9 @@
 @property (nonatomic, weak) IBOutlet UIImageView *bgView;
 @property (nonatomic, weak) IBOutlet UIButton *gcButton;
 
+@property (nonatomic, weak) IBOutlet UIButton *leftButton;
+@property (nonatomic, weak) IBOutlet UIButton *rightButton;
+
 @property (nonatomic) NSString *badgesState;
 
 @end
@@ -66,6 +69,11 @@
             }];
         });
     }
+    
+    [_leftButton setImage:[UIImage imageNamed:@"arrow_left_ac"] forState:UIControlStateNormal];
+    [_rightButton setImage:[UIImage imageNamed:@"arrow_right_ac"] forState:UIControlStateNormal];
+    [_leftButton setImage:[UIImage imageNamed:@"arrow_left_ac_on"] forState:UIControlStateHighlighted];
+    [_rightButton setImage:[UIImage imageNamed:@"arrow_right_ac_on"] forState:UIControlStateHighlighted];
     
     CABasicAnimation *pulseAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
     pulseAnimation.duration = .5;
