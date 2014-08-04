@@ -330,7 +330,7 @@ static int currentPackageIndex = 3;
     {
         [GKAchievement reportAchievements:@[achievement] withCompletionHandler:^(NSError *error) {
             if (error != nil) {
-                NSLog(@"Error in reporting achievements: %@", error);
+                //NSLog(@"Error in reporting achievements: %@", error);
             }
         }];
     }

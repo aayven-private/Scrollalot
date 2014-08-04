@@ -991,7 +991,7 @@ static BOOL startWithTutorials = NO;
 
 -(void)nextRouteLoadedInDirection:(char)initialDirection andDistance:(NSNumber *)distance
 {
-    NSLog(@"New route direction: %c", initialDirection);
+    //NSLog(@"New route direction: %c", initialDirection);
     _currentRouteDirection = initialDirection;
     _lastRouteDirection = 'n';
     _currentRouteDistance = distance.floatValue;
@@ -1106,7 +1106,7 @@ static BOOL startWithTutorials = NO;
     _lastRouteDirection = _currentRouteDirection;
     _currentRouteDirection = nextDirection;
     _currentRouteDistance = distance.floatValue;
-    NSLog(@"Checkpoint completed, next direction: %c", nextDirection);
+    //NSLog(@"Checkpoint completed, next direction: %c", nextDirection);
     
     SKTexture *arrowTexture = nil;
     BOOL isNewMarker = NO;
