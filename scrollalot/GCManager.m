@@ -89,7 +89,7 @@ static NSString *kGCEnabledKey = @"scrollalot_gc_enabled";
                                                 //NSLog(@"Speed: %f", (float)playerSpeed.value / 10.0);
                                                 float playerSpeed_d = (float)playerSpeed.value / 10.0;
                                                 if (speed && playerSpeed_d > speed.floatValue) {
-                                                    //[_delegate playerSpeedDownloaded:playerSpeed_d];
+                                                    [_delegate playerSpeedDownloaded:playerSpeed_d];
                                                 }
                                             }
                                         }
