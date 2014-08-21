@@ -19,7 +19,12 @@
 @synthesize managedObjectModel = _managedObjectModel;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{    
+{
+    NSNumber *maxSpeed = [[NSUserDefaults standardUserDefaults] objectForKey:kMaxSpeedKey];
+    if (maxSpeed && maxSpeed.floatValue > 0) {
+        [[[GCManager alloc] init] reportSpeed:maxSpeed.floatValue];
+    }
+    
     // Override point for customization after application launch.
     return YES;
 }

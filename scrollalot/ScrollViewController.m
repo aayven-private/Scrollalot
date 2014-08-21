@@ -150,11 +150,15 @@
 -(void)playerDistanceDownloaded:(double)distance
 {
     [_scrollScene distanceDownloadedFromGC:distance];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:distance] forKey:kGlobalDistanceKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(void)playerSpeedDownloaded:(float)speed
 {
     _scrollScene.maxSpeed = speed;
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:speed] forKey:kMaxSpeedKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 
