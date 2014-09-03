@@ -138,9 +138,15 @@
             zoomSpeed = recognizer.scale * recognizer.velocity;
         }
         
-        NSLog(@"Pinch scale: %f", recognizer.scale);
-        NSLog(@"Pinch velocity: %f", recognizer.velocity);
+        //NSLog(@"Pinch scale: %f", recognizer.scale);
+        //NSLog(@"Pinch velocity: %f", recognizer.velocity);
         //NSLog(@"Pinch velocity / scale: %f", recognizer.velocity / recognizer.scale);
+        
+        [_scrollScene pinchWithVelocity:recognizer.velocity];
+    }
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        NSLog(@"Start velocity: %f", recognizer.velocity);
+        [_scrollScene pinchStartedWithVelocity:recognizer.velocity];
     }
 }
 

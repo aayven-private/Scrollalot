@@ -66,6 +66,7 @@ static CGFloat mPSinKmPH = 3.6;
 @property (nonatomic) SKEmitterNode *bottomRouteEmitter;
 @property (nonatomic) SKEmitterNode *leftRouteEmitter;
 @property (nonatomic) SKEmitterNode *rightRouteEmitter;
+@property (nonatomic) SKEmitterNode *zoomOutEmitter;
 
 @property (nonatomic) SKEmitterNode *bgEmitter;
 
@@ -275,10 +276,16 @@ static BOOL startWithTutorials = NO;
     self.rightEmitter.particlePositionRange = CGVectorMake(30, self.size.height + 50);
     self.rightEmitter.emissionAngle = 180 * degreeInRadians;
     
+    emitterPath = [[NSBundle mainBundle] pathForResource:@"ZoomOutEffect" ofType:@"sks"];
+    self.zoomOutEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    self.zoomOutEmitter.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    self.zoomOutEmitter.particleBirthRate = 0;
+    
     [self addChild:self.topEmitter];
     [self addChild:self.bottomEmitter];
     [self addChild:self.leftEmitter];
     [self addChild:self.rightEmitter];
+    [self addChild:self.zoomOutEmitter];
     
     emitterPath = [[NSBundle mainBundle] pathForResource:@"BgEffect" ofType:@"sks"];
     self.bgEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
@@ -875,7 +882,7 @@ static BOOL startWithTutorials = NO;
 {
     //NSLog(@"Global position: %@", NSStringFromCGPoint(_globalPosition));
     if (!_helpNodeIsVisible) {
-        //NSLog(@"Impulse: (%f, %f)", velocity.x, velocity.y);
+        NSLog(@"Impulse: (%f, %f)", velocity.x, velocity.y);
         if (fabs(velocity.y) >= fabs(velocity.x)) {
             if (velocity.y < 0) {
                 [_comboManager actionTaken:@"d"];
@@ -909,9 +916,42 @@ static BOOL startWithTutorials = NO;
     }
 }
 
+-(void)pinchStartedWithVelocity:(CGFloat)velocity
+{
+    if (velocity < 0) {
+        //Zoom out
+        _zoomOutEmitter.particleBirthRate = 1000;
+        SKAction *turnOffZoomOut = [SKAction sequence:@[[SKAction waitForDuration:.1],
+                                                        [SKAction runBlock:^{
+            _zoomOutEmitter.particleBirthRate = 750;
+        }], [SKAction waitForDuration:.1], [SKAction runBlock:^{
+            _zoomOutEmitter.particleBirthRate = 300;
+        }], [SKAction waitForDuration:.1], [SKAction runBlock:^{
+            _zoomOutEmitter.particleBirthRate = 0;
+        }]]];
+        [self runAction:turnOffZoomOut];
+    } else {
+        //Zoom in
+
+    }
+}
+
 -(void)pinchWithVelocity:(CGFloat)velocity
 {
-    
+    SKAction *pinchPulseAction;
+    if (velocity < 0) {
+        //Zoom out
+        [_comboManager actionTaken:@"o"];
+        pinchPulseAction = [SKAction sequence:@[[SKAction scaleTo:0.8 duration:0.2], [SKAction scaleTo:1.0 duration:0.2]]];
+    } else {
+        //Zoom in
+        [_comboManager actionTaken:@"i"];
+        pinchPulseAction = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:0.2], [SKAction scaleTo:1.0 duration:0.2]]];
+    }
+    if (pinchPulseAction) {
+        [_compass runAction:pinchPulseAction];
+        [_compass_arrow runAction:pinchPulseAction];
+    }
 }
 
 -(void)swipeInProgressAtPoint:(CGPoint)point withTranslation:(CGPoint)translation

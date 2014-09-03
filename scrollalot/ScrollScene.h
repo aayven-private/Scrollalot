@@ -21,6 +21,7 @@
 -(void)distanceDownloadedFromGC:(double)distance;
 -(void)swipeWithVelocity:(CGPoint)velocity;
 -(void)pinchWithVelocity:(CGFloat)velocity;
+-(void)pinchStartedWithVelocity:(CGFloat)velocity;
 -(void)swipeInProgressAtPoint:(CGPoint)point withTranslation:(CGPoint)translation;
 
 @end
