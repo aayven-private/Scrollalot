@@ -909,6 +909,11 @@ static BOOL startWithTutorials = NO;
     }
 }
 
+-(void)pinchWithVelocity:(CGFloat)velocity
+{
+    
+}
+
 -(void)swipeInProgressAtPoint:(CGPoint)point withTranslation:(CGPoint)translation
 {
     /*double angle = atan2(rwNormalize(translation).x, rwNormalize(translation).y);

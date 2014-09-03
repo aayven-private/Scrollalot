@@ -32,6 +32,10 @@
     // Here you can customize for example the minimum and maximum number of fingers required
     panSwipeRecognizer.minimumNumberOfTouches = 1;
     [self.view addGestureRecognizer:panSwipeRecognizer];
+    
+    UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
+    [self.view addGestureRecognizer:pinchRecognizer];
+    
     self.gcManager = [[GCManager alloc] init];
     self.gcManager.delegate = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -118,7 +122,25 @@
         CGPoint vel = [recognizer velocityInView:recognizer.view];
         //NSLog(@"VelY: %f", vel.y);
         [_scrollScene swipeWithVelocity:vel];
+    }
+}
 
+-(void)handlePinch:(UIPinchGestureRecognizer *)recognizer
+{
+    CGFloat zoomSpeed;
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        
+        if (recognizer.scale < 1) {
+            //Zoom in
+            zoomSpeed = (1.0 / recognizer.scale) * recognizer.velocity;
+        } else {
+            //Zoom out
+            zoomSpeed = recognizer.scale * recognizer.velocity;
+        }
+        
+        NSLog(@"Pinch scale: %f", recognizer.scale);
+        NSLog(@"Pinch velocity: %f", recognizer.velocity);
+        //NSLog(@"Pinch velocity / scale: %f", recognizer.velocity / recognizer.scale);
     }
 }
 
