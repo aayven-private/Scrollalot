@@ -45,4 +45,6 @@ static NSString *kWasHelpShownKey = @"scrollalot_help_was_shown";
 static const uint32_t playerCategory        =  0x1 << 0;
 static const uint32_t meteorCategory      =  0x1 << 1;
 
+static CGFloat degreeInRadians = 0.0174532925;
+
 static NSString *fontName = @"TektonPro-Bold";

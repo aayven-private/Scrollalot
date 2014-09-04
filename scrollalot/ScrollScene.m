@@ -12,6 +12,7 @@
 #import "GlobalAppProperties.h"
 #import "ParallaxBG.h"
 #import "CommonTools.h"
+#import "ZoomInEffect.h"
 
 //static CGFloat mmPerPixel = 0.078125;
 //static CGFloat cmPerPixel = 0.0078125;
@@ -23,8 +24,6 @@ static CGFloat kmPerPixel = 0.000000078125;
 //static CGFloat mmPSecInKmPH = 0.0036;
 //static CGFloat mPSecInKmPH = 3.6;
 //static CGFloat kmPSecInKmPH = 3600.;
-
-static CGFloat degreeInRadians = 0.0174532925;
 
 static NSString *kHadRouteKey = @"had_route";
 static NSString *kHadComboKey = @"had_combo";
@@ -66,7 +65,8 @@ static CGFloat mPSinKmPH = 3.6;
 @property (nonatomic) SKEmitterNode *bottomRouteEmitter;
 @property (nonatomic) SKEmitterNode *leftRouteEmitter;
 @property (nonatomic) SKEmitterNode *rightRouteEmitter;
-@property (nonatomic) SKEmitterNode *zoomOutEmitter;
+
+@property (nonatomic) ZoomInEffect *zoomInEmitter;
 
 @property (nonatomic) SKEmitterNode *bgEmitter;
 
@@ -276,17 +276,13 @@ static BOOL startWithTutorials = NO;
     self.rightEmitter.particlePositionRange = CGVectorMake(30, self.size.height + 50);
     self.rightEmitter.emissionAngle = 180 * degreeInRadians;
     
-    emitterPath = [[NSBundle mainBundle] pathForResource:@"ZoomOutEffect" ofType:@"sks"];
-    self.zoomOutEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
-    self.zoomOutEmitter.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
-    self.zoomOutEmitter.particleBirthRate = 0;
+    
     
     [self addChild:self.topEmitter];
     [self addChild:self.bottomEmitter];
     [self addChild:self.leftEmitter];
     [self addChild:self.rightEmitter];
-    [self addChild:self.zoomOutEmitter];
-    
+        
     emitterPath = [[NSBundle mainBundle] pathForResource:@"BgEffect" ofType:@"sks"];
     self.bgEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
     self.bgEmitter.position = CGPointMake(self.size.width / 2.0, self.size.height /2.0);
@@ -363,6 +359,11 @@ static BOOL startWithTutorials = NO;
     self.compass.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
     self.compass.name = @"compass";
     self.compass.alpha = 0;
+    
+    self.zoomInEmitter = [[ZoomInEffect alloc] initWithColor:[UIColor clearColor] size:CGSizeMake(self.compass.size.width, self.compass.size.height)];
+    self.zoomInEmitter.position = CGPointMake(self.size.width / 2.0, self.size.height / 2.0);
+    [self addChild:self.zoomInEmitter];
+    
     [self addChild:self.compass];
     
     self.compass_arrow = [[MarkerObject alloc] initWithTexture:[SKTexture textureWithImageNamed:@"iranytu200"]];
@@ -920,19 +921,10 @@ static BOOL startWithTutorials = NO;
 {
     if (velocity < 0) {
         //Zoom out
-        _zoomOutEmitter.particleBirthRate = 1000;
-        SKAction *turnOffZoomOut = [SKAction sequence:@[[SKAction waitForDuration:.1],
-                                                        [SKAction runBlock:^{
-            _zoomOutEmitter.particleBirthRate = 750;
-        }], [SKAction waitForDuration:.1], [SKAction runBlock:^{
-            _zoomOutEmitter.particleBirthRate = 300;
-        }], [SKAction waitForDuration:.1], [SKAction runBlock:^{
-            _zoomOutEmitter.particleBirthRate = 0;
-        }]]];
-        [self runAction:turnOffZoomOut];
+        
     } else {
         //Zoom in
-
+        [_zoomInEmitter triggerEmitter];
     }
 }
 
